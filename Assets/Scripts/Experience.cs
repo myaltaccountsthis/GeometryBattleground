@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Experience : MonoBehaviour
 {
-    private int experienceValue;
-    
-    void Start() {
-
+    public int Value {
+        get => experienceValue;
     }
-    
+
+    private int experienceValue;
+
     public void SetExperience(int experience) {
-        
+        experienceValue = experience;
     }
 }

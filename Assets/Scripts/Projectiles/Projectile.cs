@@ -28,7 +28,7 @@ public abstract class Projectile : MonoBehaviour
     public virtual void Start()
     {
         collider2D = GetComponent<Collider2D>();
-        collider2D.isTrigger = true;
+        Debug.Assert(collider2D.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
         creationTime = Player.Updates;
         pierceLeft = pierce;
     }

@@ -19,11 +19,18 @@ public class Player : MonoBehaviour
     public Projectile[] projectiles;
     [HideInInspector]
     public Dictionary<string, Projectile> projectileList = new Dictionary<string, Projectile>();
+    public RectTransform healthBar;
+    public RectTransform expBar;
 
     [SerializeField]
     private float health;
+    private int level;
+    private int experience;
     private List<Projectile> ownedProjectiles;
     private int iFrames;
+
+    [SerializeField]
+    private bool testingMode;
 
     void Awake()
     {
@@ -48,9 +55,11 @@ public class Player : MonoBehaviour
     {
         // check health
         if (health <= 0) {
-            // TODO game over
+            // TODO game over, uncomment taking damage in OnTriggerEnter2D
         }
         health = Mathf.Min(totalHealth, health + healthRegen / 60f);
+        if (iFrames > 0)
+            iFrames--;
 
         // do position stuff
         float horizontal = Input.GetAxis("Horizontal"), vertical = Input.GetAxis("Vertical");
@@ -68,7 +77,7 @@ public class Player : MonoBehaviour
 
         // projectiles
         foreach (Projectile projectile in ownedProjectiles) {
-            if (updates % projectile.interval == 0) {
+            if (updates % projectile.interval == 0 || testingMode) {
                 int count = projectile.GetCount();
                 for (int i = 0; i < count; i++) {
                     Projectile newProjectile = Instantiate<Projectile>(projectile, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
@@ -76,6 +85,9 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
+        expBar.localScale = new Vector3((float)experience / ExpToNextLevel(), 1, 1);
     }
 
     void LateUpdate() {
@@ -87,9 +99,29 @@ public class Player : MonoBehaviour
         if (mob != null) {
             if (iFrames > 0)
                 return;
-
             
+            health -= mob.GetDamage();
             iFrames = 30;
         }
+        Experience exp = collider.GetComponent<Experience>();
+        if (exp != null) {
+            experience += exp.Value;
+            CheckLevel();
+            Destroy(exp.gameObject);
+        }
+    }
+
+    public void CheckLevel() {
+        int requiredExp = ExpToNextLevel();
+        if (experience >= requiredExp) {
+            experience -= requiredExp;
+            level++;
+            // TODO do level up
+            
+        }
+    }
+
+    private int ExpToNextLevel() {
+        return level * (level + 2) + 5;
     }
 }

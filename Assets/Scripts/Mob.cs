@@ -16,6 +16,8 @@ public class Mob : MonoBehaviour
     public int startingTime;
     [Tooltip("Base damage of this mob to the player before time multipliers, in health points")]
     public float baseDamage;
+    [Tooltip("How much experience this mob should drop when killed")]
+    public int experienceDrop;
 
     private float health;
     private int damageTicks;
@@ -42,6 +44,7 @@ public class Mob : MonoBehaviour
     public void TakeDamage(Projectile projectile) {
         health -= projectile.damage;
         if (health <= 0) {
+            GameObject.FindWithTag("Map").GetComponent<Map>().InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
         }
         GetComponent<SpriteRenderer>().color = DAMAGE_COLOR;
@@ -49,15 +52,15 @@ public class Mob : MonoBehaviour
     }
 
     // Returns the damage this mob should deal after some time
-    private float GetDamage() {
+    public float GetDamage() {
         int updates = Player.Updates;
-        if (updates < 300)
+        if (updates < 18000)
             return baseDamage * (1 + updates / 12000f);
         return baseDamage * (10 - 10 * Mathf.Pow(3, -updates / 60000f));
     }
 
     // Returns the health that this mob should spawn with after some time
-    private float GetHealth() {
+    public float GetHealth() {
         return startingHealth * (Mathf.Pow(Player.Updates, 1.2f) / 40000f + 1);
     }
 }

@@ -5,19 +5,40 @@ using UnityEngine.Tilemaps;
 
 public class Map : MonoBehaviour
 {
+    [Tooltip("How many units off the camera bounds should tiles still generate")]
     public int tileExtent;
-    public TileBase groundTile;
+    [Tooltip ("List of all mobs to use")]
     public Mob[] mobs;
+    [Tooltip("The maximum number of experience drops that can exist in the tile extent range")]
+    public int maxExpDrops;
+
+    [Tooltip("The tile to use for the ground")]
+    [SerializeField]
+    private TileBase groundTile;
+    [Tooltip("Minimum experience value for each new experience orb sprite")]
+    [SerializeField]
+    private int[] experienceOrbStages;
+    [Tooltip("Sprites to use for each experience orb stage")]
+    [SerializeField]
+    private Sprite[] experienceOrbSprites;
+    [Tooltip("Random values to use for map spawned experience orbs")]
+    [SerializeField]
+    private int[] randomExperienceValues;
+    [Tooltip("Experience component of experience orb prefab")]
+    [SerializeField]
+    private Experience experienceOrb;
 
     private Tilemap tileMap;
     private List<Mob> activeMobs;
     private BoundsInt bounds;
+    private int nextExpSpawn;
 
     void Start()
     {
         tileMap = GetComponent<Tilemap>();
         activeMobs = new List<Mob>();
         bounds = new BoundsInt();
+        nextExpSpawn = 0;
     }
 
     void Update()
@@ -45,6 +66,26 @@ public class Map : MonoBehaviour
         for (int i = activeMobs.Count; i < desiredCount; i++) {
             SpawnMob();
         }
+
+        // check exp drops
+        if (nextExpSpawn == 0) {
+            AttemptExpSpawn();
+        }
+        else if (nextExpSpawn > 0)
+            nextExpSpawn--;
+    }
+
+    public Experience InstantiateExperience(int experience, Vector2 position) {
+        Experience exp = Instantiate<Experience>(experienceOrb, position, Quaternion.identity, GameObject.FindWithTag("Experience Folder").transform);
+        exp.SetExperience(experience);
+        SetExperienceSprite(exp);
+        return exp;
+    }
+
+    private void SetExperienceSprite(Experience experience) {
+        int index;
+        for (index = experienceOrbStages.Length - 1; experienceOrbStages[index] > experience.Value; index--);
+        experience.GetComponent<SpriteRenderer>().sprite = experienceOrbSprites[index];
     }
 
     private void UpdateBounds() {
@@ -94,5 +135,28 @@ public class Map : MonoBehaviour
 
     private int GetDesiredMobCount() {
         return Mathf.FloorToInt(Player.Updates / 600f) + 6;
+    }
+
+    private void GenerateNextExpSpawn() {
+        InstantiateExperience(randomExperienceValues[Random.Range(0, randomExperienceValues.Length)], GetSpawnLocation());
+        nextExpSpawn = Random.Range(300, 600);
+    }
+
+    // Returns the number of exp drops that are in the tile extent range
+    private int CountExpDrops() {
+        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Experience Orb");
+        int num = 0;
+        foreach (GameObject gameObject in gameObjects) {
+            Vector3 position = gameObject.transform.position;
+            if (position.x > bounds.xMin && position.x < bounds.xMax && position.y > bounds.yMin && position.y < bounds.yMax) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    private void AttemptExpSpawn() {
+        if (CountExpDrops() < maxExpDrops)
+            GenerateNextExpSpawn();
     }
 }

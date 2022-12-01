@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Projectile Folder
   - Mob Folder
+  - Map
+  - Experience Folder
+  - Experience Orb
   layers:
   - Default
   - TransparentFX
@@ -42,6 +45,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Drops
+    uniqueID: 618568909
+    locked: 0
+  - name: Mobs
+    uniqueID: 850157567
     locked: 0
   - name: Projectiles
     uniqueID: 2936826123
