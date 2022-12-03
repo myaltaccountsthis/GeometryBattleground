@@ -13,16 +13,10 @@ public class Ball : Projectile
     public override void Update()
     {
         base.Update();
-
     }
 
-    public override int GetCount()
+    public override void GenerateStats(Transform playerTransform, int index)
     {
-        return 1;
-    }
-
-    public override void GenerateStats(float angle)
-    {
-        this.angle = angle;
+        this.angle = (playerTransform.eulerAngles.z + 90) * Mathf.Deg2Rad;
     }
 }

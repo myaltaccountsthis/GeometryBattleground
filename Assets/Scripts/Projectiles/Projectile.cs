@@ -17,18 +17,20 @@ public abstract class Projectile : MonoBehaviour
     public int lifeTime;
     [Tooltip("Number of mobs the projectile can go through (0 pierce means unlimited)")]
     public int pierce;
+    [Tooltip("How many shots should get fired per interval")]
+    public int projectileCount;
     // in radians
     [HideInInspector]
     public float angle;
 
-    private new Collider2D collider2D;
+    private Collider2D collision;
     private int creationTime;
     private int pierceLeft;
 
     public virtual void Start()
     {
-        collider2D = GetComponent<Collider2D>();
-        Debug.Assert(collider2D.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
+        collision = GetComponent<Collider2D>();
+        Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
         creationTime = Player.Updates;
         pierceLeft = pierce;
     }
@@ -55,9 +57,6 @@ public abstract class Projectile : MonoBehaviour
         }
     }
 
-    // Return the number of projectiles for this specific projectile attack
-    public abstract int GetCount();
-
     // Generate random instance variable values for projectile
-    public abstract void GenerateStats(float angle);
+    public abstract void GenerateStats(Transform playerTransform, int index = 1);
 }

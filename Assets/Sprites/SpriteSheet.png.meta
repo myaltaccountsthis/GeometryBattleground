@@ -218,7 +218,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -239,7 +239,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -247,6 +247,27 @@ TextureImporter:
       bones: []
       spriteID: e163f6517b5f6b24584c65f07a0bafef
       internalID: 1950142143
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Laser
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 8
+        height: 21
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d6cf58469399d124097e81768e3cd4bd
+      internalID: 1304152968
       vertices: []
       indices: 
       edges: []
@@ -264,6 +285,7 @@ TextureImporter:
     nameFileIdTable:
       Ball: 235350715
       Experience_1: -34948245
+      Laser: 1304152968
       Experience_2: -747614016
       Tile1: -1010670414
       Player: 98035174

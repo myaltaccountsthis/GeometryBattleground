@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     private int experience;
     private List<Projectile> ownedProjectiles;
     private int iFrames;
+    private SpriteRenderer spriteRenderer;
 
     [SerializeField]
     private bool testingMode;
@@ -38,16 +39,20 @@ public class Player : MonoBehaviour
         foreach (Projectile projectile in projectiles) {
             projectileList.Add(projectile.name, projectile);
         }
-        updates = 0;
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
     }
 
     void Start()
     {
-        Application.targetFrameRate = 60;
         ownedProjectiles = new List<Projectile>();
         ownedProjectiles.Add(projectileList["Ball"]);
+        // TESTING
+        // TESTING END
         health = totalHealth;
         iFrames = 0;
+        updates = 0;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -78,14 +83,15 @@ public class Player : MonoBehaviour
         // projectiles
         foreach (Projectile projectile in ownedProjectiles) {
             if (updates % projectile.interval == 0 || testingMode) {
-                int count = projectile.GetCount();
+                int count = projectile.projectileCount;
                 for (int i = 0; i < count; i++) {
                     Projectile newProjectile = Instantiate<Projectile>(projectile, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
-                    newProjectile.GenerateStats(angle);
+                    newProjectile.GenerateStats(transform, i);
                 }
             }
         }
 
+        spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
         healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
         expBar.localScale = new Vector3((float)experience / ExpToNextLevel(), 1, 1);
     }
@@ -101,13 +107,14 @@ public class Player : MonoBehaviour
                 return;
             
             health -= mob.GetDamage();
+            spriteRenderer.color = Color.red;
             iFrames = 30;
         }
         Experience exp = collider.GetComponent<Experience>();
-        if (exp != null) {
+        if (exp != null && exp.CanPickUp) {
             experience += exp.Value;
             CheckLevel();
-            Destroy(exp.gameObject);
+            exp.PickUp(transform);
         }
     }
 
