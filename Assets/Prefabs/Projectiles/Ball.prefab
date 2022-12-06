@@ -114,11 +114,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33d2b537a5948284fa3fc736dee5af8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interval: 40
-  speed: 15
-  drag: 0
-  damage: 1
-  lifeTime: 90
-  pierce: 1
-  projectileCount: 1
+  stats:
+    interval: 30
+    speed: 15
+    drag: 0
+    damage: 1
+    lifeTime: 90
+    pierce: 1
+    projectileCount: 1
+    timeBetweenShots: 0
+    spread: 0
   angle: 0
+  toShoot: 0
+  toWait: -25

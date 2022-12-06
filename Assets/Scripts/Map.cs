@@ -11,6 +11,8 @@ public class Map : MonoBehaviour
     public Mob[] mobs;
     [Tooltip("The maximum number of experience drops that can exist in the tile extent range")]
     public int maxExpDrops;
+    public Transform experienceFolder;
+    public Transform mobFolder;
 
     [Tooltip("The tile to use for the ground")]
     [SerializeField]
@@ -76,7 +78,7 @@ public class Map : MonoBehaviour
     }
 
     public Experience InstantiateExperience(int experience, Vector2 position) {
-        Experience exp = Instantiate<Experience>(experienceOrb, position, Quaternion.identity, GameObject.FindWithTag("Experience Folder").transform);
+        Experience exp = Instantiate<Experience>(experienceOrb, position, Quaternion.identity, experienceFolder);
         exp.SetExperience(experience);
         SetExperienceSprite(exp);
         return exp;
@@ -119,7 +121,7 @@ public class Map : MonoBehaviour
 
     // Instantiate a random mob in some position in the tileExtent region (outside of camera view)
     private void SpawnMob() {
-        activeMobs.Add(Instantiate<Mob>(GetRandomMob(), GetSpawnLocation(), Quaternion.identity, GameObject.FindWithTag("Mob Folder").transform));
+        activeMobs.Add(Instantiate<Mob>(GetRandomMob(), GetSpawnLocation(), Quaternion.identity, mobFolder));
     }
 
     // Return a linearly random mob from those available based on startingTime

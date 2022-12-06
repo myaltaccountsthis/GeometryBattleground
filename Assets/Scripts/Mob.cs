@@ -21,11 +21,15 @@ public class Mob : MonoBehaviour
 
     private float health;
     private int damageTicks;
+    private Transform player;
+    private Map map;
 
     void Start()
     {
         health = GetHealth();
         damageTicks = 0;
+        player = GameObject.FindWithTag("Player").transform;
+        map = GameObject.FindWithTag("Map").GetComponent<Map>();
     }
 
     // TODO movement and follow player (player has tag "Player")
@@ -35,16 +39,16 @@ public class Mob : MonoBehaviour
             damageTicks--;
             GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, DAMAGE_COLOR, (float) damageTicks / DAMAGE_TICKS);
         }
-        Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
+        Vector3 playerPos = player.position;
         Vector3 direction = (playerPos - transform.position).normalized;
         transform.position += direction * movementSpeed / 60f;
     }
 
     // Makes this mob take damage
     public void TakeDamage(Projectile projectile) {
-        health -= projectile.damage;
+        health -= projectile.stats.damage;
         if (health <= 0) {
-            GameObject.FindWithTag("Map").GetComponent<Map>().InstantiateExperience(experienceDrop, transform.position);
+            map.InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
         }
         GetComponent<SpriteRenderer>().color = DAMAGE_COLOR;

@@ -172,7 +172,7 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 64
+        y: 65
         width: 16
         height: 16
       alignment: 0
@@ -192,7 +192,7 @@ TextureImporter:
       name: Experience_1
       rect:
         serializedVersion: 2
-        x: 64
+        x: 351
         y: 0
         width: 32
         height: 32
@@ -213,7 +213,7 @@ TextureImporter:
       name: Experience_2
       rect:
         serializedVersion: 2
-        x: 96
+        x: 383
         y: 0
         width: 32
         height: 32
@@ -234,7 +234,7 @@ TextureImporter:
       name: Experience_3
       rect:
         serializedVersion: 2
-        x: 128
+        x: 415
         y: 0
         width: 32
         height: 32
@@ -255,8 +255,8 @@ TextureImporter:
       name: Laser
       rect:
         serializedVersion: 2
-        x: 16
-        y: 64
+        x: 17
+        y: 65
         width: 8
         height: 21
       alignment: 0
@@ -268,6 +268,27 @@ TextureImporter:
       bones: []
       spriteID: d6cf58469399d124097e81768e3cd4bd
       internalID: 1304152968
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pentagon
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42b296dd9b4dac64199a29d936d76024
+      internalID: -838418213
       vertices: []
       indices: 
       edges: []
@@ -285,6 +306,7 @@ TextureImporter:
     nameFileIdTable:
       Ball: 235350715
       Experience_1: -34948245
+      Pentagon: 35765532
       Laser: 1304152968
       Experience_2: -747614016
       Tile1: -1010670414

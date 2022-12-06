@@ -1660,6 +1660,8 @@ MonoBehaviour:
   mobs:
   - {fileID: 930587267955566061, guid: c9ca0333fef1bf8478c6b55ce969cf9b, type: 3}
   maxExpDrops: 5
+  experienceFolder: {fileID: 1346883018}
+  mobFolder: {fileID: 1582661112}
   groundTile: {fileID: 11400000, guid: 284f17f60f34381448f11b3d4de30dfd, type: 2}
   experienceOrbStages: 01000000040000000a000000
   experienceOrbSprites:
@@ -1880,8 +1882,11 @@ MonoBehaviour:
   projectiles:
   - {fileID: 628458237726471131, guid: 7add50f5122bf9b4396842428ce68c7c, type: 3}
   - {fileID: 6316105811583033691, guid: 18123acd0e4ae934d8c9b51a92901ce5, type: 3}
+  - {fileID: 1094273288802954470, guid: e6fd799a7490ef340ad108e64e3e1bd3, type: 3}
   healthBar: {fileID: 438480398}
   expBar: {fileID: 1815296024}
+  projectileFolder: {fileID: 165604480}
+  infoFile: {fileID: 4900000, guid: 2ac49942a69dcc5438ced41545bcc3da, type: 3}
   health: 0
   testingMode: 0
 --- !u!58 &1693394580

@@ -1,0 +1,7 @@
+Projectile Name,Level,Interval,Speed,Drag,Damage,Life Time,Pierce,Projectile Count,Time Between Shots,Spread
+Ball,1,30,15,0,1,90,1,1,0,0
+Ball,2,30,15,0,2,90,1,1,0,0
+Barrage,1,240,10,8,2,90,3,3,6,90
+Barrage,2,180,10,8,3,90,5,4,6,90
+Laser,1,120,40,0,2,120,-1,2,0,30
+Laser,2,90,40,0,3,120,-1,2,0,30

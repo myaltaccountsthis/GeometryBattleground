@@ -21,14 +21,18 @@ public class Player : MonoBehaviour
     public Dictionary<string, Projectile> projectileList = new Dictionary<string, Projectile>();
     public RectTransform healthBar;
     public RectTransform expBar;
+    public Transform projectileFolder;
+    [Tooltip("CSV file that contains data for each projectile")]
+    public TextAsset infoFile;
 
     [SerializeField]
     private float health;
     private int level;
     private int experience;
-    private List<Projectile> ownedProjectiles;
+    private Dictionary<Projectile, int> ownedProjectiles;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
+    private Dictionary<string, Dictionary<string, ProjectileStats>> projectileInfo;
 
     [SerializeField]
     private bool testingMode;
@@ -38,6 +42,7 @@ public class Player : MonoBehaviour
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
         foreach (Projectile projectile in projectiles) {
             projectileList.Add(projectile.name, projectile);
+            Debug.Assert(projectile != null, "Error: Projectile List contains null values");
         }
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
@@ -45,14 +50,28 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        ownedProjectiles = new List<Projectile>();
-        ownedProjectiles.Add(projectileList["Ball"]);
+        ownedProjectiles = new Dictionary<Projectile, int>();
+        ownedProjectiles.Add(projectileList["Ball"], 1);
         // TESTING
+        ownedProjectiles.Add(projectileList["Barrage"], 1);
         // TESTING END
         health = totalHealth;
         iFrames = 0;
         updates = 0;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        try {
+            projectileInfo = new Dictionary<string, Dictionary<string, ProjectileStats>>();
+            string[] lines = infoFile.text.Split('\n');
+            string[] headers = lines[0].Split(',');
+            for (int i = 1; i < lines.Length; i++) {
+                string[] lineInfo = lines[i].Split(',');
+                int level = int.Parse(lineInfo[1]);
+            // TODO set up projectileInfo, create new constructor with stuff or something idk
+            }
+        }
+        catch (System.Exception e) {
+            Debug.Log("Failed to read info file: " + e.Message);
+        }
     }
 
     // Update is called once per frame
@@ -81,14 +100,18 @@ public class Player : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, Mathf.Rad2Deg * angle - 90);
 
         // projectiles
-        foreach (Projectile projectile in ownedProjectiles) {
-            if (updates % projectile.interval == 0 || testingMode) {
-                int count = projectile.projectileCount;
-                for (int i = 0; i < count; i++) {
-                    Projectile newProjectile = Instantiate<Projectile>(projectile, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
-                    newProjectile.GenerateStats(transform, i);
-                }
+        foreach (Projectile projectile in ownedProjectiles.Keys) {
+            if (updates % projectile.stats.interval == 0 || testingMode) {
+                projectile.toShoot = projectile.stats.projectileCount;
+                projectile.toWait = 0;
             }
+            while (projectile.toShoot > 0 && projectile.toWait == 0) {
+                Projectile newProjectile = Instantiate<Projectile>(projectile, transform.position, Quaternion.identity, projectileFolder);
+                newProjectile.GenerateStats(transform, projectile.stats.projectileCount - projectile.toShoot);
+                projectile.toShoot--;
+                projectile.toWait = projectile.stats.timeBetweenShots;
+            }
+            projectile.toWait--;
         }
 
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);

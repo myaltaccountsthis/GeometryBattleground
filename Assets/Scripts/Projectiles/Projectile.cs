@@ -5,23 +5,14 @@ using UnityEngine;
 // there will be instances of each sub-class in Player's projectiles instance variable. those will Instantiate<>() new projectiles
 public abstract class Projectile : MonoBehaviour
 {
-    [Tooltip("Time in between shots, in updates")]
-    public int interval;
-    [Tooltip("Speed of the projectile, in units per second")]
-    public float speed;
-    [Tooltip("Drag of the projectile, in units per second^2 (positive drag is negative acceleration)")]
-    public float drag;
-    [Tooltip("Damage done to mobs by the projectile, in health points (just a unit)")]
-    public float damage;
-    [Tooltip("Life time of the projectile, in updates")]
-    public int lifeTime;
-    [Tooltip("Number of mobs the projectile can go through (0 pierce means unlimited)")]
-    public int pierce;
-    [Tooltip("How many shots should get fired per interval")]
-    public int projectileCount;
+    public ProjectileStats stats;
     // in radians
     [HideInInspector]
     public float angle;
+    [HideInInspector]
+    public int toShoot;
+    [HideInInspector]
+    public int toWait;
 
     private Collider2D collision;
     private int creationTime;
@@ -32,16 +23,16 @@ public abstract class Projectile : MonoBehaviour
         collision = GetComponent<Collider2D>();
         Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
         creationTime = Player.Updates;
-        pierceLeft = pierce;
+        pierceLeft = stats.pierce;
     }
 
     public virtual void Update()
     {
-        if (Player.Updates >= creationTime + lifeTime) {
+        if (Player.Updates >= creationTime + stats.lifeTime) {
             Destroy(gameObject);
         }
         
-        float currentSpeed = (speed - drag * (Player.Updates - creationTime)) / 60f;
+        float currentSpeed = Mathf.Max((stats.speed - stats.drag * (Player.Updates - creationTime) / 60f) / 60f, 0f);
         transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
     }
 
