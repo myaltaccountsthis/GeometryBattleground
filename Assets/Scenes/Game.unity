@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 141813072}
   - component: {fileID: 141813074}
   - component: {fileID: 141813073}
+  - component: {fileID: 141813075}
   m_Layer: 5
   m_Name: Upgrade Background 3
   m_TagString: Untagged
@@ -355,6 +356,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 141813071}
   m_CullTransparentMesh: 1
+--- !u!114 &141813075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141813071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd8a9978911bb446a190642ac9554b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeName: {fileID: 1722599083}
+  upgradeEffect: {fileID: 997429840}
+  upgradeImage: {fileID: 29201342}
 --- !u!1 &165604479
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,6 +602,7 @@ GameObject:
   - component: {fileID: 367776349}
   - component: {fileID: 367776351}
   - component: {fileID: 367776350}
+  - component: {fileID: 367776352}
   m_Layer: 5
   m_Name: Upgrade Background 1
   m_TagString: Untagged
@@ -605,9 +622,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1265067443}
   - {fileID: 590141783}
   - {fileID: 1785376838}
+  - {fileID: 1265067443}
   m_Father: {fileID: 1176689514}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -654,6 +671,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 367776348}
   m_CullTransparentMesh: 1
+--- !u!114 &367776352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 367776348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd8a9978911bb446a190642ac9554b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeName: {fileID: 590141784}
+  upgradeEffect: {fileID: 1785376839}
+  upgradeImage: {fileID: 900741951}
 --- !u!1 &411349745
 GameObject:
   m_ObjectHideFlags: 0
@@ -913,7 +945,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 367776349}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -1423,7 +1455,7 @@ RectTransform:
   m_Children:
   - {fileID: 900741950}
   m_Father: {fileID: 367776349}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
@@ -1887,6 +1919,7 @@ MonoBehaviour:
   expBar: {fileID: 1815296024}
   projectileFolder: {fileID: 165604480}
   infoFile: {fileID: 4900000, guid: 2ac49942a69dcc5438ced41545bcc3da, type: 3}
+  upgradeUI: {fileID: 1885261110}
   health: 0
   testingMode: 0
 --- !u!58 &1693394580
@@ -2071,7 +2104,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 367776349}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -2869,6 +2902,7 @@ GameObject:
   - component: {fileID: 2083316442}
   - component: {fileID: 2083316444}
   - component: {fileID: 2083316443}
+  - component: {fileID: 2083316445}
   m_Layer: 5
   m_Name: Upgrade Background 2
   m_TagString: Untagged
@@ -2937,6 +2971,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083316441}
   m_CullTransparentMesh: 1
+--- !u!114 &2083316445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083316441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bd8a9978911bb446a190642ac9554b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeName: {fileID: 1833009249}
+  upgradeEffect: {fileID: 1842907845}
+  upgradeImage: {fileID: 199334325}
 --- !u!1 &2086656196
 GameObject:
   m_ObjectHideFlags: 0

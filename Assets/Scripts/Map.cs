@@ -45,6 +45,9 @@ public class Map : MonoBehaviour
 
     void Update()
     {
+        if (GameTime.isPaused)
+            return;
+
         UpdateBounds();
 
         // generate tiles in view of the camera + tileExtent

@@ -28,6 +28,9 @@ public abstract class Projectile : MonoBehaviour
 
     public virtual void Update()
     {
+        if (GameTime.isPaused)
+            return;
+
         if (Player.Updates >= creationTime + stats.lifeTime) {
             Destroy(gameObject);
         }
@@ -50,4 +53,8 @@ public abstract class Projectile : MonoBehaviour
 
     // Generate random instance variable values for projectile
     public abstract void GenerateStats(Transform playerTransform, int index = 1);
+    // Load stats from the ones read from a text file
+    public void LoadStats(ProjectileStats stats) {
+        this.stats = stats;
+    }
 }

@@ -35,6 +35,9 @@ public class Mob : MonoBehaviour
     // TODO movement and follow player (player has tag "Player")
     void Update()
     {
+        if (GameTime.isPaused)
+            return;
+
         if (damageTicks > 0) {
             damageTicks--;
             GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, DAMAGE_COLOR, (float) damageTicks / DAMAGE_TICKS);
