@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
-[Serializable]
 public class ProjectileStats {
     [Tooltip("Time in between shots, in updates")]
     public int interval { get; }
@@ -40,5 +39,12 @@ public class ProjectileStats {
         return new ProjectileStats(Convert.ToInt32(tokens[startIndex]), Convert.ToSingle(tokens[startIndex + 1]), Convert.ToSingle(tokens[startIndex + 2]), Convert.ToSingle(tokens[startIndex + 3]), Convert.ToInt32(tokens[startIndex + 4]), Convert.ToInt32(tokens[startIndex + 5]), Convert.ToInt32(tokens[startIndex + 6]), Convert.ToInt32(tokens[startIndex + 7]), Convert.ToSingle(tokens[startIndex + 8]));
     }
 
-    public static ProjectileStats Empty { get => new ProjectileStats(-1, 0, 0, 0, 0, 0, 0, 0, 0); }
+    private static ProjectileStats emptyStats;
+    public static ProjectileStats Empty {
+        get {
+            if (emptyStats == null)
+                emptyStats = new ProjectileStats(-1, 0, 0, 0, 0, 0, 0, 0, 0);
+            return emptyStats;
+        }
+    }
 }

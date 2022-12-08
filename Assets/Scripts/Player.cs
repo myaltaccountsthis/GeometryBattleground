@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [Tooltip("CSV file that contains data for each projectile")]
     public TextAsset infoFile;
     public GameObject upgradeUI;
+    public Explosion explosionPrefab;
 
     [SerializeField]
     private float health;
@@ -79,7 +80,7 @@ public class Player : MonoBehaviour
             }
         }
         catch (System.Exception e) {
-            Debug.Log("Failed to read info file: " + e.Message);
+            Debug.Log("Failed to read info file: " + e);
         }
         {
             Transform upgradeUIList = upgradeUI.transform.Find("Frame");
@@ -170,15 +171,22 @@ public class Player : MonoBehaviour
 
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
-        if (experience >= requiredExp && level < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
-            experience -= requiredExp;
-            level++;
-            ShowLevelUpUI();
+        if (experience >= requiredExp) {
+            int totalLevels = 0;
+            foreach (string projectileName in ownedProjectiles.Keys)
+                totalLevels += ownedProjectiles[projectileName];
+            // TODO check if this works properly
+            if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
+                experience -= requiredExp;
+                level++;
+                ShowLevelUpUI();
+            }
         }
     }
 
     private int ExpToNextLevel() {
-        return level * (level + 2) + 5;
+        // TODO make leveling up harder in general (mostly at the start) and also make leveling up more powerful (maybe ramp mobs more), TODO mobs
+        return Mathf.FloorToInt(Mathf.Pow(level, 1.5f) + 5);
     }
 
     private ProjectileStats GetProjectileStats(string projectileName) {
@@ -191,7 +199,8 @@ public class Player : MonoBehaviour
             return;
 
         GameTime.isPaused = true;
-        // TODO generate upgrade options
+
+        // generate options
         List<Projectile> availableProjectiles = new List<Projectile>();
         foreach (Projectile projectile in projectileList.Values) {
             if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
@@ -206,6 +215,7 @@ public class Player : MonoBehaviour
             availableProjectiles[j] = temp;
         }
 
+        // show the ui
         for (int i = 0; i < Mathf.Min(availableProjectiles.Count, 3); i++) {
             SetUpgradeUI(i, availableProjectiles[i]);
         }
@@ -213,7 +223,6 @@ public class Player : MonoBehaviour
         for (int i = 2; i >= availableProjectiles.Count; i--) {
             SetUpgradeUI(i, null);
         }
-
         upgradeUI.SetActive(true);
     }
 

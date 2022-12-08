@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Barrage : Projectile
 {
-    public override void Start()
-    {
-        base.Start();
-    }
-
-    // Update is called once per frame
-    public override void Update()
-    {
-        base.Update();
-    }
-
     public override void GenerateStats(Transform playerTransform, int index)
     {
         float eulerAngle = playerTransform.eulerAngles.z + Random.Range(-.5f, .5f) * stats.spread;

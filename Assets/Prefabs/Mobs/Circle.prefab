@@ -137,7 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 5
-  movementSpeed: 3
+  movementSpeed: 2
   startingTime: 0
   baseDamage: 5
   experienceDrop: 1

@@ -255,10 +255,10 @@ TextureImporter:
       name: Laser
       rect:
         serializedVersion: 2
-        x: 17
+        x: 18
         y: 65
-        width: 8
-        height: 21
+        width: 10
+        height: 40
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -293,6 +293,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Dark Aura
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 1
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3162660e893bac749ad231d508982272
+      internalID: -1765358846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fireball
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 65
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 34695dd4e637d5247bb6407f61e93ddd
+      internalID: -791834676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -306,8 +348,10 @@ TextureImporter:
     nameFileIdTable:
       Ball: 235350715
       Experience_1: -34948245
+      Dark Aura: -1765358846
       Pentagon: 35765532
       Laser: 1304152968
+      Fireball: -791834676
       Experience_2: -747614016
       Tile1: -1010670414
       Player: 98035174

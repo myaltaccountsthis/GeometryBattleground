@@ -11,6 +11,10 @@ public class Map : MonoBehaviour
     public Mob[] mobs;
     [Tooltip("The maximum number of experience drops that can exist in the tile extent range")]
     public int maxExpDrops;
+    [Tooltip("In updates")]
+    public int minExpDelay;
+    [Tooltip("In updates")]
+    public int maxExpDelay;
     public Transform experienceFolder;
     public Transform mobFolder;
 
@@ -41,6 +45,10 @@ public class Map : MonoBehaviour
         activeMobs = new List<Mob>();
         bounds = new BoundsInt();
         nextExpSpawn = 0;
+        Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
+        for (int i = 0; i < maxExpDrops / 2; i++) {
+            AttemptExpSpawn();
+        }
     }
 
     void Update()
@@ -100,8 +108,7 @@ public class Map : MonoBehaviour
         bounds = new BoundsInt(new Vector3Int((int) Camera.main.transform.position.x, (int) Camera.main.transform.position.y) - combinedExtent, 2 * combinedExtent);
     }
 
-    // Returns a random location from the tileExtent region
-    // TODO implement actual random spawning outside of camera view
+    // Returns a random location from the tileExtent perimeter
     private Vector3 GetSpawnLocation() {
         float xExtent = Camera.main.orthographicSize * Screen.width / Screen.height;
         float yExtent = Camera.main.orthographicSize;
@@ -109,7 +116,16 @@ public class Map : MonoBehaviour
         BoundsInt cameraBounds = new BoundsInt(new Vector3Int((int) Camera.main.transform.position.x, (int) Camera.main.transform.position.y) - cameraExtent, 2 * cameraExtent);
         int left = cameraBounds.xMin - bounds.xMin, right = bounds.xMax - cameraBounds.xMax;
         int bottom = cameraBounds.yMin - bounds.yMin, top = bounds.yMax - cameraBounds.yMax;
+        // in order to get spawns along the perimeter
+        bool randomY = Random.value > .5f;
         int x = Random.Range(0, left + right), y = Random.Range(0, bottom + top);
+        if (randomY) {
+            x = Random.value > .5f ? 0 : left + right;
+        }
+        else {
+            y = Random.value > .5f ? 0 : bottom + top;
+        }
+        // shift the points into the extent range depending on which half it was on
         if (x < left)
             x += bounds.xMin;
         else
@@ -144,7 +160,7 @@ public class Map : MonoBehaviour
 
     private void GenerateNextExpSpawn() {
         InstantiateExperience(randomExperienceValues[Random.Range(0, randomExperienceValues.Length)], GetSpawnLocation());
-        nextExpSpawn = Random.Range(300, 600);
+        nextExpSpawn = Random.Range(minExpDelay, maxExpDelay);
     }
 
     // Returns the number of exp drops that are in the tile extent range
