@@ -31,7 +31,8 @@ public class Fireball : Projectile
             newExplosion.stats = stats;
             newExplosion.minSize = .2f;
             newExplosion.maxSize = 1f;
-            newExplosion.explosionLifeTime = 30;
+            newExplosion.explosionLifeTime = 6;
+            newExplosion.explosionDecayTime = 20;
 
             Destroy(gameObject);
         }

@@ -151,7 +151,20 @@ public class Map : MonoBehaviour
             if (mobs[i].startingTime <= Player.Updates)
                 break;
         }
-        return mobs[Random.Range(0, i + 1)];
+        int length = i + 1;
+        int totalWeight = 0;
+        for (i = 0; i < length; i++) {
+            totalWeight += mobs[i].spawnWeight;
+        }
+        int weight = Random.Range(0, totalWeight);
+        for (i = 0; i < length; i++) {
+            int mobWeight = mobs[i].spawnWeight;
+            if (weight < mobWeight) {
+                return mobs[i];
+            }
+            weight -= mobWeight;
+        }
+        return mobs[0];
     }
 
     private int GetDesiredMobCount() {

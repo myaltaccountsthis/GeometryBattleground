@@ -1691,6 +1691,9 @@ MonoBehaviour:
   tileExtent: 10
   mobs:
   - {fileID: 930587267955566061, guid: c9ca0333fef1bf8478c6b55ce969cf9b, type: 3}
+  - {fileID: 68015480282676767, guid: ba6bdba12b79a5841973dec4a5a18af6, type: 3}
+  - {fileID: 8306826823842799550, guid: b13f2ca291a66eb49a28ddf6d3b64116, type: 3}
+  - {fileID: 6710730481885149368, guid: 0504ccdc03b21454ea243b169cb16c0b, type: 3}
   maxExpDrops: 10
   minExpDelay: 120
   maxExpDelay: 300
@@ -1910,7 +1913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637e1aa9def90c440b9dfc94e0035e83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
+  movementSpeed: 6
   totalHealth: 100
   healthRegen: 1
   projectiles:
@@ -1919,12 +1922,14 @@ MonoBehaviour:
   - {fileID: 1094273288802954470, guid: e6fd799a7490ef340ad108e64e3e1bd3, type: 3}
   - {fileID: 4416774774060482847, guid: 50c2d993566d23546b865607a6bf9f18, type: 3}
   - {fileID: 8650562122922162173, guid: dd2a63dd1c0479c4881e52eab57aa4dc, type: 3}
+  - {fileID: 7445756913841249180, guid: a403bda9ca13554468544a2344cfd5fc, type: 3}
   healthBar: {fileID: 438480398}
   expBar: {fileID: 1815296024}
   projectileFolder: {fileID: 165604480}
   infoFile: {fileID: 4900000, guid: 2ac49942a69dcc5438ced41545bcc3da, type: 3}
   upgradeUI: {fileID: 1885261110}
   explosionPrefab: {fileID: 4949622542091398931, guid: 0fee8638b6b7d91408dedd57f4610406, type: 3}
+  spikePrefab: {fileID: 5248771642335778886, guid: 98ecec71fd93a2c408173dcf3153afd9, type: 3}
   health: 0
   testingMode: 0
 --- !u!58 &1693394580

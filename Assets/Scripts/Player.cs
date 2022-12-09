@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     public TextAsset infoFile;
     public GameObject upgradeUI;
     public Explosion explosionPrefab;
+    public Spike spikePrefab;
+    public int score;
 
     [SerializeField]
     private float health;
@@ -63,6 +65,8 @@ public class Player : MonoBehaviour
         iFrames = 0;
         updates = 0;
         level = 0;
+        score = 0;
+        // TODO score
         spriteRenderer = GetComponent<SpriteRenderer>();
         try {
             projectileInfo = new Dictionary<string, ProjectileStats[]>();
@@ -175,7 +179,6 @@ public class Player : MonoBehaviour
             int totalLevels = 0;
             foreach (string projectileName in ownedProjectiles.Keys)
                 totalLevels += ownedProjectiles[projectileName];
-            // TODO check if this works properly
             if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
                 experience -= requiredExp;
                 level++;
@@ -185,12 +188,16 @@ public class Player : MonoBehaviour
     }
 
     private int ExpToNextLevel() {
-        // TODO make leveling up harder in general (mostly at the start) and also make leveling up more powerful (maybe ramp mobs more), TODO mobs
-        return Mathf.FloorToInt(Mathf.Pow(level, 1.5f) + 5);
+        // TODO also make leveling up more powerful (maybe ramp mobs more), TODO mobs
+        return Mathf.FloorToInt(Mathf.Pow(level, 1.5f)) + 1 * level + 5;
     }
 
     private ProjectileStats GetProjectileStats(string projectileName) {
         return projectileInfo[projectileName][ownedProjectiles[projectileName]];
+    }
+
+    public int GetProjectileLevel(string projectileName) {
+        return ownedProjectiles[projectileName];
     }
 
     // show level up ui and generate 

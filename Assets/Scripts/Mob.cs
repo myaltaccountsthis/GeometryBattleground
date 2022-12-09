@@ -18,6 +18,12 @@ public class Mob : MonoBehaviour
     public float baseDamage;
     [Tooltip("How much experience this mob should drop when killed")]
     public int experienceDrop;
+    [Tooltip("Percent that experience will be dropped when killing this mob")]
+    public float experiencePercent;
+    [Tooltip("How much this mob should be weighted into spawning (higher weight = greater chance of spawning)")]
+    public int spawnWeight;
+    [Tooltip("How many points this mob awards you when defeated")]
+    public int score;
 
     private float health;
     private int damageTicks;
@@ -32,7 +38,7 @@ public class Mob : MonoBehaviour
         map = GameObject.FindWithTag("Map").GetComponent<Map>();
     }
 
-    // TODO movement and follow player (player has tag "Player")
+    // follow player (player has tag "Player")
     void Update()
     {
         if (GameTime.isPaused)
@@ -45,13 +51,15 @@ public class Mob : MonoBehaviour
         Vector3 playerPos = player.position;
         Vector3 direction = (playerPos - transform.position).normalized;
         transform.position += direction * movementSpeed / 60f;
+        transform.eulerAngles = new Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x) - 90);
     }
 
     // Makes this mob take damage
     public void TakeDamage(Projectile projectile) {
         health -= projectile.stats.damage;
         if (health <= 0) {
-            map.InstantiateExperience(experienceDrop, transform.position);
+            if (Random.value < experiencePercent)
+                map.InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
         }
         GetComponent<SpriteRenderer>().color = DAMAGE_COLOR;
