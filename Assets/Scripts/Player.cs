@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -27,12 +28,14 @@ public class Player : MonoBehaviour
     public GameObject upgradeUI;
     public Explosion explosionPrefab;
     public Spike spikePrefab;
-    public int score;
+    public TextMeshProUGUI levelText;
+    public TextMeshProUGUI scoreText;
 
     [SerializeField]
     private float health;
     private int level;
     private int experience;
+    private int score;
     private Dictionary<string, int> ownedProjectiles;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
@@ -64,10 +67,12 @@ public class Player : MonoBehaviour
         health = totalHealth;
         iFrames = 0;
         updates = 0;
-        level = 0;
+        level = 1;
+        experience = 0;
         score = 0;
-        // TODO score
         spriteRenderer = GetComponent<SpriteRenderer>();
+        UpdateExpBar();
+        UpdateScore();
         try {
             projectileInfo = new Dictionary<string, ProjectileStats[]>();
             string[] lines = infoFile.text.Split('\n');
@@ -145,7 +150,7 @@ public class Player : MonoBehaviour
 
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
         healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
-        expBar.localScale = new Vector3(Mathf.Min(1f, (float)experience / ExpToNextLevel()), 1, 1);
+        // UpdateExpBar();
     }
 
     void LateUpdate() {
@@ -168,9 +173,17 @@ public class Player : MonoBehaviour
         Experience exp = collider.GetComponent<Experience>();
         if (exp != null && exp.CanPickUp) {
             experience += exp.Value;
+            score += exp.Value;
             CheckLevel();
+            UpdateExpBar();
+            UpdateScore();
             exp.PickUp(transform);
         }
+    }
+
+    private void UpdateExpBar() {
+        expBar.localScale = new Vector3(Mathf.Min(1f, (float)experience / ExpToNextLevel()), 1, 1);
+        levelText.text = level + "";
     }
 
     public void CheckLevel() {
@@ -187,9 +200,18 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void UpdateScore() {
+        scoreText.text = score + "";
+    }
+
+    public void AddScore(int toAdd) {
+        score += toAdd;
+        UpdateScore();
+    }
+
     private int ExpToNextLevel() {
         // TODO also make leveling up more powerful (maybe ramp mobs more), TODO mobs
-        return Mathf.FloorToInt(Mathf.Pow(level, 1.5f)) + 1 * level + 5;
+        return Mathf.FloorToInt(Mathf.Pow(level - 1, 1.5f)) + 1 * level + 4;
     }
 
     private ProjectileStats GetProjectileStats(string projectileName) {

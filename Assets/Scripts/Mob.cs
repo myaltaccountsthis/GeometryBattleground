@@ -58,6 +58,7 @@ public class Mob : MonoBehaviour
     public void TakeDamage(Projectile projectile) {
         health -= projectile.stats.damage;
         if (health <= 0) {
+            player.GetComponent<Player>().AddScore(score);
             if (Random.value < experiencePercent)
                 map.InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
