@@ -45,7 +45,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private bool testingMode;
 
-    private const int MAX_PROJECTILE_LEVEL = 3;
+    private const int MAX_PROJECTILE_LEVEL = 6;
 
     void Awake()
     {
@@ -266,6 +266,7 @@ public class Player : MonoBehaviour
             option.upgradeName.text = projectile.name;
             // TODO projectile upgrade effect description
             option.upgradeEffect.text = "real projectile";
+            option.upgradeLevel.text = ownedProjectiles.ContainsKey(projectile.name) ? "Level " + ownedProjectiles[projectile.name] : "Unlock";
             // TODO projectile image sprite
         }
     }

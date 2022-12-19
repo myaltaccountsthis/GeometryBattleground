@@ -440,6 +440,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Shotgun
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 106
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c93e8c45fa57574ba5348780c0ff7a8
+      internalID: -442452156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -463,6 +484,7 @@ TextureImporter:
       Tile1: -1010670414
       Player: 98035174
       Circle: 700268490
+      Shotgun: -442452156
       Square: 497585160
       Experience_3: 1950142143
       Hexagon: 1559499710

@@ -9,6 +9,7 @@ public class UpgradeOption : MonoBehaviour, IPointerDownHandler
 {
     public TextMeshProUGUI upgradeName;
     public TextMeshProUGUI upgradeEffect;
+    public TextMeshProUGUI upgradeLevel;
     public Image upgradeImage;
 
     private Player player;
