@@ -267,8 +267,16 @@ public class Player : MonoBehaviour
         else {
             option.upgradeName.text = projectile.name;
             // TODO projectile upgrade effect description
-            option.upgradeEffect.text = ownedProjectiles.ContainsKey(projectile.name) ? projectileInfo[projectile.name][ownedProjectiles[projectile.name]].getUpgradeEffect(projectileInfo[projectile.name][ownedProjectiles[projectile.name] + 1]) : "New projectile";
-            option.upgradeLevel.text = ownedProjectiles.ContainsKey(projectile.name) ? "Level " + ownedProjectiles[projectile.name] + "->" + (ownedProjectiles[projectile.name] + 1) : "Unlock";
+            if (ownedProjectiles.ContainsKey(projectile.name)) {
+                int level = ownedProjectiles[projectile.name];
+                string message = projectileInfo[projectile.name][level].getUpgradeEffect(projectileInfo[projectile.name][level + 1]);
+                option.upgradeEffect.text = message.Trim();
+                option.upgradeLevel.text = "Level " + (level + 1);
+            }
+            else {
+                option.upgradeEffect.text = "New projectile";
+                option.upgradeLevel.text = "Unlock";
+            }
             // TODO projectile image sprite
         }
     }
