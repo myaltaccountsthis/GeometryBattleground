@@ -141,6 +141,6 @@ MonoBehaviour:
   startingTime: 0
   baseDamage: 5
   experienceDrop: 1
-  experiencePercent: 0.3
+  experiencePercent: 0.5
   spawnWeight: 10
   score: 1

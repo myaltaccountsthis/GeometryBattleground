@@ -134,7 +134,7 @@ public class Player : MonoBehaviour
         foreach (string projectileName in ownedProjectiles.Keys) {
             ProjectileStats stats = GetProjectileStats(projectileName);
             Projectile projectile = projectileList[projectileName];
-            if (updates % stats.interval == 0 || testingMode) {
+            if (updates % (testingMode ? Mathf.Max(stats.interval / 2, 1) : stats.interval) == 0) {
                 projectile.toShoot = stats.projectileCount;
                 projectile.toWait = 0;
             }
@@ -172,11 +172,9 @@ public class Player : MonoBehaviour
         }
         Experience exp = collider.GetComponent<Experience>();
         if (exp != null && exp.CanPickUp) {
-            experience += exp.Value;
+            experience += testingMode ? exp.Value * 10 : exp.Value;
             score += exp.Value;
             CheckLevel();
-            UpdateExpBar();
-            UpdateScore();
             exp.PickUp(transform);
         }
     }
@@ -195,9 +193,13 @@ public class Player : MonoBehaviour
             if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
                 experience -= requiredExp;
                 level++;
+                UpdateExpBar();
+                UpdateScore();
                 ShowLevelUpUI();
             }
         }
+        UpdateExpBar();
+        UpdateScore();
     }
 
     private void UpdateScore() {
@@ -266,7 +268,7 @@ public class Player : MonoBehaviour
             option.upgradeName.text = projectile.name;
             // TODO projectile upgrade effect description
             option.upgradeEffect.text = ownedProjectiles.ContainsKey(projectile.name) ? projectileInfo[projectile.name][ownedProjectiles[projectile.name]].getUpgradeEffect(projectileInfo[projectile.name][ownedProjectiles[projectile.name] + 1]) : "New projectile";
-            option.upgradeLevel.text = ownedProjectiles.ContainsKey(projectile.name) ? "Level " + ownedProjectiles[projectile.name] : "Unlock";
+            option.upgradeLevel.text = ownedProjectiles.ContainsKey(projectile.name) ? "Level " + ownedProjectiles[projectile.name] + "->" + (ownedProjectiles[projectile.name] + 1) : "Unlock";
             // TODO projectile image sprite
         }
     }
@@ -288,8 +290,8 @@ public class Player : MonoBehaviour
         if (!ownedProjectiles.ContainsKey(upgradeName))
             ownedProjectiles.Add(upgradeName, 0);
         ownedProjectiles[upgradeName]++;
-        
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
+        CheckLevel();
     }
 }

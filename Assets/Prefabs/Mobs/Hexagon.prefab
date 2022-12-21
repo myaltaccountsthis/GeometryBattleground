@@ -155,7 +155,7 @@ MonoBehaviour:
   movementSpeed: 1.5
   startingTime: 7200
   baseDamage: 15
-  experienceDrop: 4
-  experiencePercent: 1
+  experienceDrop: 5
+  experiencePercent: 0.5
   spawnWeight: 1
   score: 5

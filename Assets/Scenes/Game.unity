@@ -2704,7 +2704,7 @@ MonoBehaviour:
   - {fileID: 68015480282676767, guid: ba6bdba12b79a5841973dec4a5a18af6, type: 3}
   - {fileID: 8306826823842799550, guid: b13f2ca291a66eb49a28ddf6d3b64116, type: 3}
   - {fileID: 6710730481885149368, guid: 0504ccdc03b21454ea243b169cb16c0b, type: 3}
-  maxExpDrops: 10
+  maxExpDrops: 12
   minExpDelay: 120
   maxExpDelay: 300
   experienceFolder: {fileID: 1346883018}

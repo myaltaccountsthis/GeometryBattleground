@@ -15,7 +15,7 @@ public abstract class Projectile : MonoBehaviour
     public int toWait;
 
     private Collider2D collision;
-    private int creationTime;
+    protected int creationTime;
     private int pierceLeft;
 
     public virtual void Start()

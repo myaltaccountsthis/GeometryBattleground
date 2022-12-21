@@ -27,21 +27,39 @@ public class Splitter : Projectile
         Mob mob = collider.GetComponent<Mob>();
         if (mob != null && !alreadyHit) {
             alreadyHit = true;
-            int toSpawn = getProjectileCount();
-            // spawn spike
-            for (int i = 0; i < toSpawn; i++) {
-                Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
-                newSpike.stats = stats;
-                newSpike.projectileCount = toSpawn;
-                newSpike.GenerateStats(transform, i);
-            }
-
+            SpawnSpikes();
             Destroy(gameObject);
         }
     }
 
+    void SpawnSpikes() {
+        int toSpawn = getProjectileCount();
+        for (int i = 0; i < toSpawn; i++) {
+            Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
+            newSpike.stats = stats;
+            newSpike.projectileCount = toSpawn;
+            newSpike.GenerateStats(transform, i);
+        }
+    }
+
+    public override void Update()
+    {
+        if (GameTime.isPaused)
+            return;
+
+        if (Player.Updates >= creationTime + stats.lifeTime) {
+            SpawnSpikes();
+            Destroy(gameObject);
+        }
+        
+        float currentSpeed = Mathf.Max((stats.speed - stats.drag * (Player.Updates - creationTime) / 60f) / 60f, 0f);
+        transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
+    }
+
     private int getProjectileCount() {
         int level = player.GetProjectileLevel("Splitter");
+        if (level >= 6)
+            return 16;
         if (level >= 3)
             return 12;
         return 8;
