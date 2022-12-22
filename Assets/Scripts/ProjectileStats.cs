@@ -39,11 +39,11 @@ public struct ProjectileStats {
         string message = "";
         if (next.interval != interval) {
             int dInterval = next.interval - interval;
-            message += (dInterval > 0 ? "<color=red>+" : "<color=green>-") + Math.Round(Math.Abs(100f * dInterval / interval), 2) + "% Attack Interval</color>\n";
+            message += (dInterval > 0 ? "<color=red>+" : "<color=green>-") + Math.Round(Math.Abs(100f * dInterval / interval), 1) + "% Attack Interval</color>\n";
         }
         if (next.damage != damage) {
             float dDamage = next.damage - damage;
-            message += (dDamage > 0 ? "<color=green>+" : "<color=red>-") + Math.Round(Math.Abs(100f * dDamage / damage), 2) + "% Damage</color>\n";
+            message += (dDamage > 0 ? "<color=green>+" : "<color=red>-") + Math.Round(Math.Abs(100f * dDamage / damage), 1) + "% Damage</color>\n";
         }
         if (next.pierce != pierce) {
             int dPierce = next.pierce - pierce;

@@ -42,10 +42,10 @@ public class Player : MonoBehaviour
     private Dictionary<string, ProjectileStats[]> projectileInfo;
     private UpgradeOption[] upgradeUIOptions;
 
-    [SerializeField]
+    [SerializeField, Tooltip("Basically Hacks")]
     private bool testingMode;
 
-    private const int MAX_PROJECTILE_LEVEL = 6;
+    private const int MAX_PROJECTILE_LEVEL = 8;
 
     void Awake()
     {
@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
         Vector2 moveVector = new Vector2(horizontal, vertical);
         if (moveVector.magnitude > 1)
             moveVector.Normalize();
-        moveVector *= movementSpeed / 60;
+        moveVector *= (testingMode ? movementSpeed * 2 : movementSpeed) / 60;
         position += moveVector;
         transform.position = position;
         Camera.main.transform.position = new Vector3(position.x, position.y, Camera.main.transform.position.z);
