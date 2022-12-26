@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private Dictionary<string, ProjectileStats[]> projectileInfo;
     private UpgradeOption[] upgradeUIOptions;
 
-    [SerializeField, Tooltip("Basically Hacks")]
+    [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
 
     private const int MAX_PROJECTILE_LEVEL = 8;
@@ -171,12 +171,22 @@ public class Player : MonoBehaviour
             iFrames = 30;
         }
         Experience exp = collider.GetComponent<Experience>();
-        if (exp != null && exp.CanPickUp) {
-            experience += testingMode ? exp.Value * 10 : exp.Value;
-            score += exp.Value;
-            CheckLevel();
-            exp.PickUp(transform);
+        if (exp != null && exp.CanPickUp)
+            exp.PickUp(this);
+        Health healthDrop = collider.GetComponent<Health>();
+        if (healthDrop != null && healthDrop.CanPickUp) {
+            healthDrop.PickUp(this);
         }
+    }
+
+    public void CollectExp(Experience exp) {
+        experience += testingMode ? exp.Value * 10 : exp.Value;
+        score += exp.Value;
+        CheckLevel();
+    }
+
+    public void CollectHealth(Health healthDrop) {
+        health = totalHealth;
     }
 
     private void UpdateExpBar() {

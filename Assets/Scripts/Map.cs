@@ -33,6 +33,8 @@ public class Map : MonoBehaviour
     [Tooltip("Experience component of experience orb prefab")]
     [SerializeField]
     private Experience experienceOrb;
+    [SerializeField]
+    private Health healthDrop;
 
     private Tilemap tileMap;
     private List<Mob> activeMobs;
@@ -93,6 +95,10 @@ public class Map : MonoBehaviour
         exp.SetExperience(experience);
         SetExperienceSprite(exp);
         return exp;
+    }
+    public Health InstantiateHealth(Vector2 position) {
+        Health health = Instantiate<Health>(healthDrop, position, Quaternion.identity, experienceFolder);
+        return health;
     }
 
     private void SetExperienceSprite(Experience experience) {
