@@ -10,6 +10,10 @@ public class Player : MonoBehaviour
     }
     private static int updates;
 
+    public int Wave {
+        get => wave;
+    }
+
     [Tooltip("Movement speed of the player in units per second")]
     public float movementSpeed;
     [Tooltip("Total health for the player, in health points")]
@@ -30,6 +34,7 @@ public class Player : MonoBehaviour
     public Spike spikePrefab;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI waveText;
 
     [SerializeField]
     private float health;
@@ -41,6 +46,10 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
     private UpgradeOption[] upgradeUIOptions;
+    private int wave;
+    private int waveTextStart;
+    private Map map;
+    private CircleCollider2D playerCollider;
 
     [SerializeField, Tooltip("Basically Hacks")]
     private bool testingMode;
@@ -60,6 +69,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        map = GameObject.FindWithTag("Map").GetComponent<Map>();
+        playerCollider = GetComponent<CircleCollider2D>();
         ownedProjectiles = new Dictionary<string, int>();
         ownedProjectiles.Add("Ball", 1);
         // TESTING
@@ -70,6 +81,8 @@ public class Player : MonoBehaviour
         level = 1;
         experience = 0;
         score = 0;
+        wave = 0;
+        waveTextStart = 0;
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateExpBar();
         UpdateScore();
@@ -110,8 +123,14 @@ public class Player : MonoBehaviour
         
         // check health
         if (health <= 0) {
-            // TODO game over, uncomment taking damage in OnTriggerEnter2D
+            // TODO game over
+            Application.Quit();
         }
+
+        if (map.CurrentMobCount == 0 && !waveText.gameObject.activeSelf) {
+            AdvanceWave();
+        }
+
         health = Mathf.Min(totalHealth, health + healthRegen / 60f);
         if (iFrames > 0)
             iFrames--;
@@ -124,6 +143,8 @@ public class Player : MonoBehaviour
             moveVector.Normalize();
         moveVector *= (testingMode ? movementSpeed * 2 : movementSpeed) / 60;
         position += moveVector;
+        position.x = Mathf.Clamp(position.x, map.Bounds.xMin + playerCollider.radius, map.Bounds.xMax - playerCollider.radius);
+        position.y = Mathf.Clamp(position.y, map.Bounds.yMin + playerCollider.radius, map.Bounds.yMax - playerCollider.radius);
         transform.position = position;
         Camera.main.transform.position = new Vector3(position.x, position.y, Camera.main.transform.position.z);
         Vector2 mousePosition = Input.mousePosition;
@@ -148,6 +169,15 @@ public class Player : MonoBehaviour
             projectile.toWait--;
         }
 
+        // ui
+        int waveTextAliveTime = Updates - waveTextStart;
+        if (waveText.gameObject.activeSelf && waveTextAliveTime > 90) {
+            waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
+            if (waveTextAliveTime > 120) {
+                waveText.gameObject.SetActive(false);
+                map.SpawnWave(wave);
+            }
+        }
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
         healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
         // UpdateExpBar();
@@ -179,6 +209,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void AdvanceWave() {
+        wave++;
+        waveText.text = "Wave " + wave;
+        waveText.color = Color.white;
+        waveText.gameObject.SetActive(true);
+        waveTextStart = Updates;
+    }
+
     private void UpdateExpBar() {
         expBar.localScale = new Vector3(Mathf.Min(1f, (float)experience / ExpToNextLevel()), 1, 1);
         levelText.text = level + "";
@@ -196,6 +234,7 @@ public class Player : MonoBehaviour
                 UpdateExpBar();
                 UpdateScore();
                 ShowLevelUpUI();
+                iFrames = 30;
             }
         }
         UpdateExpBar();

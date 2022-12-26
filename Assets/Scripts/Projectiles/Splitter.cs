@@ -42,18 +42,9 @@ public class Splitter : Projectile
         }
     }
 
-    public override void Update()
+    void OnDestroy()
     {
-        if (GameTime.isPaused)
-            return;
-
-        if (Player.Updates >= creationTime + stats.lifeTime) {
-            SpawnSpikes();
-            Destroy(gameObject);
-        }
-        
-        float currentSpeed = Mathf.Max((stats.speed - stats.drag * (Player.Updates - creationTime) / 60f) / 60f, 0f);
-        transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
+        SpawnSpikes();
     }
 
     private int getProjectileCount() {
