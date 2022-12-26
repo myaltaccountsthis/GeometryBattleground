@@ -17,10 +17,12 @@ public abstract class Projectile : MonoBehaviour
     private Collider2D collision;
     protected int creationTime;
     private int pierceLeft;
+    private BoundsInt bounds;
 
     public virtual void Start()
     {
         collision = GetComponent<Collider2D>();
+        bounds = GameObject.FindWithTag("Map").GetComponent<Map>().Bounds;
         Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
         creationTime = Player.Updates;
         pierceLeft = stats.pierce;
@@ -31,12 +33,16 @@ public abstract class Projectile : MonoBehaviour
         if (GameTime.isPaused)
             return;
 
-        if (Player.Updates >= creationTime + stats.lifeTime) {
+        if (Player.Updates >= creationTime + stats.lifeTime || !bounds.Contains(Vector3Int.FloorToInt(transform.position))) {
             Destroy(gameObject);
         }
         
         float currentSpeed = Mathf.Max((stats.speed - stats.drag * (Player.Updates - creationTime) / 60f) / 60f, 0f);
         transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
+    }
+
+    public virtual void ProjectileUpdate() {
+
     }
 
     void OnTriggerEnter2D(Collider2D collider) {

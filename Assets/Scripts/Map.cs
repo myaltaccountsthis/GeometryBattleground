@@ -5,6 +5,10 @@ using UnityEngine.Tilemaps;
 
 public class Map : MonoBehaviour
 {
+    public BoundsInt Bounds {
+        get => bounds;
+    }
+
     [Tooltip("How many units off the camera bounds should tiles still generate")]
     public int tileExtent;
     [Tooltip ("List of all mobs to use")]
@@ -17,6 +21,10 @@ public class Map : MonoBehaviour
     public int maxExpDelay;
     public Transform experienceFolder;
     public Transform mobFolder;
+
+    public int CurrentMobCount {
+        get => mobFolder.childCount;
+    }
 
     [Tooltip("The tile to use for the ground")]
     [SerializeField]
@@ -35,17 +43,25 @@ public class Map : MonoBehaviour
     private Experience experienceOrb;
     [SerializeField]
     private Health healthDrop;
-
+    [SerializeField]
+    private Tilemap background;
+    
     private Tilemap tileMap;
     private List<Mob> activeMobs;
     private BoundsInt bounds;
+    private BoundsInt mobBounds;
+    private BoundsInt experienceBounds;
     private int nextExpSpawn;
 
     void Start()
     {
         tileMap = GetComponent<Tilemap>();
         activeMobs = new List<Mob>();
-        bounds = new BoundsInt();
+        bounds = tileMap.cellBounds;
+        mobBounds = background.cellBounds;
+        mobBounds.SetMinMax(new Vector3Int(mobBounds.xMin + 1, mobBounds.yMin + 1), new Vector3Int(mobBounds.xMax - 1, mobBounds.yMax - 1));
+        experienceBounds = bounds;
+        experienceBounds.SetMinMax(new Vector3Int(experienceBounds.xMin + 1, experienceBounds.yMin + 1), new Vector3Int(experienceBounds.xMax - 1, experienceBounds.yMax - 1));
         nextExpSpawn = 0;
         Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
         for (int i = 0; i < maxExpDrops / 2; i++) {
@@ -58,6 +74,7 @@ public class Map : MonoBehaviour
         if (GameTime.isPaused)
             return;
 
+        /*
         UpdateBounds();
 
         // generate tiles in view of the camera + tileExtent
@@ -67,6 +84,7 @@ public class Map : MonoBehaviour
                 tileMap.SetTile(new Vector3Int(bounds.xMin + x, bounds.yMin + y, 0), groundTile);
             }
         }
+        */
 
         // clear dead mobs
         for (int i = 0; i < activeMobs.Count; i++) {
@@ -76,11 +94,13 @@ public class Map : MonoBehaviour
             }
         }
         
+        /*
         // do mob spawning
         int desiredCount = GetDesiredMobCount();
         for (int i = activeMobs.Count; i < desiredCount; i++) {
             SpawnMob();
         }
+        */
 
         // check exp drops
         if (nextExpSpawn == 0) {
@@ -114,8 +134,20 @@ public class Map : MonoBehaviour
         bounds = new BoundsInt(new Vector3Int((int) Camera.main.transform.position.x, (int) Camera.main.transform.position.y) - combinedExtent, 2 * combinedExtent);
     }
 
+    public void SpawnWave(int wave) {
+        int count = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
+        for (int i = 0; i < count; i++) {
+            SpawnMob(wave);
+        }
+    }
+
     // Returns a random location from the tileExtent perimeter
-    private Vector3 GetSpawnLocation() {
+    private Vector3 GetMobSpawnLocation() {
+        if (Random.Range(0, 2) == 0) {
+            return new Vector3(Random.Range((float) mobBounds.xMin, mobBounds.xMax), Random.Range(0, 2) * mobBounds.size.y + mobBounds.yMin);
+        }
+        return new Vector3(Random.Range(0, 2) * mobBounds.size.x + mobBounds.xMin, Random.Range((float) mobBounds.yMin, mobBounds.yMax));
+        /*
         float xExtent = Camera.main.orthographicSize * Screen.width / Screen.height;
         float yExtent = Camera.main.orthographicSize;
         Vector3Int cameraExtent = new Vector3Int((int) xExtent, (int) yExtent, 0);
@@ -142,19 +174,21 @@ public class Map : MonoBehaviour
             y += cameraBounds.yMax - bottom;
         
         return new Vector3(x, y);
+        */
     }
 
     // Instantiate a random mob in some position in the tileExtent region (outside of camera view)
-    private void SpawnMob() {
-        activeMobs.Add(Instantiate<Mob>(GetRandomMob(), GetSpawnLocation(), Quaternion.identity, mobFolder));
+    private void SpawnMob(int wave) {
+        activeMobs.Add(Instantiate<Mob>(GetRandomMob(wave), GetMobSpawnLocation(), Quaternion.identity, mobFolder));
     }
 
-    // Return a linearly random mob from those available based on startingTime
-    private Mob GetRandomMob() {
+    // Return a random mob with weight
+    private Mob GetRandomMob(int wave) {
         // assume mobs are in ascending order based on their startingTime
         int i;
         for (i = mobs.Length - 1; i > 0; i--) {
-            if (mobs[i].startingTime <= Player.Updates)
+            // change to wave
+            if (mobs[i].startingWave <= wave)
                 break;
         }
         int length = i + 1;
@@ -173,12 +207,12 @@ public class Map : MonoBehaviour
         return mobs[0];
     }
 
-    private int GetDesiredMobCount() {
-        return Mathf.FloorToInt(Player.Updates / 600f) + 6;
+    private Vector3 GetExperienceSpawnLocation() {
+        return new Vector3(Random.Range((float) experienceBounds.xMin, experienceBounds.xMax), Random.Range((float) experienceBounds.yMin, experienceBounds.yMax));
     }
 
     private void GenerateNextExpSpawn() {
-        InstantiateExperience(randomExperienceValues[Random.Range(0, randomExperienceValues.Length)], GetSpawnLocation());
+        InstantiateExperience(randomExperienceValues[Random.Range(0, randomExperienceValues.Length)], GetExperienceSpawnLocation());
         nextExpSpawn = Random.Range(minExpDelay, maxExpDelay);
     }
 

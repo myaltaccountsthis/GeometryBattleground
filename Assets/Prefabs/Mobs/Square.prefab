@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 12
   movementSpeed: 2
-  startingTime: 1800
+  startingWave: 4
   baseDamage: 8
   experienceDrop: 3
   experiencePercent: 0.5

@@ -30,8 +30,6 @@ public class Explosion : Projectile
     // Update is called once per frame
     public override void Update()
     {
-        base.Update();
-
         aliveFor++;
 
         if (aliveFor >= explosionLifeTime) {

@@ -22,18 +22,9 @@ public class Fireball : Projectile
         transform.eulerAngles = new Vector3(0, 0, playerTransform.eulerAngles.z);
     }
 
-    public override void Update()
+    void OnDestroy()
     {
-        if (GameTime.isPaused)
-            return;
-
-        if (Player.Updates >= creationTime + stats.lifeTime) {
-            SpawnExplosion();
-            Destroy(gameObject);
-        }
-        
-        float currentSpeed = Mathf.Max((stats.speed - stats.drag * (Player.Updates - creationTime) / 60f) / 60f, 0f);
-        transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
+        SpawnExplosion();
     }
 
     void OnTriggerEnter2D(Collider2D collider) {

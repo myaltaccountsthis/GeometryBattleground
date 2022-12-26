@@ -12,8 +12,8 @@ public class Mob : MonoBehaviour
     public float startingHealth;
     [Tooltip("Movement speed of the mob, in units per second")]
     public float movementSpeed;
-    [Tooltip("When this mob will start spawning, in updates")]
-    public int startingTime;
+    [Tooltip("When this mob will start spawning")]
+    public int startingWave;
     [Tooltip("Base damage of this mob to the player before time multipliers, in health points")]
     public float baseDamage;
     [Tooltip("How much experience this mob should drop when killed")]
@@ -27,16 +27,19 @@ public class Mob : MonoBehaviour
 
     private float health;
     private int damageTicks;
-    private Transform player;
+    private Player player;
     private Map map;
+    private SpriteRenderer spriteRenderer;
+    
     private const float HEALTH_CHANCE = .003f;
 
     void Start()
     {
-        health = GetHealth();
         damageTicks = 0;
-        player = GameObject.FindWithTag("Player").transform;
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         map = GameObject.FindWithTag("Map").GetComponent<Map>();
+        health = GetHealth();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // follow player (player has tag "Player")
@@ -47,9 +50,10 @@ public class Mob : MonoBehaviour
 
         if (damageTicks > 0) {
             damageTicks--;
-            GetComponent<SpriteRenderer>().color = Color.Lerp(Color.white, DAMAGE_COLOR, (float) damageTicks / DAMAGE_TICKS);
+            spriteRenderer.color = Color.Lerp(Color.white, DAMAGE_COLOR, (float) damageTicks / DAMAGE_TICKS);
         }
-        Vector3 playerPos = player.position;
+        
+        Vector3 playerPos = player.transform.position;
         Vector3 direction = (playerPos - transform.position).normalized;
         transform.position += direction * movementSpeed / 60f;
         transform.eulerAngles = new Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x) - 90);
@@ -59,27 +63,24 @@ public class Mob : MonoBehaviour
     public void TakeDamage(Projectile projectile) {
         health -= projectile.stats.damage;
         if (health <= 0) {
-            player.GetComponent<Player>().AddScore(score);
+            player.AddScore(score);
             if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
                 map.InstantiateHealth(transform.position);
             else if (Random.value < experiencePercent)
                 map.InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
         }
-        GetComponent<SpriteRenderer>().color = DAMAGE_COLOR;
+        spriteRenderer.color = DAMAGE_COLOR;
         damageTicks = DAMAGE_TICKS;
     }
 
     // Returns the damage this mob should deal after some time
     public float GetDamage() {
-        int updates = Player.Updates;
-        if (updates < 18000)
-            return baseDamage * (1 + updates / 12000f);
-        return baseDamage * (10 - 10 * Mathf.Pow(3, -updates / 60000f));
+        return baseDamage * (Mathf.Pow(player.Wave - 1, 1.3f) / 40 + 1);
     }
 
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
-        return startingHealth * (Mathf.Pow(Player.Updates, 1.2f) / 40000f + 1);
+        return startingHealth * (Mathf.Pow(player.Wave - 1, 1.3f) / 20 + 1);
     }
 }
