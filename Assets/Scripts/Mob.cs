@@ -29,6 +29,7 @@ public class Mob : MonoBehaviour
     private int damageTicks;
     private Transform player;
     private Map map;
+    private const float HEALTH_CHANCE = .003f;
 
     void Start()
     {
@@ -59,7 +60,9 @@ public class Mob : MonoBehaviour
         health -= projectile.stats.damage;
         if (health <= 0) {
             player.GetComponent<Player>().AddScore(score);
-            if (Random.value < experiencePercent)
+            if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
+                map.InstantiateHealth(transform.position);
+            else if (Random.value < experiencePercent)
                 map.InstantiateExperience(experienceDrop, transform.position);
             Destroy(gameObject);
         }

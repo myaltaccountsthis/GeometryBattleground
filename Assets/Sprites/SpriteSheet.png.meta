@@ -449,7 +449,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -457,6 +457,27 @@ TextureImporter:
       bones: []
       spriteID: 6c93e8c45fa57574ba5348780c0ff7a8
       internalID: -442452156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Health
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2ba957d8d6b2a04e945d007d705bfcb
+      internalID: 1462610924
       vertices: []
       indices: 
       edges: []
@@ -477,6 +498,7 @@ TextureImporter:
       Dark Aura: -1765358846
       Pentagon: 35765532
       Splitter: 1979487859
+      Health: 1462610924
       Laser: 1304152968
       Fireball: -791834676
       Experience_2: -747614016
