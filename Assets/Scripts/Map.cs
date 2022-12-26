@@ -42,8 +42,10 @@ public class Map : MonoBehaviour
     [SerializeField]
     private Experience experienceOrb;
     [SerializeField]
+    private Health healthDrop;
+    [SerializeField]
     private Tilemap background;
-
+    
     private Tilemap tileMap;
     private List<Mob> activeMobs;
     private BoundsInt bounds;
@@ -113,6 +115,10 @@ public class Map : MonoBehaviour
         exp.SetExperience(experience);
         SetExperienceSprite(exp);
         return exp;
+    }
+    public Health InstantiateHealth(Vector2 position) {
+        Health health = Instantiate<Health>(healthDrop, position, Quaternion.identity, experienceFolder);
+        return health;
     }
 
     private void SetExperienceSprite(Experience experience) {
