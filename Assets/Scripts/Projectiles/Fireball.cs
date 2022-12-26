@@ -31,7 +31,6 @@ public class Fireball : Projectile
         Mob mob = collider.GetComponent<Mob>();
         if (mob != null && !alreadyHit) {
             alreadyHit = true;
-            SpawnExplosion();
             Destroy(gameObject);
         }
     }

@@ -27,7 +27,6 @@ public class Splitter : Projectile
         Mob mob = collider.GetComponent<Mob>();
         if (mob != null && !alreadyHit) {
             alreadyHit = true;
-            SpawnSpikes();
             Destroy(gameObject);
         }
     }

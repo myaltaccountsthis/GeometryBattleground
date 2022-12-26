@@ -76,11 +76,11 @@ public class Mob : MonoBehaviour
 
     // Returns the damage this mob should deal after some time
     public float GetDamage() {
-        return baseDamage * (Mathf.Pow(player.Wave - 1, 1.3f) / 40 + 1);
+        return baseDamage * (Mathf.Pow(player.Wave, 1.3f) / 40 + 1);
     }
 
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
-        return startingHealth * (Mathf.Pow(player.Wave - 1, 1.3f) / 20 + 1);
+        return startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 20 + 1);
     }
 }
