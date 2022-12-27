@@ -17,6 +17,16 @@ public class Splitter : Projectile
         spike = player.spikePrefab;
     }
 
+    public override string GetUpgradeEffect(int level, ProjectileStats next) {
+        string message = base.GetUpgradeEffect(level, next);
+        int count = GetProjectileCount(level);
+        if (GetProjectileCount(level + 1) != count) {
+            int dCount = GetProjectileCount(level + 1) - count;
+            message += (dCount > 0 ? "<color=green>+" : "<color=red>-") + Mathf.Abs(dCount) + " Spikes</color>\n";
+        }
+        return message;
+    }
+
     public override void GenerateStats(Transform playerTransform, int index)
     {
         this.angle = (playerTransform.eulerAngles.z + 90) * Mathf.Deg2Rad;
@@ -32,7 +42,7 @@ public class Splitter : Projectile
     }
 
     void SpawnSpikes() {
-        int toSpawn = getProjectileCount();
+        int toSpawn = GetProjectileCount();
         for (int i = 0; i < toSpawn; i++) {
             Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
             newSpike.stats = stats;
@@ -46,8 +56,9 @@ public class Splitter : Projectile
         SpawnSpikes();
     }
 
-    private int getProjectileCount() {
-        int level = player.GetProjectileLevel("Splitter");
+    public int GetProjectileCount(int level = -1) {
+        if (level == -1)
+            level = player.GetProjectileLevel("Splitter");
         if (level >= 6)
             return 16;
         if (level >= 3)
