@@ -318,7 +318,8 @@ public class Player : MonoBehaviour
             // TODO projectile upgrade effect description
             if (ownedProjectiles.ContainsKey(projectile.name)) {
                 int level = ownedProjectiles[projectile.name];
-                string message = projectileInfo[projectile.name][level].getUpgradeEffect(projectileInfo[projectile.name][level + 1]);
+                projectile.stats = projectileInfo[projectile.name][level];
+                string message = projectile.GetUpgradeEffect(level, projectileInfo[projectile.name][level + 1]);
                 option.upgradeEffect.text = message.Trim();
                 option.upgradeLevel.text = "Level " + (level + 1);
             }

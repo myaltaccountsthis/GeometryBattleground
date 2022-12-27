@@ -35,27 +35,30 @@ public struct ProjectileStats {
         this.spread = spread;
     }
 
-    public String getUpgradeEffect(ProjectileStats next) {
+    public string GetBaseUpgradeEffect(ProjectileStats next) {
         string message = "";
         if (next.interval != interval) {
             int dInterval = next.interval - interval;
-            message += (dInterval > 0 ? "<color=red>+" : "<color=green>-") + Math.Round(Math.Abs(100f * dInterval / interval), 1) + "% Attack Interval</color>\n";
+            message += (dInterval > 0 ? "<color=red>+" : "<color=green>-") + Round(Math.Abs(100f * dInterval / interval), 1) + "% Attack Interval</color>\n";
         }
         if (next.damage != damage) {
             float dDamage = next.damage - damage;
-            message += (dDamage > 0 ? "<color=green>+" : "<color=red>-") + Math.Round(Math.Abs(100f * dDamage / damage), 1) + "% Damage</color>\n";
+            message += (dDamage > 0 ? "<color=green>+" : "<color=red>-") + Round(Math.Abs(100f * dDamage / damage), 1) + "% Damage</color>\n";
         }
         if (next.pierce != pierce) {
             int dPierce = next.pierce - pierce;
-            message += (dPierce > 0 ? "<color=green>+" : "<color=red>-") + Math.Abs(dPierce) + " Pierce</color>\n";
+            message += (dPierce > 0 ? "<color=green>+" : "<color=red>-") + Mathf.Abs(dPierce) + " Pierce</color>\n";
         }
         if (next.projectileCount != projectileCount) {
             int dProjectileCount = next.projectileCount - projectileCount;
-            message += (dProjectileCount > 0 ? "<color=green>+" : "<color=red>-") + Math.Abs(dProjectileCount) + " Projectile" + (dProjectileCount == 1 ? "" : "s") + "</color>\n";
+            message += (dProjectileCount > 0 ? "<color=green>+" : "<color=red>-") + Mathf.Abs(dProjectileCount) + " Projectile" + (dProjectileCount == 1 ? "" : "s") + "</color>\n";
         }
         return message;
     }
 
+    public static float Round(float num, int digits) {
+        return Mathf.Round(num * Mathf.Pow(10, digits)) / Mathf.Pow(10, digits);
+    }
 
     public static ProjectileStats Parse(string[] tokens, int startIndex = 0) {
         return new ProjectileStats(Convert.ToInt32(tokens[startIndex]), Convert.ToSingle(tokens[startIndex + 1]), Convert.ToSingle(tokens[startIndex + 2]), Convert.ToSingle(tokens[startIndex + 3]), Convert.ToInt32(tokens[startIndex + 4]), Convert.ToInt32(tokens[startIndex + 5]), Convert.ToInt32(tokens[startIndex + 6]), Convert.ToInt32(tokens[startIndex + 7]), Convert.ToSingle(tokens[startIndex + 8]));
