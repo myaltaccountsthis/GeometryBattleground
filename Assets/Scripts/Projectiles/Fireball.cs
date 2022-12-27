@@ -7,13 +7,25 @@ public class Fireball : Projectile
 {
     private Explosion explosion;
     private bool alreadyHit;
+    private Player player;
 
     public override void Start()
     {
         base.Start();
 
         alreadyHit = false;
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         explosion = GameObject.FindWithTag("Player").GetComponent<Player>().explosionPrefab;
+    }
+
+    public override string GetUpgradeEffect(int level, ProjectileStats next) {
+        string message = base.GetUpgradeEffect(level, next);
+        float size = getExplosionSize(level);
+        if (getExplosionSize(level + 1) != size) {
+            float dSize = getExplosionSize(level + 1) - size;
+            message += (dSize > 0 ? "<color=green>+" : "<color=red>-") + ProjectileStats.Round(Mathf.Abs(100f * dSize / size), 1) + "% Size</color>\n";
+        }
+        return message;
     }
 
     public override void GenerateStats(Transform playerTransform, int index = 1)
@@ -39,8 +51,18 @@ public class Fireball : Projectile
         Explosion newExplosion = Instantiate<Explosion>(explosion, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
         newExplosion.stats = stats;
         newExplosion.minSize = .2f;
-        newExplosion.maxSize = 1f;
+        newExplosion.maxSize = getExplosionSize();
         newExplosion.explosionLifeTime = 6;
         newExplosion.explosionDecayTime = 20;
+    }
+
+    private float getExplosionSize(int level = -1) {
+        if (level == -1)
+            level = player.GetProjectileLevel("Splitter");
+        if (level >= 8)
+            return 1.5f;
+        if (level >= 5)
+            return 1.2f;
+        return 1f;
     }
 }

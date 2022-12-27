@@ -45,6 +45,11 @@ public abstract class Projectile : MonoBehaviour
 
     }
 
+    public virtual string GetUpgradeEffect(int level, ProjectileStats next) {
+        string message = stats.GetBaseUpgradeEffect(next);
+        return message;
+    }
+
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
         if (mob != null) {
