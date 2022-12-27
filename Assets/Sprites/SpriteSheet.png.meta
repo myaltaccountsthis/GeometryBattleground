@@ -147,11 +147,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Tile1
+      name: Ground
       rect:
         serializedVersion: 2
-        x: 448
-        y: 0
+        x: 447
+        y: 1
         width: 64
         height: 64
       alignment: 0
@@ -192,7 +192,7 @@ TextureImporter:
       name: Experience_1
       rect:
         serializedVersion: 2
-        x: 351
+        x: 284
         y: 0
         width: 32
         height: 32
@@ -213,7 +213,7 @@ TextureImporter:
       name: Experience_2
       rect:
         serializedVersion: 2
-        x: 383
+        x: 316
         y: 0
         width: 32
         height: 32
@@ -234,7 +234,7 @@ TextureImporter:
       name: Experience_3
       rect:
         serializedVersion: 2
-        x: 415
+        x: 348
         y: 0
         width: 32
         height: 32
@@ -465,12 +465,12 @@ TextureImporter:
       name: Health
       rect:
         serializedVersion: 2
-        x: 416
+        x: 348
         y: 32
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -478,6 +478,153 @@ TextureImporter:
       bones: []
       spriteID: b2ba957d8d6b2a04e945d007d705bfcb
       internalID: 1462610924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallV
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 67
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b739902cedcfad9499466bf537146944
+      internalID: -747594729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallH
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 133
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1e2ec0ea59d6ce46b47926112556fc6
+      internalID: -959483350
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallBL
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 199
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddd765461a19d464db6731f5e7aeb329
+      internalID: 815336767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallTL
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 265
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0301d09c5c4fb9409f2d36558a6f1e6
+      internalID: 768906600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallBR
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 331
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 455abdfe8111ba24ebcc53ccc5432e27
+      internalID: 2032642998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WallTR
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 397
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e0fde3d0d6933254688348f4b879a3a8
+      internalID: -455452338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Void
+      rect:
+        serializedVersion: 2
+        x: 381
+        y: 1
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81ad10be5be346143bab9f62198edd9a
+      internalID: 918843843
       vertices: []
       indices: 
       edges: []
@@ -500,13 +647,20 @@ TextureImporter:
       Splitter: 1979487859
       Health: 1462610924
       Laser: 1304152968
+      WallBL: 815336767
       Fireball: -791834676
       Experience_2: -747614016
+      WallTR: -455452338
       Spike: -1179899642
-      Tile1: -1010670414
+      WallH: -959483350
+      WallTL: 768906600
       Player: 98035174
+      Void: 918843843
       Circle: 700268490
+      WallBR: 2032642998
       Shotgun: -442452156
+      WallV: -747594729
+      Ground: -1010670414
       Square: 497585160
       Experience_3: 1950142143
       Hexagon: 1559499710
