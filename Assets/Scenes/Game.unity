@@ -28551,6 +28551,8 @@ MonoBehaviour:
   maxExpDelay: 300
   experienceFolder: {fileID: 1346883018}
   mobFolder: {fileID: 1582661112}
+  powerups:
+  - {fileID: 6691443378005616656, guid: e57b3dd7df258e64f855c38bde877397, type: 3}
   groundTile: {fileID: 11400000, guid: 284f17f60f34381448f11b3d4de30dfd, type: 2}
   experienceOrbStages: 01000000040000000a000000
   experienceOrbSprites:

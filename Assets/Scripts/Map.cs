@@ -21,6 +21,7 @@ public class Map : MonoBehaviour
     public int maxExpDelay;
     public Transform experienceFolder;
     public Transform mobFolder;
+    public Powerup[] powerups;
 
     public int CurrentMobCount {
         get => mobFolder.childCount;
@@ -121,6 +122,10 @@ public class Map : MonoBehaviour
         return health;
     }
 
+    public Powerup InstantiatePowerup(Vector2 position) {
+        return Instantiate<Powerup>(powerups[Random.Range(0, powerups.Length)], position, Quaternion.identity, experienceFolder);
+    }
+
     private void SetExperienceSprite(Experience experience) {
         int index;
         for (index = experienceOrbStages.Length - 1; experienceOrbStages[index] > experience.Value; index--);
@@ -218,9 +223,10 @@ public class Map : MonoBehaviour
 
     // Returns the number of exp drops that are in the tile extent range
     private int CountExpDrops() {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Experience Orb");
         int num = 0;
-        foreach (GameObject gameObject in gameObjects) {
+        foreach (Transform gameObject in experienceFolder) {
+            if (gameObject.tag != "Experience Orb")
+                continue;
             Vector3 position = gameObject.transform.position;
             if (position.x > bounds.xMin && position.x < bounds.xMax && position.y > bounds.yMin && position.y < bounds.yMax) {
                 num++;

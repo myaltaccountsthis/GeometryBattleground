@@ -41,10 +41,6 @@ public abstract class Projectile : MonoBehaviour
         transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
     }
 
-    public virtual void ProjectileUpdate() {
-
-    }
-
     public virtual string GetUpgradeEffect(int level, ProjectileStats next) {
         string message = stats.GetBaseUpgradeEffect(next);
         return message;

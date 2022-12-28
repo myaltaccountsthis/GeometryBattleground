@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     private int experience;
     private int score;
     private Dictionary<string, int> ownedProjectiles;
+    private Dictionary<string, int> activePowerups;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
@@ -75,6 +76,7 @@ public class Player : MonoBehaviour
         ownedProjectiles.Add("Ball", 1);
         // TESTING
         // TESTING END
+        activePowerups = new Dictionary<string, int>();
         health = totalHealth;
         iFrames = 0;
         updates = 0;
@@ -181,6 +183,15 @@ public class Player : MonoBehaviour
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
         healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
         // UpdateExpBar();
+
+        // powerups
+        List<string> powerupNames = new List<string>(activePowerups.Keys);
+        foreach (string powerupName in powerupNames) {
+            activePowerups[powerupName]--;
+            if (activePowerups[powerupName] <= 0) {
+                activePowerups.Remove(powerupName);
+            }
+        }
     }
 
     void LateUpdate() {
@@ -200,13 +211,9 @@ public class Player : MonoBehaviour
             spriteRenderer.color = Color.red;
             iFrames = 30;
         }
-        Experience exp = collider.GetComponent<Experience>();
-        if (exp != null && exp.CanPickUp)
-            exp.PickUp(this);
-        Health healthDrop = collider.GetComponent<Health>();
-        if (healthDrop != null && healthDrop.CanPickUp) {
-            healthDrop.PickUp(this);
-        }
+        Drop drop = collider.GetComponent<Drop>();
+        if (drop != null && drop.CanPickUp)
+            drop.PickUp(this);
     }
 
     private void AdvanceWave() {
@@ -216,6 +223,8 @@ public class Player : MonoBehaviour
         waveText.gameObject.SetActive(true);
         waveTextStart = Updates;    
     }
+
+    // ui and projectile stats
     
     public void CollectExp(Experience exp) {
         experience += testingMode ? exp.Value * 10 : exp.Value;
@@ -351,5 +360,26 @@ public class Player : MonoBehaviour
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
         CheckLevel();
+    }
+
+    // powerups
+
+    public void CollectPowerup(Powerup powerup) {
+        activePowerups[powerup.type] = powerup.duration;
+        switch (powerup.type) {
+            case "Nuke":
+                Explosion explosion = Instantiate<Explosion>(explosionPrefab, powerup.transform.position, Quaternion.identity, projectileFolder);
+                explosion.LoadStats(new ProjectileStats(0, 0, 0, 1000000, 0, -1, 0, 0, 0));
+                explosion.SetOriginalColor(new Color(.5f, .06f, .02f, .3f));
+                explosion.minSize = 1f;
+                explosion.maxSize = map.Bounds.size.magnitude / 2.56f;
+                explosion.explosionLifeTime = 180;
+                explosion.explosionDecayTime = 60;
+                break;
+        }
+    }
+
+    public bool IsPowerupActive(string powerupName) {
+        return activePowerups.ContainsKey(powerupName);
     }
 }

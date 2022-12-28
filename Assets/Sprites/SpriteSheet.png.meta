@@ -70,7 +70,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -533,7 +533,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -554,7 +554,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -575,7 +575,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -596,7 +596,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -617,7 +617,7 @@ TextureImporter:
         width: 64
         height: 64
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -625,6 +625,132 @@ TextureImporter:
       bones: []
       spriteID: 81ad10be5be346143bab9f62198edd9a
       internalID: 918843843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Double Damage
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 32
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f84d20c158e62214f9c6462663564757
+      internalID: 1142072427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Magnet
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 80
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 72d02b928abe7704388f3e260d1d622b
+      internalID: -498431500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Infinite Pierce
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 80
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8e6a5272a9d5bc4681af03a88d6605e
+      internalID: -1312039128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Shield
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 128
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ea45cd51e83abb47b132832dc661a4e
+      internalID: -168208030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Speed
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 128
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a70ced718f93864697f0fc658640ff6
+      internalID: -33824401
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Powerup Nuke
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 130
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5d01440bf11f904ba46dce63b37b96d
+      internalID: 1679474931
       vertices: []
       indices: 
       edges: []
@@ -640,24 +766,30 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Powerup Nuke: 1679474931
       Ball: 235350715
       Experience_1: -34948245
       Dark Aura: -1765358846
       Pentagon: 35765532
       Splitter: 1979487859
       Health: 1462610924
+      Powerup Double Damage: 1142072427
       Laser: 1304152968
       WallBL: 815336767
       Fireball: -791834676
       Experience_2: -747614016
       WallTR: -455452338
+      Powerup Speed: -33824401
       Spike: -1179899642
+      Powerup Infinite Pierce: -1312039128
+      Powerup Magnet: -498431500
       WallH: -959483350
       WallTL: 768906600
       Player: 98035174
       Void: 918843843
       Circle: 700268490
       WallBR: 2032642998
+      Powerup Shield: -168208030
       Shotgun: -442452156
       WallV: -747594729
       Ground: -1010670414

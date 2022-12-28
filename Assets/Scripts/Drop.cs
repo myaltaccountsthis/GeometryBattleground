@@ -10,13 +10,24 @@ public abstract class Drop : MonoBehaviour
     protected Transform toFollow;
     protected Vector3 followOrigin;
     protected int followTicks;
+    private Vector3 pushTo;
+    private bool shouldPush;
 
     protected const int FOLLOW_TICKS = 10;
     protected const float LIFETIME = 60f;
+    protected const float PUSH_SPEED = .1f;
 
     // Start is called before the first frame update
     void Start()
     {
+        CircleCollider2D myCollider = GetComponent<CircleCollider2D>();
+        Debug.Assert(myCollider != null, "Error: this drop is missing a CircleCollider2D");
+        Debug.Assert(myCollider.isTrigger, "Error: this drop's Collider2D property isTrigger is false");
+        BoundsInt bounds = GameObject.FindWithTag("Map").GetComponent<Map>().Bounds;
+        Vector3 position = transform.position;
+        float radius = myCollider.radius;
+        pushTo = new Vector3(Mathf.Clamp(position.x, bounds.xMin + radius, bounds.xMax - radius), Mathf.Clamp(position.y, bounds.yMin + radius, bounds.yMax - radius), position.z);
+        shouldPush = pushTo != position;
         Destroy(gameObject, LIFETIME);
     }
 
@@ -30,6 +41,16 @@ public abstract class Drop : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (shouldPush) {
+            Vector3 direction = (pushTo - transform.position);
+            float distance = direction.magnitude;
+            if (distance < PUSH_SPEED) {
+                transform.position = pushTo;
+                shouldPush = false;
+            }
+            else
+                transform.position += direction.normalized * PUSH_SPEED;
+        }
         if (CanPickUp)
             return;
         if (followTicks == 0) {

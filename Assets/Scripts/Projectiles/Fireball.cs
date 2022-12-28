@@ -49,7 +49,7 @@ public class Fireball : Projectile
 
     void SpawnExplosion() {
         Explosion newExplosion = Instantiate<Explosion>(explosion, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
-        newExplosion.stats = stats;
+        newExplosion.LoadStats(stats);
         newExplosion.minSize = .2f;
         newExplosion.maxSize = getExplosionSize();
         newExplosion.explosionLifeTime = 6;
@@ -58,7 +58,7 @@ public class Fireball : Projectile
 
     private float getExplosionSize(int level = -1) {
         if (level == -1)
-            level = player.GetProjectileLevel("Splitter");
+            level = player.GetProjectileLevel("Fireball");
         if (level >= 8)
             return 1.5f;
         if (level >= 5)
