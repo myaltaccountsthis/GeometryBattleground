@@ -21,6 +21,7 @@ public class Map : MonoBehaviour
     public int maxExpDelay;
     public Transform experienceFolder;
     public Transform mobFolder;
+    public Powerup[] powerups;
 
     public int CurrentMobCount {
         get => mobFolder.childCount;
@@ -46,6 +47,8 @@ public class Map : MonoBehaviour
     [SerializeField]
     private Tilemap background;
     
+    private Dictionary<string, Powerup> powerupList; 
+    private Player player;
     private Tilemap tileMap;
     private List<Mob> activeMobs;
     private BoundsInt bounds;
@@ -53,17 +56,25 @@ public class Map : MonoBehaviour
     private BoundsInt experienceBounds;
     private int nextExpSpawn;
 
-    void Start()
-    {
-        tileMap = GetComponent<Tilemap>();
+    void Awake() {
+        Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
+        powerupList = new Dictionary<string, Powerup>();
+        foreach (Powerup powerup in powerups) {
+            powerupList[powerup.type] = powerup;
+        }
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
         activeMobs = new List<Mob>();
+        tileMap = GetComponent<Tilemap>();
         bounds = tileMap.cellBounds;
         mobBounds = background.cellBounds;
         mobBounds.SetMinMax(new Vector3Int(mobBounds.xMin + 1, mobBounds.yMin + 1), new Vector3Int(mobBounds.xMax - 1, mobBounds.yMax - 1));
         experienceBounds = bounds;
         experienceBounds.SetMinMax(new Vector3Int(experienceBounds.xMin + 1, experienceBounds.yMin + 1), new Vector3Int(experienceBounds.xMax - 1, experienceBounds.yMax - 1));
         nextExpSpawn = 0;
-        Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
+    }
+
+    void Start()
+    {
         for (int i = 0; i < maxExpDrops / 2; i++) {
             AttemptExpSpawn();
         }
@@ -110,15 +121,29 @@ public class Map : MonoBehaviour
             nextExpSpawn--;
     }
 
+
+
+    public void CheckDropMagnet(Drop drop) {
+        drop.LargeDropSize = player.IsPowerupActive("Drop Magnet");
+    }
+
     public Experience InstantiateExperience(int experience, Vector2 position) {
         Experience exp = Instantiate<Experience>(experienceOrb, position, Quaternion.identity, experienceFolder);
         exp.SetExperience(experience);
         SetExperienceSprite(exp);
+        CheckDropMagnet(exp);
         return exp;
     }
     public Health InstantiateHealth(Vector2 position) {
         Health health = Instantiate<Health>(healthDrop, position, Quaternion.identity, experienceFolder);
+        CheckDropMagnet(health);
         return health;
+    }
+
+    public Powerup InstantiatePowerup(Vector2 position) {
+        Powerup powerup = Instantiate<Powerup>(powerups[Random.Range(0, powerups.Length)], position, Quaternion.identity, experienceFolder);
+        CheckDropMagnet(powerup);
+        return powerup;
     }
 
     private void SetExperienceSprite(Experience experience) {
@@ -218,9 +243,10 @@ public class Map : MonoBehaviour
 
     // Returns the number of exp drops that are in the tile extent range
     private int CountExpDrops() {
-        GameObject[] gameObjects = GameObject.FindGameObjectsWithTag("Experience Orb");
         int num = 0;
-        foreach (GameObject gameObject in gameObjects) {
+        foreach (Transform gameObject in experienceFolder) {
+            if (gameObject.tag != "Experience Orb")
+                continue;
             Vector3 position = gameObject.transform.position;
             if (position.x > bounds.xMin && position.x < bounds.xMax && position.y > bounds.yMin && position.y < bounds.yMax) {
                 num++;
@@ -232,5 +258,9 @@ public class Map : MonoBehaviour
     private void AttemptExpSpawn() {
         if (CountExpDrops() < maxExpDrops)
             GenerateNextExpSpawn();
+    }
+
+    public Powerup GetPowerup(string powerupName) {
+        return powerupList[powerupName];
     }
 }

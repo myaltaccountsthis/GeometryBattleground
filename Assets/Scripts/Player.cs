@@ -23,25 +23,25 @@ public class Player : MonoBehaviour
     [Tooltip("List of all projectiles to use")]
     public Projectile[] projectiles;
     [HideInInspector]
-    public Dictionary<string, Projectile> projectileList = new Dictionary<string, Projectile>();
-    public RectTransform healthBar;
-    public RectTransform expBar;
+    public Dictionary<string, Projectile> projectileList;
     public Transform projectileFolder;
     [Tooltip("CSV file that contains data for each projectile")]
     public TextAsset infoFile;
     public GameObject upgradeUI;
     public Explosion explosionPrefab;
     public Spike spikePrefab;
-    public TextMeshProUGUI levelText;
-    public TextMeshProUGUI scoreText;
     public TextMeshProUGUI waveText;
+    public HudUI hudUI;
 
     [SerializeField]
     private float health;
+    private float shield;
     private int level;
     private int experience;
     private int score;
+    private float originalMovementSpeed;
     private Dictionary<string, int> ownedProjectiles;
+    private Dictionary<string, int> activePowerups;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
@@ -59,18 +59,14 @@ public class Player : MonoBehaviour
     void Awake()
     {
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
+        projectileList = new Dictionary<string, Projectile>();
         foreach (Projectile projectile in projectiles) {
             projectileList.Add(projectile.name, projectile);
             Debug.Assert(projectile != null, "Error: Projectile List contains null values");
         }
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 0;
-    }
-
-    void Start()
-    {
-        map = GameObject.FindWithTag("Map").GetComponent<Map>();
-        playerCollider = GetComponent<CircleCollider2D>();
+        activePowerups = new Dictionary<string, int>();
         ownedProjectiles = new Dictionary<string, int>();
         ownedProjectiles.Add("Ball", 1);
         // TESTING
@@ -83,9 +79,7 @@ public class Player : MonoBehaviour
         score = 0;
         wave = 0;
         waveTextStart = 0;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        UpdateExpBar();
-        UpdateScore();
+        originalMovementSpeed = movementSpeed;
         try {
             projectileInfo = new Dictionary<string, ProjectileStats[]>();
             string[] lines = infoFile.text.Split('\n');
@@ -104,6 +98,18 @@ public class Player : MonoBehaviour
         catch (System.Exception e) {
             Debug.Log("Failed to read info file: " + e);
         }
+    }
+
+    void Start()
+    {
+        map = GameObject.FindWithTag("Map").GetComponent<Map>();
+        playerCollider = GetComponent<CircleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        UpdateExpBar();
+        UpdateScore();
+        hudUI.UpdateHealth(health, totalHealth, shield);
+        
         {
             Transform upgradeUIList = upgradeUI.transform.Find("Frame");
             upgradeUIOptions = new UpgradeOption[upgradeUIList.childCount];
@@ -154,6 +160,8 @@ public class Player : MonoBehaviour
         // projectiles
         foreach (string projectileName in ownedProjectiles.Keys) {
             ProjectileStats stats = GetProjectileStats(projectileName);
+            if (activePowerups.ContainsKey("Infinite Pierce"))
+                stats.pierce = -1;
             Projectile projectile = projectileList[projectileName];
             if (updates % (testingMode ? Mathf.Max(stats.interval / 2, 1) : stats.interval) == 0) {
                 projectile.toShoot = stats.projectileCount;
@@ -179,8 +187,34 @@ public class Player : MonoBehaviour
             }
         }
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
-        healthBar.localScale = new Vector3(health / totalHealth, 1, 1);
+        hudUI.UpdateHealth(health, totalHealth, shield);
+        if (shield > 0) {
+            // TODO shield visual
+        }
+        hudUI.UpdatePowerups(activePowerups);
         // UpdateExpBar();
+
+        // powerups
+        List<string> powerupNames = new List<string>(activePowerups.Keys);
+        foreach (string powerupName in powerupNames) {
+            activePowerups[powerupName]--;
+            if (activePowerups[powerupName] <= 0) {
+                activePowerups.Remove(powerupName);
+                switch (powerupName) {
+                    case "Drop Magnet":
+                        foreach (Transform transform in map.experienceFolder) {
+                            transform.GetComponent<Drop>().LargeDropSize = true;
+                        }
+                        break;
+                    case "Speed":
+                        movementSpeed = originalMovementSpeed;
+                        break;
+                    case "Shield":
+                        shield = 0;
+                        break;
+                }
+            }
+        }
     }
 
     void LateUpdate() {
@@ -196,17 +230,22 @@ public class Player : MonoBehaviour
             if (iFrames > 0)
                 return;
             
-            health -= mob.GetDamage();
+            TakeDamage(mob.GetDamage());
             spriteRenderer.color = Color.red;
             iFrames = 30;
         }
-        Experience exp = collider.GetComponent<Experience>();
-        if (exp != null && exp.CanPickUp)
-            exp.PickUp(this);
-        Health healthDrop = collider.GetComponent<Health>();
-        if (healthDrop != null && healthDrop.CanPickUp) {
-            healthDrop.PickUp(this);
+        Drop drop = collider.GetComponent<Drop>();
+        if (drop != null && drop.CanPickUp)
+            drop.PickUp(this);
+    }
+
+    private void TakeDamage(float damage) {
+        if (shield > 0) {
+            float shieldDamage = Mathf.Min(damage, shield);
+            shield -= shieldDamage;
+            damage -= shieldDamage;
         }
+        health -= damage;
     }
 
     private void AdvanceWave() {
@@ -216,6 +255,8 @@ public class Player : MonoBehaviour
         waveText.gameObject.SetActive(true);
         waveTextStart = Updates;    
     }
+
+    // ui and projectile stats
     
     public void CollectExp(Experience exp) {
         experience += testingMode ? exp.Value * 10 : exp.Value;
@@ -228,8 +269,7 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateExpBar() {
-        expBar.localScale = new Vector3(Mathf.Min(1f, (float)experience / ExpToNextLevel()), 1, 1);
-        levelText.text = level + "";
+        hudUI.UpdateExpBar(experience, ExpToNextLevel(), level);
     }
 
     public void CheckLevel() {
@@ -252,7 +292,7 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateScore() {
-        scoreText.text = score + "";
+        hudUI.UpdateScore(score);
     }
 
     public void AddScore(int toAdd) {
@@ -351,5 +391,37 @@ public class Player : MonoBehaviour
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
         CheckLevel();
+    }
+
+    // powerups
+
+    public void CollectPowerup(Powerup powerup) {
+        activePowerups[powerup.type] = powerup.duration;
+        switch (powerup.type) {
+            case "Nuke":
+                Explosion explosion = Instantiate<Explosion>(explosionPrefab, powerup.transform.position, Quaternion.identity, projectileFolder);
+                explosion.LoadStats(new ProjectileStats(0, 0, 0, 1000000, 0, -1, 0, 0, 0));
+                explosion.SetOriginalColor(new Color(.5f, .06f, .02f, .3f));
+                explosion.minSize = 1f;
+                explosion.maxSize = map.Bounds.size.magnitude / 2.56f;
+                explosion.explosionLifeTime = 180;
+                explosion.explosionDecayTime = 60;
+                break;
+            case "Drop Magnet":
+                foreach (Transform transform in map.experienceFolder) {
+                    transform.GetComponent<Drop>().LargeDropSize = true;
+                }
+                break;
+            case "Speed":
+                movementSpeed = originalMovementSpeed * 1.5f;
+                break;
+            case "Shield":
+                shield = totalHealth;
+                break;
+        }
+    }
+
+    public bool IsPowerupActive(string powerupName) {
+        return activePowerups.ContainsKey(powerupName);
     }
 }

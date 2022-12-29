@@ -25,6 +25,7 @@ public class Explosion : Projectile
         sprite = GetComponent<SpriteRenderer>();
         collision2 = GetComponent<Collider2D>();
         originalColor = sprite.color;
+        transform.localScale = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -49,5 +50,9 @@ public class Explosion : Projectile
     public override void GenerateStats(Transform playerTransform, int index = 1)
     {
         // things that create an explosion will just give their stats to this
+    }
+
+    public void SetOriginalColor(Color color) {
+        GetComponent<SpriteRenderer>().color = color;
     }
 }

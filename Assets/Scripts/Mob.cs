@@ -32,6 +32,8 @@ public class Mob : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     
     private const float HEALTH_CHANCE = .003f;
+    // private const float POWERUP_CHANCE = 1f;
+    private const float POWERUP_CHANCE = .005f;
 
     void Start()
     {
@@ -61,10 +63,15 @@ public class Mob : MonoBehaviour
 
     // Makes this mob take damage
     public void TakeDamage(Projectile projectile) {
-        health -= projectile.stats.damage;
+        float damage = projectile.stats.damage;
+        if (player.IsPowerupActive("Double Damage"))
+            damage *= 2;
+        health -= damage;
         if (health <= 0) {
             player.AddScore(score);
-            if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
+            if (Random.value < POWERUP_CHANCE * experiencePercent * experienceDrop)
+                map.InstantiatePowerup(transform.position);
+            else if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
                 map.InstantiateHealth(transform.position);
             else if (Random.value < experiencePercent)
                 map.InstantiateExperience(experienceDrop, transform.position);
