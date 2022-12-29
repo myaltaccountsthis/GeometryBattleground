@@ -6,21 +6,32 @@ public abstract class Drop : MonoBehaviour
 {
     [HideInInspector]
     public bool CanPickUp = true;
+    [HideInInspector]
+    public bool LargeDropSize {
+        get => largeDropSize;
+        set {
+            if (value != LargeDropSize) {
+                largeDropSize = value;
+                myCollider.radius = largeDropSize ? originalRadius * 2 : originalRadius;
+            } 
+        }
+    }
 
     protected Transform toFollow;
     protected Vector3 followOrigin;
     protected int followTicks;
     private Vector3 pushTo;
     private bool shouldPush;
+    private bool largeDropSize;
+    private float originalRadius;
+    private CircleCollider2D myCollider;
 
     protected const int FOLLOW_TICKS = 10;
     protected const float LIFETIME = 60f;
     protected const float PUSH_SPEED = .1f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        CircleCollider2D myCollider = GetComponent<CircleCollider2D>();
+    void Awake() {
+        myCollider = GetComponent<CircleCollider2D>();
         Debug.Assert(myCollider != null, "Error: this drop is missing a CircleCollider2D");
         Debug.Assert(myCollider.isTrigger, "Error: this drop's Collider2D property isTrigger is false");
         BoundsInt bounds = GameObject.FindWithTag("Map").GetComponent<Map>().Bounds;
@@ -28,6 +39,12 @@ public abstract class Drop : MonoBehaviour
         float radius = myCollider.radius;
         pushTo = new Vector3(Mathf.Clamp(position.x, bounds.xMin + radius, bounds.xMax - radius), Mathf.Clamp(position.y, bounds.yMin + radius, bounds.yMax - radius), position.z);
         shouldPush = pushTo != position;
+        originalRadius = radius;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
         Destroy(gameObject, LIFETIME);
     }
 

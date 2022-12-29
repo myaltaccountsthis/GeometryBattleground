@@ -32,7 +32,7 @@ public class Mob : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     
     private const float HEALTH_CHANCE = .003f;
-    // private const float POWERUP_CHANCE = .2f;
+    // private const float POWERUP_CHANCE = 1f;
     private const float POWERUP_CHANCE = .005f;
 
     void Start()

@@ -7,6 +7,10 @@ public class Powerup : Drop
     public string type;
     public int duration;
 
+    public Sprite sprite {
+        get => GetComponent<SpriteRenderer>().sprite;
+    }
+
     public override void PickUp(Player player)
     {
         base.PickUp(player);
