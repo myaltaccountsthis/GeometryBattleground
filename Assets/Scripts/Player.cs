@@ -22,8 +22,12 @@ public class Player : MonoBehaviour
     public float healthRegen;
     [Tooltip("List of all projectiles to use")]
     public Projectile[] projectiles;
+    [Tooltip("List of all passive abilities")]
+    public Passive[] passives;
     [HideInInspector]
     public Dictionary<string, Projectile> projectileList;
+    [HideInInspector]
+    public Dictionary<string, Passive> passiveList;
     public Transform projectileFolder;
     [Tooltip("CSV file that contains data for each projectile")]
     public TextAsset infoFile;
@@ -41,6 +45,7 @@ public class Player : MonoBehaviour
     private int score;
     private float originalMovementSpeed;
     private Dictionary<string, int> ownedProjectiles;
+    private Dictionary<string, int> ownedPassives;
     private Dictionary<string, int> activePowerups;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
@@ -65,6 +70,10 @@ public class Player : MonoBehaviour
         foreach (Projectile projectile in projectiles) {
             projectileList.Add(projectile.name, projectile);
             Debug.Assert(projectile != null, "Error: Projectile List contains null values");
+        }
+        foreach (Passive passive in passives) {
+            passiveList.Add(passive.type, passive);
+            Debug.Assert(passive != null, "Error: Passive List contains null values");
         }
         activePowerups = new Dictionary<string, int>();
         ownedProjectiles = new Dictionary<string, int>();
@@ -160,6 +169,7 @@ public class Player : MonoBehaviour
         // projectiles
         foreach (string projectileName in ownedProjectiles.Keys) {
             ProjectileStats stats = GetProjectileStats(projectileName);
+            stats.ApplyPassives(ownedPassives);
             if (activePowerups.ContainsKey("Infinite Pierce"))
                 stats.pierce = -1;
             Projectile projectile = projectileList[projectileName];
@@ -207,7 +217,7 @@ public class Player : MonoBehaviour
                         }
                         break;
                     case "Speed":
-                        movementSpeed = originalMovementSpeed;
+                        movementSpeed = GetMovementSpeed();
                         break;
                     case "Shield":
                         shield = 0;
@@ -259,7 +269,7 @@ public class Player : MonoBehaviour
     // ui and projectile stats
     
     public void CollectExp(Experience exp) {
-        experience += testingMode ? exp.Value * 10 : exp.Value;
+        experience += exp.Value * (testingMode ? 10 : 1);
         score += exp.Value;
         CheckLevel();
     }
@@ -321,26 +331,26 @@ public class Player : MonoBehaviour
         GameTime.isPaused = true;
 
         // generate options
-        List<Projectile> availableProjectiles = new List<Projectile>();
+        List<Projectile> availableUpgrades = new List<Projectile>();
         foreach (Projectile projectile in projectileList.Values) {
             if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
-                availableProjectiles.Add(projectile);
+                availableUpgrades.Add(projectile);
             }
         }
         // do shuffling
-        for (int i = 0; i < availableProjectiles.Count - 1; i++) {
-            int j = Random.Range(i + 1, availableProjectiles.Count);
-            Projectile temp = availableProjectiles[i];
-            availableProjectiles[i] = availableProjectiles[j];
-            availableProjectiles[j] = temp;
+        for (int i = 0; i < availableUpgrades.Count - 1; i++) {
+            int j = Random.Range(i + 1, availableUpgrades.Count);
+            Projectile temp = availableUpgrades[i];
+            availableUpgrades[i] = availableUpgrades[j];
+            availableUpgrades[j] = temp;
         }
 
         // show the ui
-        for (int i = 0; i < Mathf.Min(availableProjectiles.Count, 3); i++) {
-            SetUpgradeUI(i, availableProjectiles[i]);
+        for (int i = 0; i < Mathf.Min(availableUpgrades.Count, 3); i++) {
+            SetUpgradeUI(i, availableUpgrades[i]);
         }
         // if less than 2 upgrades available, make those upgrade options unavailable
-        for (int i = 2; i >= availableProjectiles.Count; i--) {
+        for (int i = 2; i >= availableUpgrades.Count; i--) {
             SetUpgradeUI(i, null);
         }
         upgradeUI.SetActive(true);
@@ -413,7 +423,7 @@ public class Player : MonoBehaviour
                 }
                 break;
             case "Speed":
-                movementSpeed = originalMovementSpeed * 1.5f;
+                movementSpeed = GetMovementSpeed() * 1.5f;
                 break;
             case "Shield":
                 shield = totalHealth;
@@ -423,5 +433,14 @@ public class Player : MonoBehaviour
 
     public bool IsPowerupActive(string powerupName) {
         return activePowerups.ContainsKey(powerupName);
+    }
+
+    // passives
+    public float GetMovementSpeed() {
+        return originalMovementSpeed + (ownedPassives.ContainsKey("Agility") ? ownedPassives["Agility"] : 0);
+    }
+
+    public float GetExpMultiplier() {
+        return ownedPassives.ContainsKey("Wisdom") ? 1 + .2f * ownedPassives["Wisdom"] : 1;
     }
 }

@@ -29196,6 +29196,8 @@ MonoBehaviour:
   - {fileID: 8650562122922162173, guid: dd2a63dd1c0479c4881e52eab57aa4dc, type: 3}
   - {fileID: 7445756913841249180, guid: a403bda9ca13554468544a2344cfd5fc, type: 3}
   - {fileID: 5009912764668076576, guid: f2011852c97957f45a6b68e289335172, type: 3}
+  passives:
+  - {fileID: 339360475850051728, guid: 8510a473bbd73514bac19a033cba806a, type: 3}
   projectileFolder: {fileID: 165604480}
   infoFile: {fileID: 4900000, guid: 2ac49942a69dcc5438ced41545bcc3da, type: 3}
   upgradeUI: {fileID: 1885261110}

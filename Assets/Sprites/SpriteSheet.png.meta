@@ -192,7 +192,7 @@ TextureImporter:
       name: Experience_1
       rect:
         serializedVersion: 2
-        x: 284
+        x: 283
         y: 0
         width: 32
         height: 32
@@ -213,7 +213,7 @@ TextureImporter:
       name: Experience_2
       rect:
         serializedVersion: 2
-        x: 316
+        x: 315
         y: 0
         width: 32
         height: 32
@@ -234,7 +234,7 @@ TextureImporter:
       name: Experience_3
       rect:
         serializedVersion: 2
-        x: 348
+        x: 347
         y: 0
         width: 32
         height: 32
@@ -465,7 +465,7 @@ TextureImporter:
       name: Health
       rect:
         serializedVersion: 2
-        x: 348
+        x: 347
         y: 32
         width: 32
         height: 32
@@ -633,7 +633,7 @@ TextureImporter:
       name: Powerup Double Damage
       rect:
         serializedVersion: 2
-        x: 298
+        x: 283
         y: 32
         width: 48
         height: 48
@@ -654,8 +654,8 @@ TextureImporter:
       name: Powerup Magnet
       rect:
         serializedVersion: 2
-        x: 284
-        y: 80
+        x: 283
+        y: 81
         width: 48
         height: 48
       alignment: 0
@@ -675,12 +675,12 @@ TextureImporter:
       name: Powerup Infinite Pierce
       rect:
         serializedVersion: 2
-        x: 332
-        y: 80
+        x: 331
+        y: 81
         width: 48
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -696,12 +696,12 @@ TextureImporter:
       name: Powerup Shield
       rect:
         serializedVersion: 2
-        x: 332
-        y: 128
+        x: 331
+        y: 130
         width: 48
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -717,12 +717,12 @@ TextureImporter:
       name: Powerup Speed
       rect:
         serializedVersion: 2
-        x: 284
-        y: 128
+        x: 283
+        y: 130
         width: 48
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -738,12 +738,12 @@ TextureImporter:
       name: Powerup Nuke
       rect:
         serializedVersion: 2
-        x: 236
+        x: 235
         y: 130
         width: 48
         height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -751,6 +751,90 @@ TextureImporter:
       bones: []
       spriteID: c5d01440bf11f904ba46dce63b37b96d
       internalID: 1679474931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive Wisdom
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 180
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 32c77840cfaa9914999367fc9a973997
+      internalID: -940632185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive Power
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 180
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c9c042417b36bad4f9c9736127b46a75
+      internalID: 322056946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive Agility
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 245
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4a4bc1814844094f9f37be10b14e8dd
+      internalID: 614068773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Passive Dexterity
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 245
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2353b8e4f1a0df64d9d001e4e784e5fb
+      internalID: -2080526494
       vertices: []
       indices: 
       edges: []
@@ -781,6 +865,7 @@ TextureImporter:
       WallTR: -455452338
       Powerup Speed: -33824401
       Spike: -1179899642
+      Passive Wisdom: -940632185
       Powerup Infinite Pierce: -1312039128
       Powerup Magnet: -498431500
       WallH: -959483350
@@ -789,13 +874,16 @@ TextureImporter:
       Void: 918843843
       Circle: 700268490
       WallBR: 2032642998
+      Passive Dexterity: -2080526494
       Powerup Shield: -168208030
+      Passive Power: 322056946
       Shotgun: -442452156
       WallV: -747594729
       Ground: -1010670414
       Square: 497585160
-      Experience_3: 1950142143
       Hexagon: 1559499710
+      Experience_3: 1950142143
+      Passive Agility: 614068773
       Triangle: -913997244
   spritePackingTag: 
   pSDRemoveMatte: 0

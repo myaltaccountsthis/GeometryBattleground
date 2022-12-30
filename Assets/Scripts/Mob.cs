@@ -74,7 +74,7 @@ public class Mob : MonoBehaviour
             else if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
                 map.InstantiateHealth(transform.position);
             else if (Random.value < experiencePercent)
-                map.InstantiateExperience(experienceDrop, transform.position);
+                map.InstantiateExperience(Mathf.RoundToInt(experienceDrop * player.GetExpMultiplier()), transform.position);
             Destroy(gameObject);
         }
         spriteRenderer.color = DAMAGE_COLOR;
