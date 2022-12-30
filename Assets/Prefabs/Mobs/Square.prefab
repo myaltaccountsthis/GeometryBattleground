@@ -150,7 +150,7 @@ MonoBehaviour:
   movementSpeed: 2
   startingWave: 4
   baseDamage: 8
-  experienceDrop: 3
+  experienceDrop: 30
   experiencePercent: 0.5
   spawnWeight: 5
-  score: 3
+  score: 30

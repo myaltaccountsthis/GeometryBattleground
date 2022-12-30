@@ -71,8 +71,11 @@ public class Player : MonoBehaviour
             projectileList.Add(projectile.name, projectile);
             Debug.Assert(projectile != null, "Error: Projectile List contains null values");
         }
+        passiveList = new Dictionary<string, Passive>();
+        ownedPassives = new Dictionary<string, int>();
         foreach (Passive passive in passives) {
-            passiveList.Add(passive.type, passive);
+            passiveList.Add(passive.name, passive);
+            ownedPassives.Add(passive.name, 0);
             Debug.Assert(passive != null, "Error: Passive List contains null values");
         }
         activePowerups = new Dictionary<string, int>();
@@ -269,7 +272,7 @@ public class Player : MonoBehaviour
     // ui and projectile stats
     
     public void CollectExp(Experience exp) {
-        experience += exp.Value * (testingMode ? 10 : 1);
+        experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
         score += exp.Value;
         CheckLevel();
     }
@@ -285,20 +288,20 @@ public class Player : MonoBehaviour
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
         if (experience >= requiredExp) {
-            int totalLevels = 0;
-            foreach (string projectileName in ownedProjectiles.Keys)
-                totalLevels += ownedProjectiles[projectileName];
-            if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
-                experience -= requiredExp;
-                level++;
-                UpdateExpBar();
-                UpdateScore();
-                ShowLevelUpUI();
-                iFrames = 30;
-            }
+            // int totalLevels = 0;
+            // foreach (string projectileName in ownedProjectiles.Keys)
+            //     totalLevels += ownedProjectiles[projectileName];
+            // if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
+            experience -= requiredExp;
+            level++;
+            UpdateExpBar();
+            UpdateScore();
+            ShowLevelUpUI();
+            iFrames = 30;
         }
         UpdateExpBar();
         UpdateScore();
+        movementSpeed = GetMovementSpeed();
     }
 
     private void UpdateScore() {
@@ -312,7 +315,7 @@ public class Player : MonoBehaviour
 
     private int ExpToNextLevel() {
         // TODO also make leveling up more powerful (maybe ramp mobs more), TODO mobs
-        return Mathf.FloorToInt(Mathf.Pow(level - 1, 1.5f)) + 1 * level + 4;
+        return Mathf.FloorToInt((Mathf.FloorToInt(Mathf.Pow(level - 1, 1.5f)) + 1 * level + 4) * 10);
     }
 
     private ProjectileStats GetProjectileStats(string projectileName) {
@@ -331,16 +334,23 @@ public class Player : MonoBehaviour
         GameTime.isPaused = true;
 
         // generate options
-        List<Projectile> availableUpgrades = new List<Projectile>();
+        List<Upgradeable> availableUpgrades = new List<Upgradeable>();
         foreach (Projectile projectile in projectileList.Values) {
             if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
-                availableUpgrades.Add(projectile);
+                Upgradeable newUpgrade = new Upgradeable();
+                newUpgrade.projectile = projectile;
+                availableUpgrades.Add(newUpgrade);
             }
+        }
+        foreach (Passive passive in passiveList.Values) {
+            Upgradeable newUpgrade = new Upgradeable();
+            newUpgrade.passive = passive;
+            availableUpgrades.Add(newUpgrade);
         }
         // do shuffling
         for (int i = 0; i < availableUpgrades.Count - 1; i++) {
             int j = Random.Range(i + 1, availableUpgrades.Count);
-            Projectile temp = availableUpgrades[i];
+            Upgradeable temp = availableUpgrades[i];
             availableUpgrades[i] = availableUpgrades[j];
             availableUpgrades[j] = temp;
         }
@@ -356,28 +366,38 @@ public class Player : MonoBehaviour
         upgradeUI.SetActive(true);
     }
 
-    private void SetUpgradeUI(int index, Projectile projectile) {
+    private void SetUpgradeUI(int index, Upgradeable upgrade) {
         UpgradeOption option = upgradeUIOptions[index];
-        if (projectile == null) {
+        if (upgrade == null) {
             option.upgradeName.text = "NO UPGRADE";
             option.upgradeEffect.text = "";
             option.upgradeImage.sprite = null;
         }
         else {
-            option.upgradeName.text = projectile.name;
-            // TODO projectile upgrade effect description
-            if (ownedProjectiles.ContainsKey(projectile.name)) {
-                int level = ownedProjectiles[projectile.name];
-                projectile.stats = projectileInfo[projectile.name][level];
-                string message = projectile.GetUpgradeEffect(level, projectileInfo[projectile.name][level + 1]);
-                option.upgradeEffect.text = message.Trim();
+            if (upgrade.isProjectile) {
+                Projectile projectile = upgrade.projectile;
+                option.upgradeName.text = projectile.name;
+                if (ownedProjectiles.ContainsKey(projectile.name)) {
+                    int level = ownedProjectiles[projectile.name];
+                    projectile.stats = projectileInfo[projectile.name][level];
+                    string message = projectile.GetUpgradeEffect(level, projectileInfo[projectile.name][level + 1]);
+                    option.upgradeEffect.text = message.Trim();
+                    option.upgradeLevel.text = "Level " + (level + 1);
+                }
+                else {
+                    option.upgradeEffect.text = "New projectile";
+                    option.upgradeLevel.text = "Unlock";
+                }
+                // TODO projectile image sprite
+            }
+            else if (upgrade.isPassive) {
+                Passive passive = upgrade.passive;
+                option.upgradeName.text = passive.name;
+                int level = ownedPassives[passive.name];
+                string message = passive.GetUpgradeEffect();
+                option.upgradeEffect.text = message;
                 option.upgradeLevel.text = "Level " + (level + 1);
             }
-            else {
-                option.upgradeEffect.text = "New projectile";
-                option.upgradeLevel.text = "Unlock";
-            }
-            // TODO projectile image sprite
         }
     }
 
@@ -386,7 +406,7 @@ public class Player : MonoBehaviour
             return;
 
         string upgradeName = option.upgradeName.text;
-        if (!projectileList.ContainsKey(upgradeName))
+        if (!projectileList.ContainsKey(upgradeName) && !passiveList.ContainsKey(upgradeName))
             return;
         
         int i;
@@ -395,12 +415,28 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if (!ownedProjectiles.ContainsKey(upgradeName))
-            ownedProjectiles.Add(upgradeName, 0);
-        ownedProjectiles[upgradeName]++;
+        if (projectileList.ContainsKey(upgradeName)) {
+            if (!ownedProjectiles.ContainsKey(upgradeName) && projectileList.ContainsKey(upgradeName))
+                ownedProjectiles.Add(upgradeName, 0);
+            ownedProjectiles[upgradeName]++;
+        }
+        else {
+            ownedPassives[upgradeName]++;
+        }
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
+        printInfo();
         CheckLevel();
+    }
+
+    private void printInfo() {
+        string message = "";
+        foreach (string name in ownedProjectiles.Keys)
+            message += name + ": " + ownedProjectiles[name] + ", ";
+        message += "\n";
+        foreach (string name in ownedPassives.Keys)
+            message += name + ": " + ownedPassives[name] + ", ";
+        Debug.Log(message);
     }
 
     // powerups
@@ -423,7 +459,7 @@ public class Player : MonoBehaviour
                 }
                 break;
             case "Speed":
-                movementSpeed = GetMovementSpeed() * 1.5f;
+                movementSpeed = GetMovementSpeed();
                 break;
             case "Shield":
                 shield = totalHealth;
@@ -437,10 +473,10 @@ public class Player : MonoBehaviour
 
     // passives
     public float GetMovementSpeed() {
-        return originalMovementSpeed + (ownedPassives.ContainsKey("Agility") ? ownedPassives["Agility"] : 0);
+        return (originalMovementSpeed + ownedPassives["Agility"]) * (activePowerups.ContainsKey("Speed") ? 1.5f : 1);
     }
 
     public float GetExpMultiplier() {
-        return ownedPassives.ContainsKey("Wisdom") ? 1 + .2f * ownedPassives["Wisdom"] : 1;
+        return (1 + .2f * ownedPassives["Wisdom"]) * (testingMode ? 10 : 1);
     }
 }
