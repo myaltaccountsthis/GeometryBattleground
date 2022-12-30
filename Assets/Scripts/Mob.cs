@@ -69,9 +69,10 @@ public class Mob : MonoBehaviour
         health -= damage;
         if (health <= 0) {
             player.AddScore(score);
-            if (Random.value < POWERUP_CHANCE * experiencePercent * experienceDrop)
+            float chance = experiencePercent * experienceDrop / 10;
+            if (Random.value < POWERUP_CHANCE * chance)
                 map.InstantiatePowerup(transform.position);
-            else if (Random.value < HEALTH_CHANCE * experiencePercent * experienceDrop)
+            else if (Random.value < HEALTH_CHANCE * chance)
                 map.InstantiateHealth(transform.position);
             else if (Random.value < experiencePercent)
                 map.InstantiateExperience(experienceDrop, transform.position);

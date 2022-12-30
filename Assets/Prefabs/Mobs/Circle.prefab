@@ -138,9 +138,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingHealth: 5
   movementSpeed: 3
-  startingTime: 0
+  startingWave: 0
   baseDamage: 5
-  experienceDrop: 1
+  experienceDrop: 10
   experiencePercent: 0.5
   spawnWeight: 10
-  score: 1
+  score: 10
