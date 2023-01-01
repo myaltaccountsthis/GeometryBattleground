@@ -98,13 +98,13 @@ public class Player : MonoBehaviour
             string[] headers = lines[0].Split(',');
             for (int i = 1; i < lines.Length; i++) {
                 string[] lineInfo = lines[i].Split(',');
-                int level = int.Parse(lineInfo[1]);
+                int projLevel = int.Parse(lineInfo[1]);
                 string name = lineInfo[0];
                 if (!projectileInfo.ContainsKey(name)) {
                     projectileInfo[name] = new ProjectileStats[MAX_PROJECTILE_LEVEL + 1];
                     projectileInfo[name][0] = ProjectileStats.Empty;
                 }
-                projectileInfo[name][level] = ProjectileStats.Parse(lineInfo, 2);
+                projectileInfo[name][projLevel] = ProjectileStats.Parse(lineInfo, 2);
             }
         }
         catch (System.Exception e) {
@@ -318,12 +318,22 @@ public class Player : MonoBehaviour
         return Mathf.FloorToInt((Mathf.FloorToInt(Mathf.Pow(level - 1, 1.5f)) + 1 * level + 4) * 10);
     }
 
-    private ProjectileStats GetProjectileStats(string projectileName) {
-        return projectileInfo[projectileName][ownedProjectiles[projectileName]];
+    public ProjectileStats GetProjectileStats(string projectileName, int projLevel = -1) {
+        if (projLevel == -1)
+            projLevel = ownedProjectiles[projectileName];
+        return projectileInfo[projectileName][projLevel];
     }
 
     public int GetProjectileLevel(string projectileName) {
-        return ownedProjectiles[projectileName];
+        int projLevel;
+        ownedProjectiles.TryGetValue(projectileName, out projLevel);
+        return projLevel;
+    }
+
+    public int GetPassiveLevel(string passiveName) {
+        int passiveLevel;
+        ownedPassives.TryGetValue(passiveName, out passiveLevel);
+        return passiveLevel;
     }
 
     // show level up ui and generate 
@@ -334,23 +344,19 @@ public class Player : MonoBehaviour
         GameTime.isPaused = true;
 
         // generate options
-        List<Upgradeable> availableUpgrades = new List<Upgradeable>();
+        List<IUpgradeable> availableUpgrades = new List<IUpgradeable>();
         foreach (Projectile projectile in projectileList.Values) {
             if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
-                Upgradeable newUpgrade = new Upgradeable();
-                newUpgrade.projectile = projectile;
-                availableUpgrades.Add(newUpgrade);
+                availableUpgrades.Add(projectile);
             }
         }
         foreach (Passive passive in passiveList.Values) {
-            Upgradeable newUpgrade = new Upgradeable();
-            newUpgrade.passive = passive;
-            availableUpgrades.Add(newUpgrade);
+            availableUpgrades.Add(passive);
         }
         // do shuffling
         for (int i = 0; i < availableUpgrades.Count - 1; i++) {
             int j = Random.Range(i + 1, availableUpgrades.Count);
-            Upgradeable temp = availableUpgrades[i];
+            IUpgradeable temp = availableUpgrades[i];
             availableUpgrades[i] = availableUpgrades[j];
             availableUpgrades[j] = temp;
         }
@@ -366,7 +372,7 @@ public class Player : MonoBehaviour
         upgradeUI.SetActive(true);
     }
 
-    private void SetUpgradeUI(int index, Upgradeable upgrade) {
+    private void SetUpgradeUI(int index, IUpgradeable upgrade) {
         UpgradeOption option = upgradeUIOptions[index];
         if (upgrade == null) {
             option.upgradeName.text = "NO UPGRADE";
@@ -374,30 +380,37 @@ public class Player : MonoBehaviour
             option.upgradeImage.sprite = null;
         }
         else {
+            option.upgradeName.text = upgrade.GetName();
+            int upgradeLevel = upgrade.GetLevel(this);
+            option.upgradeLevel.text = upgrade.GetLevelText(upgradeLevel + 1);
+            option.upgradeEffect.text = upgrade.GetUpgradeEffect(this);
+            // TODO projectile image sprite
+            
+            /*
             if (upgrade.isProjectile) {
                 Projectile projectile = upgrade.projectile;
                 option.upgradeName.text = projectile.name;
                 if (ownedProjectiles.ContainsKey(projectile.name)) {
-                    int level = ownedProjectiles[projectile.name];
-                    projectile.stats = projectileInfo[projectile.name][level];
-                    string message = projectile.GetUpgradeEffect(level, projectileInfo[projectile.name][level + 1]);
+                    int upgradeLevel = ownedProjectiles[projectile.name];
+                    projectile.stats = projectileInfo[projectile.name][upgradeLevel];
+                    string message = projectile.GetUpgradeEffect(upgradeLevel, projectileInfo[projectile.name][upgradeLevel + 1]);
                     option.upgradeEffect.text = message.Trim();
-                    option.upgradeLevel.text = "Level " + (level + 1);
+                    option.upgradeLevel.text = "Level " + (upgradeLevel + 1);
                 }
                 else {
                     option.upgradeEffect.text = "New projectile";
                     option.upgradeLevel.text = "Unlock";
                 }
-                // TODO projectile image sprite
             }
             else if (upgrade.isPassive) {
                 Passive passive = upgrade.passive;
                 option.upgradeName.text = passive.name;
-                int level = ownedPassives[passive.name];
+                int upgradeLevel = ownedPassives[passive.name];
                 string message = passive.GetUpgradeEffect();
                 option.upgradeEffect.text = message;
-                option.upgradeLevel.text = "Level " + (level + 1);
+                option.upgradeLevel.text = "Level " + (upgradeLevel + 1);
             }
+            */
         }
     }
 
@@ -430,7 +443,7 @@ public class Player : MonoBehaviour
     }
 
     private void printInfo() {
-        string message = "";
+        string message = "L: " + level + ", ";
         foreach (string name in ownedProjectiles.Keys)
             message += name + ": " + ownedProjectiles[name] + ", ";
         message += "\n";

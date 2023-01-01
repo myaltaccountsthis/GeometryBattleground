@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Passive : MonoBehaviour
+public class Passive : MonoBehaviour, IUpgradeable
 {
     // Start is called before the first frame update
     void Start()
@@ -14,6 +14,25 @@ public class Passive : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public int GetLevel(Player player)
+    {
+        return player.GetPassiveLevel(name);
+    }
+    
+    public string GetLevelText(int nextLevel) {
+        return "Level " + nextLevel;
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public string GetUpgradeEffect(Player player)
+    {
+        return GetUpgradeEffect();
     }
 
     public string GetUpgradeEffect() {

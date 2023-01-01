@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // there will be instances of each sub-class in Player's projectiles instance variable. those will Instantiate<>() new projectiles
-public abstract class Projectile : MonoBehaviour
+public abstract class Projectile : MonoBehaviour, IUpgradeable
 {
     public ProjectileStats stats;
     // in radians
@@ -63,5 +63,34 @@ public abstract class Projectile : MonoBehaviour
     // Load stats from the ones read from a text file
     public void LoadStats(ProjectileStats stats) {
         this.stats = stats;
+    }
+
+    public int GetLevel(Player player)
+    {
+        return player.GetProjectileLevel(name);
+    }
+
+    public string GetLevelText(int nextLevel) {
+        // if (nextLevel == 1) {
+        //     return "";
+        // }
+        return "Level " + nextLevel;
+    }
+
+    public string GetName()
+    {
+        return name;
+    }
+
+    public string GetUpgradeEffect(Player player)
+    {
+        int currentLevel = player.GetProjectileLevel(name);
+        // when unlock
+        if (currentLevel == 0)
+            return "Unlock";
+        
+        // compare this level to next
+        LoadStats(player.GetProjectileStats(name, currentLevel));
+        return GetUpgradeEffect(currentLevel, player.GetProjectileStats(name, currentLevel + 1));
     }
 }
