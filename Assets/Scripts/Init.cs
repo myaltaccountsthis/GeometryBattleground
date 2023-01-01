@@ -12,7 +12,11 @@ public class Init : MonoBehaviour
 
     void Update() {
         if (Input.GetAxis("Submit") > 0) {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+            ChangeScene();
         }
+    }
+
+    public void ChangeScene() {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
     }
 }
