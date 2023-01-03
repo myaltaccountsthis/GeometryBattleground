@@ -13,19 +13,22 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     public int toShoot;
     [HideInInspector]
     public int toWait;
+    public Sprite sprite;
 
     private Collider2D collision;
     protected int creationTime;
     private int pierceLeft;
     private BoundsInt bounds;
 
+    public virtual void Awake() {
+        collision = GetComponent<Collider2D>();
+        Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
+    }
+
     public virtual void Start()
     {
-        collision = GetComponent<Collider2D>();
         bounds = GameObject.FindWithTag("Map").GetComponent<Map>().Bounds;
-        Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
         creationTime = Player.Updates;
-        pierceLeft = stats.pierce;
     }
 
     public virtual void Update()
@@ -48,7 +51,9 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
 
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
+        Debug.Log(mob);
         if (mob != null) {
+            Debug.Log("Pierce: " + pierceLeft);
             if (pierceLeft == 0)
                 return;
             pierceLeft--;
@@ -63,6 +68,7 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     // Load stats from the ones read from a text file
     public void LoadStats(ProjectileStats stats) {
         this.stats = stats;
+        this.pierceLeft = stats.pierce;
     }
 
     public int GetLevel(Player player)
@@ -92,5 +98,9 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         // compare this level to next
         LoadStats(player.GetProjectileStats(name, currentLevel));
         return GetUpgradeEffect(currentLevel, player.GetProjectileStats(name, currentLevel + 1));
+    }
+
+    public Sprite GetSprite() {
+        return sprite;
     }
 }

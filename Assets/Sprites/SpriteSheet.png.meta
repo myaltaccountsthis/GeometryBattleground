@@ -273,7 +273,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pentagon
+      name: Barrage
       rect:
         serializedVersion: 2
         x: 65
@@ -839,6 +839,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Octagon
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 384
+        width: 128
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e5ab8866ad41f9243a743c598949dc3f
+      internalID: -281965925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -854,7 +875,6 @@ TextureImporter:
       Ball: 235350715
       Experience_1: -34948245
       Dark Aura: -1765358846
-      Pentagon: 35765532
       Splitter: 1979487859
       Health: 1462610924
       Powerup Double Damage: 1142072427
@@ -865,7 +885,6 @@ TextureImporter:
       WallTR: -455452338
       Powerup Speed: -33824401
       Spike: -1179899642
-      Passive Wisdom: -940632185
       Powerup Infinite Pierce: -1312039128
       Powerup Magnet: -498431500
       WallH: -959483350
@@ -874,12 +893,15 @@ TextureImporter:
       Void: 918843843
       Circle: 700268490
       WallBR: 2032642998
+      Barrage: -838418213
       Passive Dexterity: -2080526494
       Powerup Shield: -168208030
       Passive Power: 322056946
+      Passive Wisdom: -940632185
       Shotgun: -442452156
       WallV: -747594729
       Ground: -1010670414
+      Octagon: -281965925
       Square: 497585160
       Hexagon: 1559499710
       Experience_3: 1950142143

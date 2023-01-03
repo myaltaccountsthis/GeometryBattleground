@@ -279,6 +279,7 @@ public class Player : MonoBehaviour
 
     public void CollectHealth(Health healthDrop) {
         health = totalHealth;
+        score += Health.SCORE;
     }
 
     private void UpdateExpBar() {
@@ -384,6 +385,7 @@ public class Player : MonoBehaviour
             int upgradeLevel = upgrade.GetLevel(this);
             option.upgradeLevel.text = upgrade.GetLevelText(upgradeLevel + 1);
             option.upgradeEffect.text = upgrade.GetUpgradeEffect(this);
+            option.upgradeImage.sprite = upgrade.GetSprite();
             // TODO projectile image sprite
             
             /*
@@ -456,6 +458,7 @@ public class Player : MonoBehaviour
 
     public void CollectPowerup(Powerup powerup) {
         activePowerups[powerup.type] = powerup.duration;
+        score += Powerup.SCORE;
         switch (powerup.type) {
             case "Nuke":
                 Explosion explosion = Instantiate<Explosion>(explosionPrefab, powerup.transform.position, Quaternion.identity, projectileFolder);

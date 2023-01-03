@@ -71,7 +71,7 @@ public class PauseMenuHandler : MonoBehaviour
         GameTime.isPaused = false;
     }
 
-    private void ToggleUI() {
+    public void ToggleUI() {
         if (pauseMenu.activeInHierarchy) {
             CloseUI();
         }

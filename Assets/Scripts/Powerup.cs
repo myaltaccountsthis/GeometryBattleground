@@ -6,6 +6,7 @@ public class Powerup : Drop
 {
     public string type;
     public int duration;
+    public const int SCORE = 200;
 
     public Sprite sprite {
         get => GetComponent<SpriteRenderer>().sprite;

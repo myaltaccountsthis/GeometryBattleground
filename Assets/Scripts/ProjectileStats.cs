@@ -69,7 +69,7 @@ public struct ProjectileStats {
                 case "Power":
                     damage *= (1 + passiveLevel * .2f);
                     if (pierce != -1)
-                        pierce += 1;
+                        pierce += passiveLevel;
                     break;
             }
         }

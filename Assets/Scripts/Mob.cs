@@ -31,9 +31,9 @@ public class Mob : MonoBehaviour
     private Map map;
     private SpriteRenderer spriteRenderer;
     
-    private const float HEALTH_CHANCE = .003f;
+    private const float HEALTH_CHANCE = .03f;
     // private const float POWERUP_CHANCE = 1f;
-    private const float POWERUP_CHANCE = .005f;
+    private const float POWERUP_CHANCE = .02f;
 
     void Start()
     {
@@ -68,18 +68,22 @@ public class Mob : MonoBehaviour
             damage *= 2;
         health -= damage;
         if (health <= 0) {
-            player.AddScore(score);
-            float chance = experiencePercent * experienceDrop / 10;
-            if (Random.value < POWERUP_CHANCE * chance)
-                map.InstantiatePowerup(transform.position);
-            else if (Random.value < HEALTH_CHANCE * chance)
-                map.InstantiateHealth(transform.position);
-            else if (Random.value < experiencePercent)
-                map.InstantiateExperience(experienceDrop, transform.position);
-            Destroy(gameObject);
+            onDeath();
         }
         spriteRenderer.color = DAMAGE_COLOR;
         damageTicks = DAMAGE_TICKS;
+    }
+
+    public virtual void onDeath() {
+        player.AddScore(score);
+        float chance = experiencePercent * experienceDrop / 10;
+        if (Random.value < POWERUP_CHANCE * chance)
+            map.InstantiatePowerup(transform.position);
+        else if (Random.value < HEALTH_CHANCE * chance)
+            map.InstantiateHealth(transform.position);
+        else if (Random.value < experiencePercent)
+            map.InstantiateExperience(experienceDrop, transform.position);
+        Destroy(gameObject);
     }
 
     // Returns the damage this mob should deal after some time
@@ -90,5 +94,17 @@ public class Mob : MonoBehaviour
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
         return startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 20 + 1);
+    }
+
+    public float GetSpeed() {
+        return movementSpeed * (1 + .02f *  player.Wave);
+    }
+
+    private float getHealthChance() {
+        return HEALTH_CHANCE * (Mathf.Log(player.Wave) + 1) / player.Wave;
+    }
+
+    private float GetPowerupChance() {
+        return POWERUP_CHANCE * (Mathf.Log(player.Wave) + 1) / player.Wave;
     }
 }
