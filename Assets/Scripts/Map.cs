@@ -24,7 +24,7 @@ public class Map : MonoBehaviour
     public Powerup[] powerups;
 
     public int CurrentMobCount {
-        get => mobFolder.childCount;
+        get => mobFolder.childCount + mobsToSpawn;
     }
 
     [Tooltip("The tile to use for the ground")]
@@ -55,6 +55,9 @@ public class Map : MonoBehaviour
     private BoundsInt mobBounds;
     private BoundsInt experienceBounds;
     private int nextExpSpawn;
+    private int currentWave;
+    private int mobsToSpawn;
+    private const int SPAWN_INTERVAL = 10;
 
     void Awake() {
         Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
@@ -70,11 +73,13 @@ public class Map : MonoBehaviour
         mobBounds.SetMinMax(new Vector3Int(mobBounds.xMin + 1, mobBounds.yMin + 1), new Vector3Int(mobBounds.xMax - 1, mobBounds.yMax - 1));
         experienceBounds = bounds;
         experienceBounds.SetMinMax(new Vector3Int(experienceBounds.xMin + 1, experienceBounds.yMin + 1), new Vector3Int(experienceBounds.xMax - 1, experienceBounds.yMax - 1));
-        nextExpSpawn = 0;
     }
 
     void Start()
     {
+        nextExpSpawn = 0;
+        currentWave = 0;
+        mobsToSpawn = 0;
         for (int i = 0; i < maxExpDrops / 2; i++) {
             AttemptExpSpawn();
         }
@@ -119,6 +124,11 @@ public class Map : MonoBehaviour
         }
         else if (nextExpSpawn > 0)
             nextExpSpawn--;
+
+        if (mobsToSpawn > 0 && Player.Updates % SPAWN_INTERVAL == 0) {
+            mobsToSpawn--;
+            SpawnMob(currentWave);
+        }
     }
 
 
@@ -160,10 +170,8 @@ public class Map : MonoBehaviour
     }
 
     public void SpawnWave(int wave) {
-        int count = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
-        for (int i = 0; i < count; i++) {
-            SpawnMob(wave);
-        }
+        mobsToSpawn = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
+        currentWave = wave;
     }
 
     // Returns a random location from the tileExtent perimeter

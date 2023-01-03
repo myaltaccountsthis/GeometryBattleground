@@ -192,11 +192,14 @@ public class Player : MonoBehaviour
 
         // ui
         int waveTextAliveTime = Updates - waveTextStart;
-        if (waveText.gameObject.activeSelf && waveTextAliveTime > 90) {
-            waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
-            if (waveTextAliveTime > 120) {
-                waveText.gameObject.SetActive(false);
+        if (waveText.gameObject.activeSelf) {
+            if (waveTextAliveTime == 0)
                 map.SpawnWave(wave);
+            if (waveTextAliveTime > 90) {
+                waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
+                if (waveTextAliveTime > 120) {
+                    waveText.gameObject.SetActive(false);
+                }
             }
         }
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
