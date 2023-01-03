@@ -8,11 +8,16 @@ public class Splitter : Projectile
     private bool alreadyHit;
     private Player player;
 
+    public override void Awake()
+    {
+        base.Awake();
+
+        alreadyHit = false;
+    }
     public override void Start()
     {
         base.Start();
 
-        alreadyHit = false;
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         spike = player.spikePrefab;
     }

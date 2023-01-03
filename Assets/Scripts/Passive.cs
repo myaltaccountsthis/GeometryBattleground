@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Passive : MonoBehaviour, IUpgradeable
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,5 +49,9 @@ public class Passive : MonoBehaviour, IUpgradeable
                 return "<color=green>-15% Attack Interval</color>";
         }
         return "";
+    }
+
+    public Sprite GetSprite() {
+        return GetComponent<Image>().sprite;
     }
 }

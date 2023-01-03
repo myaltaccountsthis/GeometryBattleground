@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Health : Drop
 {
+    public const int SCORE = 100;
     public override void PickUp(Player player)
     {
         base.PickUp(player);
