@@ -12,19 +12,19 @@ public class Explosion : Projectile
 
     private Vector3 startPosition;
     private int aliveFor;
-    private SpriteRenderer sprite;
+    private SpriteRenderer spriteRenderer;
     private Collider2D collision2;
     private Color originalColor;
 
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
 
         startPosition = transform.position;
         aliveFor = 0;
-        sprite = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         collision2 = GetComponent<Collider2D>();
-        originalColor = sprite.color;
+        originalColor = spriteRenderer.color;
         transform.localScale = Vector3.zero;
     }
 
@@ -35,7 +35,7 @@ public class Explosion : Projectile
 
         if (aliveFor >= explosionLifeTime) {
             collision2.enabled = false;
-            sprite.color = Color.Lerp(originalColor, Color.clear, (float) (aliveFor - explosionLifeTime) / explosionDecayTime);
+            spriteRenderer.color = Color.Lerp(originalColor, Color.clear, (float) (aliveFor - explosionLifeTime) / explosionDecayTime);
         }
         else {
             float scale = (maxSize - minSize) * aliveFor / explosionLifeTime + minSize;

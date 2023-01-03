@@ -154,5 +154,5 @@ MonoBehaviour:
   baseDamage: 10
   experienceDrop: 20
   experiencePercent: 0.5
-  spawnWeight: 3
+  spawnWeight: 30
   score: 20

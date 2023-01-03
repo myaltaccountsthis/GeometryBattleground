@@ -105,7 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BallUpgrade
+      name: Ball Upgrade
       rect:
         serializedVersion: 2
         x: 0
@@ -263,11 +263,11 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Fireball Upgrade: -1292699629
-      BallUpgrade: -1390496926
+      Ball Upgrade: -1390496926
       Shotgun Upgrade: -1906731998
       Laser Upgrade: 1815120338
-      Barrage Upgrade: 10280811
       Dark Aura Upgrade: 146222453
+      Barrage Upgrade: 10280811
       Splitter Upgrade: 1277646696
   spritePackingTag: 
   pSDRemoveMatte: 0
