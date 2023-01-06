@@ -31,9 +31,9 @@ public class Mob : MonoBehaviour
     private Map map;
     private SpriteRenderer spriteRenderer;
     
-    private const float HEALTH_CHANCE = .03f;
+    private const float HEALTH_CHANCE = .04f;
     // private const float POWERUP_CHANCE = 1f;
-    private const float POWERUP_CHANCE = .02f;
+    private const float POWERUP_CHANCE = .03f;
 
     void Start()
     {
@@ -57,7 +57,7 @@ public class Mob : MonoBehaviour
         
         Vector3 playerPos = player.transform.position;
         Vector3 direction = (playerPos - transform.position).normalized;
-        transform.position += direction * movementSpeed / 60f;
+        transform.position += direction * GetSpeed() / 60f;
         transform.eulerAngles = new Vector3(0, 0, Mathf.Rad2Deg * Mathf.Atan2(direction.y, direction.x) - 90);
     }
 
@@ -77,9 +77,9 @@ public class Mob : MonoBehaviour
     public virtual void onDeath() {
         player.AddScore(score);
         float chance = experiencePercent * experienceDrop / 10;
-        if (Random.value < POWERUP_CHANCE * chance)
+        if (Random.value < getPowerupChance(chance))
             map.InstantiatePowerup(transform.position);
-        else if (Random.value < HEALTH_CHANCE * chance)
+        else if (Random.value < getHealthChance(chance))
             map.InstantiateHealth(transform.position);
         else if (Random.value < experiencePercent)
             map.InstantiateExperience(experienceDrop, transform.position);
@@ -93,18 +93,22 @@ public class Mob : MonoBehaviour
 
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
-        return startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 20 + 1);
+        return Mathf.Floor(startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 20 + 1));
     }
 
     public float GetSpeed() {
         return movementSpeed * (1 + .02f *  player.Wave);
     }
 
-    private float getHealthChance() {
-        return HEALTH_CHANCE * (Mathf.Log(player.Wave) + 1) / player.Wave;
+    private float getDropChance() {
+        return (Mathf.Log(player.Wave) + 1) / player.Wave;
     }
 
-    private float GetPowerupChance() {
-        return POWERUP_CHANCE * (Mathf.Log(player.Wave) + 1) / player.Wave;
+    private float getHealthChance(float chance) {
+        return HEALTH_CHANCE * getDropChance();
+    }
+
+    private float getPowerupChance(float chance) {
+        return POWERUP_CHANCE * getDropChance();
     }
 }

@@ -12,7 +12,7 @@ public abstract class Drop : MonoBehaviour
         set {
             if (value != LargeDropSize) {
                 largeDropSize = value;
-                myCollider.radius = largeDropSize ? originalRadius * 2 : originalRadius;
+                myCollider.radius = largeDropSize ? originalRadius * 4 : originalRadius;
             } 
         }
     }

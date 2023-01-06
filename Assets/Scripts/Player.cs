@@ -282,7 +282,7 @@ public class Player : MonoBehaviour
 
     public void CollectHealth(Health healthDrop) {
         health = totalHealth;
-        score += Health.SCORE;
+        AddScore(Health.SCORE);
     }
 
     private void UpdateExpBar() {
@@ -461,7 +461,7 @@ public class Player : MonoBehaviour
 
     public void CollectPowerup(Powerup powerup) {
         activePowerups[powerup.type] = powerup.duration;
-        score += Powerup.SCORE;
+        AddScore(Powerup.SCORE);
         switch (powerup.type) {
             case "Nuke":
                 Explosion explosion = Instantiate<Explosion>(explosionPrefab, powerup.transform.position, Quaternion.identity, projectileFolder);
