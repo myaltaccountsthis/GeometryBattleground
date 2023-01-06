@@ -24,10 +24,6 @@ public class Player : MonoBehaviour
     public Projectile[] projectiles;
     [Tooltip("List of all passive abilities")]
     public Passive[] passives;
-    [HideInInspector]
-    public Dictionary<string, Projectile> projectileList;
-    [HideInInspector]
-    public Dictionary<string, Passive> passiveList;
     public Transform projectileFolder;
     [Tooltip("CSV file that contains data for each projectile")]
     public TextAsset infoFile;
@@ -47,6 +43,8 @@ public class Player : MonoBehaviour
     private Dictionary<string, int> ownedProjectiles;
     private Dictionary<string, int> ownedPassives;
     private Dictionary<string, int> activePowerups;
+    private Dictionary<string, ProjectileLauncher> projectileLaunchers;
+    public Dictionary<string, Passive> passiveList;
     private int iFrames;
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
@@ -55,6 +53,7 @@ public class Player : MonoBehaviour
     private int waveTextStart;
     private Map map;
     private CircleCollider2D playerCollider;
+    private DataManager dataManager;
 
     [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
@@ -66,31 +65,20 @@ public class Player : MonoBehaviour
         Camera.main.transform.position = new Vector3(transform.position.x, transform.position.y, Camera.main.transform.position.z);
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
-        projectileList = new Dictionary<string, Projectile>();
+        map = GameObject.FindWithTag("Map").GetComponent<Map>();
+        playerCollider = GetComponent<CircleCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
+        projectileLaunchers = new Dictionary<string, ProjectileLauncher>();
         foreach (Projectile projectile in projectiles) {
-            projectileList.Add(projectile.name, projectile);
             Debug.Assert(projectile != null, "Error: Projectile List contains null values");
+            projectileLaunchers.Add(projectile.name, new ProjectileLauncher(projectile, this));
         }
         passiveList = new Dictionary<string, Passive>();
-        ownedPassives = new Dictionary<string, int>();
         foreach (Passive passive in passives) {
-            passiveList.Add(passive.name, passive);
-            ownedPassives.Add(passive.name, 0);
             Debug.Assert(passive != null, "Error: Passive List contains null values");
+            passiveList.Add(passive.name, passive);
         }
-        activePowerups = new Dictionary<string, int>();
-        ownedProjectiles = new Dictionary<string, int>();
-        ownedProjectiles.Add("Ball", 1);
-        // TESTING
-        // TESTING END
-        health = totalHealth;
-        iFrames = 0;
-        updates = 0;
-        level = 1;
-        experience = 0;
-        score = 0;
-        wave = 0;
-        waveTextStart = 0;
         originalMovementSpeed = movementSpeed;
         try {
             projectileInfo = new Dictionary<string, ProjectileStats[]>();
@@ -114,9 +102,23 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        map = GameObject.FindWithTag("Map").GetComponent<Map>();
-        playerCollider = GetComponent<CircleCollider2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        ownedPassives = new Dictionary<string, int>();
+        foreach (Passive passive in passives) {
+            ownedPassives.Add(passive.name, 0);
+        }
+        activePowerups = new Dictionary<string, int>();
+        ownedProjectiles = new Dictionary<string, int>();
+        ownedProjectiles.Add("Ball", 1);
+        // TESTING
+        // TESTING END
+        health = totalHealth;
+        iFrames = 0;
+        updates = 0;
+        level = 1;
+        experience = 0;
+        score = 0;
+        wave = 0;
+        waveTextStart = 0;
         
         UpdateExpBar();
         UpdateScore();
@@ -171,23 +173,18 @@ public class Player : MonoBehaviour
 
         // projectiles
         foreach (string projectileName in ownedProjectiles.Keys) {
-            ProjectileStats stats = GetProjectileStats(projectileName);
-            stats.ApplyPassives(ownedPassives);
-            if (activePowerups.ContainsKey("Infinite Pierce"))
-                stats.pierce = -1;
-            Projectile projectile = projectileList[projectileName];
+            ProjectileStats stats = GetProjectileAppliedStats(projectileName);
+            ProjectileLauncher launcher = projectileLaunchers[projectileName];
+            launcher.Update(stats);
             if (updates % (testingMode ? Mathf.Max(stats.interval / 2, 1) : stats.interval) == 0) {
-                projectile.toShoot = stats.projectileCount;
-                projectile.toWait = 0;
+                launcher.Shoot();
             }
-            while (projectile.toShoot > 0 && projectile.toWait == 0) {
-                Projectile newProjectile = Instantiate<Projectile>(projectile, transform.position, Quaternion.identity, projectileFolder);
+            while (launcher.ShouldShoot) {
+                Projectile newProjectile = Instantiate<Projectile>(launcher.Projectile, transform.position, Quaternion.identity, projectileFolder);
                 newProjectile.LoadStats(stats);
-                newProjectile.GenerateStats(transform, stats.projectileCount - projectile.toShoot);
-                projectile.toShoot--;
-                projectile.toWait = stats.timeBetweenShots;
+                newProjectile.GenerateStats(transform, stats.projectileCount - launcher.ToShoot);
+                launcher.ShootSub();
             }
-            projectile.toWait--;
         }
 
         // ui
@@ -276,13 +273,13 @@ public class Player : MonoBehaviour
     
     public void CollectExp(Experience exp) {
         experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
-        score += exp.Value;
+        AddScore(exp.Value);
         CheckLevel();
     }
 
     public void CollectHealth(Health healthDrop) {
         health = totalHealth;
-        score += Health.SCORE;
+        AddScore(Health.SCORE);
     }
 
     private void UpdateExpBar() {
@@ -309,6 +306,8 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateScore() {
+        if (score > dataManager.highScore)
+            dataManager.highScore = score;
         hudUI.UpdateScore(score);
     }
 
@@ -326,6 +325,14 @@ public class Player : MonoBehaviour
         if (projLevel == -1)
             projLevel = ownedProjectiles[projectileName];
         return projectileInfo[projectileName][projLevel];
+    }
+
+    public ProjectileStats GetProjectileAppliedStats(string projectileName) {
+        ProjectileStats stats = GetProjectileStats(projectileName);
+        stats.ApplyPassives(ownedPassives);
+        if (activePowerups.ContainsKey("Infinite Pierce"))
+            stats.pierce = -1;
+        return stats;
     }
 
     public int GetProjectileLevel(string projectileName) {
@@ -349,7 +356,8 @@ public class Player : MonoBehaviour
 
         // generate options
         List<IUpgradeable> availableUpgrades = new List<IUpgradeable>();
-        foreach (Projectile projectile in projectileList.Values) {
+        foreach (ProjectileLauncher launcher in projectileLaunchers.Values) {
+            Projectile projectile = launcher.Projectile;
             if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
                 availableUpgrades.Add(projectile);
             }
@@ -424,7 +432,7 @@ public class Player : MonoBehaviour
             return;
 
         string upgradeName = option.upgradeName.text;
-        if (!projectileList.ContainsKey(upgradeName) && !passiveList.ContainsKey(upgradeName))
+        if (!projectileLaunchers.ContainsKey(upgradeName) && !passiveList.ContainsKey(upgradeName))
             return;
         
         int i;
@@ -433,8 +441,8 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if (projectileList.ContainsKey(upgradeName)) {
-            if (!ownedProjectiles.ContainsKey(upgradeName) && projectileList.ContainsKey(upgradeName))
+        if (projectileLaunchers.ContainsKey(upgradeName)) {
+            if (!ownedProjectiles.ContainsKey(upgradeName))
                 ownedProjectiles.Add(upgradeName, 0);
             ownedProjectiles[upgradeName]++;
         }
@@ -487,7 +495,8 @@ public class Player : MonoBehaviour
     }
 
     public bool IsPowerupActive(string powerupName) {
-        return activePowerups.ContainsKey(powerupName);
+        // something strange here where during map's Start(), activePowerups is null
+        return activePowerups != null && activePowerups.ContainsKey(powerupName);
     }
 
     // passives

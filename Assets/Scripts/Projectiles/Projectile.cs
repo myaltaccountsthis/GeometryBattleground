@@ -9,10 +9,6 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     // in radians
     [HideInInspector]
     public float angle;
-    [HideInInspector]
-    public int toShoot;
-    [HideInInspector]
-    public int toWait;
     public Sprite sprite;
 
     private Collider2D collision;
@@ -51,7 +47,6 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
 
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
-        Debug.Log(mob);
         if (mob != null) {
             Debug.Log("Pierce: " + pierceLeft);
             if (pierceLeft == 0)
