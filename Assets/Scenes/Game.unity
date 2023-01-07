@@ -26659,8 +26659,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -5, y: 25}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchoredPosition: {x: -5, y: 8}
+  m_SizeDelta: {x: 150, y: 68}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &997429840
 MonoBehaviour:
@@ -37434,9 +37434,8 @@ MonoBehaviour:
   spikePrefab: {fileID: 5248771642335778886, guid: 98ecec71fd93a2c408173dcf3153afd9, type: 3}
   waveText: {fileID: 772553885}
   hudUI: {fileID: 1718587549}
-  highScore: 0
   health: 0
-  testingMode: 0
+  testingMode: 1
 --- !u!58 &1693394580
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -37559,7 +37558,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -15, y: -10}
+  m_AnchoredPosition: {x: -20, y: -10}
   m_SizeDelta: {x: 120, y: 24}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1722599083
@@ -37829,8 +37828,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -5, y: 25}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchoredPosition: {x: -5, y: 8}
+  m_SizeDelta: {x: 150, y: 68}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1785376839
 MonoBehaviour:
@@ -38147,7 +38146,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -15, y: -10}
+  m_AnchoredPosition: {x: -20, y: -10}
   m_SizeDelta: {x: 120, y: 24}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1833009249
@@ -38282,8 +38281,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -5, y: 25}
-  m_SizeDelta: {x: 150, y: 50}
+  m_AnchoredPosition: {x: -5, y: 8}
+  m_SizeDelta: {x: 150, y: 68}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1842907845
 MonoBehaviour:

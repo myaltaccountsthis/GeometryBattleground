@@ -56,6 +56,16 @@ public struct ProjectileStats {
         return message;
     }
 
+    public string GetBaseStats() {
+        string message = "";
+        message += "<color=green>Attack Interval: " + interval + "</color>\n";
+        message += "<color=green>Damage: " + damage + "</color>\n";
+        message += "<color=green>Pierce: " + (pierce == -1 ? "Infinite" : pierce) + "</color>\n";
+        if (projectileCount > 1)
+            message += "<color=green>Projectiles: " + projectileCount + "</color>\n";
+        return message;
+    }
+
     public void ApplyPassives(Dictionary<string, int> passives) {
         foreach(string passiveName in passives.Keys) {
             int passiveLevel = passives[passiveName];

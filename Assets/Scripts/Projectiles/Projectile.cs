@@ -40,8 +40,13 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
     }
 
+    // Get stats using projectilestats, should be used and overriden by children
     public virtual string GetUpgradeEffect(int level, ProjectileStats next) {
         string message = stats.GetBaseUpgradeEffect(next);
+        return message;
+    }
+    public virtual string GetBaseStats(ProjectileStats next) {
+        string message = next.GetBaseStats();
         return message;
     }
 
@@ -85,10 +90,12 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     public string GetUpgradeEffect(Player player)
     {
         int currentLevel = player.GetProjectileLevel(name);
+        ProjectileStats next = player.GetProjectileStats(name, currentLevel + 1);
         // when unlock
-        if (currentLevel == 0)
-            return "Unlock";
-        
+        if (currentLevel == 0) {
+            return GetBaseStats(next);
+        }
+
         // compare this level to next
         LoadStats(player.GetProjectileStats(name, currentLevel));
         return GetUpgradeEffect(currentLevel, player.GetProjectileStats(name, currentLevel + 1));

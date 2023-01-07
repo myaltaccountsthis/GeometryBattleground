@@ -8,6 +8,7 @@ public class Fireball : Projectile
     private Explosion explosion;
     private bool alreadyHit;
     private Player player;
+    private const float EXPLOSION_RADIUS = 2;
 
     public override void Awake()
     {
@@ -30,6 +31,13 @@ public class Fireball : Projectile
             float dSize = getExplosionSize(level + 1) - size;
             message += (dSize > 0 ? "<color=green>+" : "<color=red>-") + ProjectileStats.Round(Mathf.Abs(100f * dSize / size), 1) + "% Size</color>\n";
         }
+        return message;
+    }
+
+    public override string GetBaseStats(ProjectileStats next)
+    {
+        string message = base.GetBaseStats(next);
+        message += "<color=green>Explosion Size: " + (getExplosionSize(1) * EXPLOSION_RADIUS) + "</color>\n";
         return message;
     }
 
@@ -65,9 +73,9 @@ public class Fireball : Projectile
         if (level == -1)
             level = player.GetProjectileLevel("Fireball");
         if (level >= 8)
-            return 1.5f;
+            return 1.8f;
         if (level >= 5)
-            return 1.2f;
-        return 1f;
+            return 1.5f;
+        return 1.25f;
     }
 }
