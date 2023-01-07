@@ -197,7 +197,7 @@ TextureImporter:
         width: 128
         height: 128
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -205,6 +205,27 @@ TextureImporter:
       bones: []
       spriteID: 802edc642c6a1b64f9f6185ea60f2996
       internalID: -878610701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Miniboss
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 372
+        width: 128
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7a2973beee54c142b23525ceb5876b3
+      internalID: 1979922417
       vertices: []
       indices: 
       edges: []
@@ -221,6 +242,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Circle: 1800784726
+      Miniboss: 1979922417
       Octagon: -878610701
       Square: 693334078
       Hexagon: -1841015907

@@ -37435,7 +37435,7 @@ MonoBehaviour:
   waveText: {fileID: 772553885}
   hudUI: {fileID: 1718587549}
   health: 0
-  testingMode: 1
+  testingMode: 0
 --- !u!58 &1693394580
 CircleCollider2D:
   m_ObjectHideFlags: 0
