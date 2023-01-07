@@ -26,6 +26,7 @@ public class Mob : MonoBehaviour
     public int score;
 
     private float health;
+    private bool dead;
     private int damageTicks;
     private Player player;
     private Map map;
@@ -41,6 +42,7 @@ public class Mob : MonoBehaviour
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         map = GameObject.FindWithTag("Map").GetComponent<Map>();
         health = GetHealth();
+        dead = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -67,8 +69,9 @@ public class Mob : MonoBehaviour
         if (player.IsPowerupActive("Double Damage"))
             damage *= 2;
         health -= damage;
-        if (health <= 0) {
+        if (health <= 0 && !dead) {
             onDeath();
+            dead = true;
         }
         spriteRenderer.color = DAMAGE_COLOR;
         damageTicks = DAMAGE_TICKS;
