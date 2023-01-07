@@ -6,13 +6,21 @@ public class DarkAura : Projectile
 {
     public override string GetUpgradeEffect(int level, ProjectileStats next) {
         string message = base.GetUpgradeEffect(level, next);
-        float size = this.stats.speed;
+        float size = stats.speed;
         if (next.speed != size) {
             float dSize = next.speed - size;
             message += (dSize > 0 ? "<color=green>+" : "<color=red>-") + ProjectileStats.Round(Mathf.Abs(100f * dSize / size), 1) + "% Size</color>\n";
         }
         return message;
     }
+
+    public override string GetBaseStats(ProjectileStats next)
+    {
+        string message = base.GetBaseStats(next);
+        message += "<color=green>Size: " + next.speed + "</color>\n";
+        return message;
+    }
+
     public override void GenerateStats(Transform playerTransform, int index = 1)
     {
         transform.localScale = new Vector3(stats.speed, stats.speed, 1);
