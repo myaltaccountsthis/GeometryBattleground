@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     private static int updates;
 
     public int Wave {
-        get => wave;
+        get => dataManager.wave;
     }
 
     [Tooltip("Movement speed of the player in units per second")]
@@ -36,12 +36,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float health;
     private float shield;
-    private int level;
     private int experience;
-    private int score;
     private float originalMovementSpeed;
-    private Dictionary<string, int> ownedProjectiles;
-    private Dictionary<string, int> ownedPassives;
     private Dictionary<string, int> activePowerups;
     private Dictionary<string, ProjectileLauncher> projectileLaunchers;
     public Dictionary<string, Passive> passiveList;
@@ -49,11 +45,12 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
     private UpgradeOption[] upgradeUIOptions;
-    private int wave;
     private int waveTextStart;
     private Map map;
     private CircleCollider2D playerCollider;
     private DataManager dataManager;
+    // if waveText is big
+    private bool waveTextActive;
 
     [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
@@ -102,24 +99,17 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        ownedPassives = new Dictionary<string, int>();
-        foreach (Passive passive in passives) {
-            ownedPassives.Add(passive.name, 0);
-        }
         activePowerups = new Dictionary<string, int>();
-        ownedProjectiles = new Dictionary<string, int>();
-        ownedProjectiles.Add("Ball", 1);
         // TESTING
         // TESTING END
         health = totalHealth;
         iFrames = 0;
         updates = 0;
-        level = 1;
         experience = 0;
-        score = 0;
-        wave = 0;
+        waveText.text = "";
         waveTextStart = 0;
-        
+        waveTextActive = false;
+
         UpdateExpBar();
         UpdateScore();
         hudUI.UpdateHealth(health, totalHealth, shield);
@@ -147,7 +137,7 @@ public class Player : MonoBehaviour
             Application.Quit();
         }
 
-        if (map.CurrentMobCount == 0 && !waveText.gameObject.activeSelf) {
+        if (map.CurrentMobCount == 0 && !waveTextActive) {
             AdvanceWave();
         }
 
@@ -172,7 +162,7 @@ public class Player : MonoBehaviour
         transform.eulerAngles = new Vector3(0, 0, Mathf.Rad2Deg * angle - 90);
 
         // projectiles
-        foreach (string projectileName in ownedProjectiles.Keys) {
+        foreach (string projectileName in dataManager.ownedProjectiles.Keys) {
             ProjectileStats stats = GetProjectileAppliedStats(projectileName);
             ProjectileLauncher launcher = projectileLaunchers[projectileName];
             launcher.Update(stats);
@@ -189,13 +179,18 @@ public class Player : MonoBehaviour
 
         // ui
         int waveTextAliveTime = Updates - waveTextStart;
-        if (waveText.gameObject.activeSelf) {
+        if (waveTextActive) {
             if (waveTextAliveTime == 0)
-                map.SpawnWave(wave);
+                map.SpawnWave(dataManager.wave);
             if (waveTextAliveTime > 90) {
-                waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
+                float t = (float) (waveTextAliveTime - 90) / 30;
+                // waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
+                waveText.fontSize = 80 - 36 * t;
+                Vector2 pos = waveText.rectTransform.anchoredPosition;
+                pos.y = -60 + 40 * t;
+                waveText.rectTransform.anchoredPosition = pos;
                 if (waveTextAliveTime > 120) {
-                    waveText.gameObject.SetActive(false);
+                    waveTextActive = false;
                 }
             }
         }
@@ -262,10 +257,14 @@ public class Player : MonoBehaviour
     }
 
     private void AdvanceWave() {
-        wave++;
-        waveText.text = "Wave " + wave;
-        waveText.color = Color.white;
-        waveText.gameObject.SetActive(true);
+        dataManager.wave++;
+        waveText.text = "Wave " + dataManager.wave;
+        // waveText.color = Color.white;
+        waveText.fontSize = 80;
+        Vector2 pos = waveText.rectTransform.anchoredPosition;
+        pos.y = -60;
+        waveText.rectTransform.anchoredPosition = pos;
+        waveTextActive = true;
         waveTextStart = Updates;    
     }
 
@@ -283,18 +282,18 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateExpBar() {
-        hudUI.UpdateExpBar(experience, ExpToNextLevel(), level);
+        hudUI.UpdateExpBar(experience, ExpToNextLevel(), dataManager.level);
     }
 
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
         if (experience >= requiredExp) {
             // int totalLevels = 0;
-            // foreach (string projectileName in ownedProjectiles.Keys)
-            //     totalLevels += ownedProjectiles[projectileName];
+            // foreach (string projectileName in dataManager.ownedProjectiles.Keys)
+            //     totalLevels += dataManager.ownedProjectiles[projectileName];
             // if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
             experience -= requiredExp;
-            level++;
+            dataManager.level++;
             UpdateExpBar();
             UpdateScore();
             ShowLevelUpUI();
@@ -306,48 +305,48 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateScore() {
-        if (score > dataManager.highScore)
-            dataManager.highScore = score;
-        hudUI.UpdateScore(score);
+        if (dataManager.score > dataManager.highScore)
+            dataManager.highScore = dataManager.score;
+        hudUI.UpdateScore(dataManager.score);
     }
 
     public void AddScore(int toAdd) {
-        score += toAdd;
+        dataManager.score += toAdd;
         UpdateScore();
     }
 
     private int ExpToNextLevel() {
         // TODO also make leveling up more powerful (maybe ramp mobs more), TODO mobs
-        return Mathf.FloorToInt((Mathf.FloorToInt(Mathf.Pow(level - 1, 1.5f)) + 1 * level + 4) * 10);
+        return Mathf.FloorToInt((Mathf.FloorToInt(Mathf.Pow(dataManager.level - 1, 1.5f)) + 1 * dataManager.level + 4) * 10);
     }
 
     public ProjectileStats GetProjectileStats(string projectileName, int projLevel = -1) {
         if (projLevel == -1)
-            projLevel = ownedProjectiles[projectileName];
+            projLevel = dataManager.ownedProjectiles[projectileName];
         return projectileInfo[projectileName][projLevel];
     }
 
     public ProjectileStats GetProjectileAppliedStats(string projectileName) {
         ProjectileStats stats = GetProjectileStats(projectileName);
-        stats.ApplyPassives(ownedPassives);
+        stats.ApplyPassives(dataManager.ownedPassives);
         if (activePowerups.ContainsKey("Infinite Pierce"))
             stats.pierce = -1;
         return stats;
     }
 
     public int GetProjectileLevel(string projectileName) {
-        int projLevel;
-        ownedProjectiles.TryGetValue(projectileName, out projLevel);
+        int projLevel = 0;
+        dataManager.ownedProjectiles.TryGetValue(projectileName, out projLevel);
         return projLevel;
     }
 
     public int GetPassiveLevel(string passiveName) {
-        int passiveLevel;
-        ownedPassives.TryGetValue(passiveName, out passiveLevel);
+        int passiveLevel = 0;
+        dataManager.ownedPassives.TryGetValue(passiveName, out passiveLevel);
         return passiveLevel;
     }
 
-    // show level up ui and generate 
+    // show dataManager.level up ui and generate 
     private void ShowLevelUpUI() {
         if (upgradeUI.activeInHierarchy)
             return;
@@ -358,7 +357,7 @@ public class Player : MonoBehaviour
         List<IUpgradeable> availableUpgrades = new List<IUpgradeable>();
         foreach (ProjectileLauncher launcher in projectileLaunchers.Values) {
             Projectile projectile = launcher.Projectile;
-            if (!ownedProjectiles.ContainsKey(projectile.name) || ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
+            if (!dataManager.ownedProjectiles.ContainsKey(projectile.name) || dataManager.ownedProjectiles[projectile.name] < MAX_PROJECTILE_LEVEL) {
                 availableUpgrades.Add(projectile);
             }
         }
@@ -403,8 +402,8 @@ public class Player : MonoBehaviour
             if (upgrade.isProjectile) {
                 Projectile projectile = upgrade.projectile;
                 option.upgradeName.text = projectile.name;
-                if (ownedProjectiles.ContainsKey(projectile.name)) {
-                    int upgradeLevel = ownedProjectiles[projectile.name];
+                if (dataManager.ownedProjectiles.ContainsKey(projectile.name)) {
+                    int upgradeLevel = dataManager.ownedProjectiles[projectile.name];
                     projectile.stats = projectileInfo[projectile.name][upgradeLevel];
                     string message = projectile.GetUpgradeEffect(upgradeLevel, projectileInfo[projectile.name][upgradeLevel + 1]);
                     option.upgradeEffect.text = message.Trim();
@@ -418,7 +417,7 @@ public class Player : MonoBehaviour
             else if (upgrade.isPassive) {
                 Passive passive = upgrade.passive;
                 option.upgradeName.text = passive.name;
-                int upgradeLevel = ownedPassives[passive.name];
+                int upgradeLevel = dataManager.ownedPassives[passive.name];
                 string message = passive.GetUpgradeEffect();
                 option.upgradeEffect.text = message;
                 option.upgradeLevel.text = "Level " + (upgradeLevel + 1);
@@ -442,12 +441,14 @@ public class Player : MonoBehaviour
         }
 
         if (projectileLaunchers.ContainsKey(upgradeName)) {
-            if (!ownedProjectiles.ContainsKey(upgradeName))
-                ownedProjectiles.Add(upgradeName, 0);
-            ownedProjectiles[upgradeName]++;
+            if (!dataManager.ownedProjectiles.ContainsKey(upgradeName))
+                dataManager.ownedProjectiles.Add(upgradeName, 0);
+            dataManager.ownedProjectiles[upgradeName]++;
         }
         else {
-            ownedPassives[upgradeName]++;
+            if (!dataManager.ownedPassives.ContainsKey(upgradeName))
+                dataManager.ownedPassives.Add(upgradeName, 0);
+            dataManager.ownedPassives[upgradeName]++;
         }
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
@@ -456,12 +457,12 @@ public class Player : MonoBehaviour
     }
 
     private void printInfo() {
-        string message = "L: " + level + ", ";
-        foreach (string name in ownedProjectiles.Keys)
-            message += name + ": " + ownedProjectiles[name] + ", ";
+        string message = "L: " + dataManager.level + ", ";
+        foreach (string name in dataManager.ownedProjectiles.Keys)
+            message += name + ": " + dataManager.ownedProjectiles[name] + ", ";
         message += "\n";
-        foreach (string name in ownedPassives.Keys)
-            message += name + ": " + ownedPassives[name] + ", ";
+        foreach (string name in dataManager.ownedPassives.Keys)
+            message += name + ": " + dataManager.ownedPassives[name] + ", ";
         Debug.Log(message);
     }
 
@@ -501,10 +502,10 @@ public class Player : MonoBehaviour
 
     // passives
     public float GetMovementSpeed() {
-        return (originalMovementSpeed + ownedPassives["Agility"]) * (activePowerups.ContainsKey("Speed") ? 1.5f : 1);
+        return (originalMovementSpeed + dataManager.ownedPassives.GetValueOrDefault("Agility", 0)) * (activePowerups.ContainsKey("Speed") ? 1.5f : 1);
     }
 
     public float GetExpMultiplier() {
-        return (1 + .2f * ownedPassives["Wisdom"]) * (testingMode ? 10 : 1);
+        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? 10 : 1);
     }
 }
