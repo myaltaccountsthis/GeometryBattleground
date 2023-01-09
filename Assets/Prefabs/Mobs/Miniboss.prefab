@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5954677298906624304
+--- !u!1 &8004664006709344066
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3210086311161414591}
-  - component: {fileID: 5471478046282514679}
-  - component: {fileID: 712505378936810085}
-  - component: {fileID: 4829716342328310467}
-  - component: {fileID: 3823107937658698479}
+  - component: {fileID: 6244885531265540053}
+  - component: {fileID: 1691219665955874585}
+  - component: {fileID: 7352321247172881307}
+  - component: {fileID: 17223517891252995}
+  - component: {fileID: 3398417122842344662}
   m_Layer: 0
-  m_Name: Octagon
+  m_Name: Miniboss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3210086311161414591
+--- !u!4 &6244885531265540053
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954677298906624304}
+  m_GameObject: {fileID: 8004664006709344066}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0163436, y: -9.079552, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.06, y: -1.87, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5471478046282514679
+--- !u!212 &1691219665955874585
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954677298906624304}
+  m_GameObject: {fileID: 8004664006709344066}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -76,24 +76,24 @@ SpriteRenderer:
   m_SortingLayerID: 850157567
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: -878610701, guid: 6b3d3173c411dbf45bf511841b133f52, type: 3}
+  m_Sprite: {fileID: 1979922417, guid: 6b3d3173c411dbf45bf511841b133f52, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 2, y: 2}
+  m_Size: {x: 2, y: 1.25}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &712505378936810085
+--- !u!60 &7352321247172881307
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954677298906624304}
+  m_GameObject: {fileID: 8004664006709344066}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -104,35 +104,39 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 2}
-    newSize: {x: 2, y: 2}
+    oldSize: {x: 2, y: 1.25}
+    newSize: {x: 2, y: 1.25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.50005734, y: 1.0012679}
-      - {x: -1.0018626, y: 0.5118847}
-      - {x: -0.999326, y: -0.505414}
-      - {x: -0.5066019, y: -0.99828815}
-      - {x: 0.5064091, y: -0.9977813}
-      - {x: 0.99889183, y: -0.5094633}
-      - {x: 1.0018892, y: 0.51024675}
-      - {x: 0.5011903, y: 1.0017157}
---- !u!50 &4829716342328310467
+    - - {x: 0.15, y: 0.5}
+      - {x: -0.15, y: 0.5}
+      - {x: -0.45, y: 0.25}
+      - {x: -1, y: 0.25}
+      - {x: -1, y: -0.25}
+      - {x: -0.45, y: -0.25}
+      - {x: -0.15, y: -0.5}
+      - {x: 0.15, y: -0.5}
+      - {x: 0.45, y: -0.25}
+      - {x: 1, y: -0.25}
+      - {x: 1, y: 0.25}
+      - {x: 0.45, y: 0.25}
+--- !u!50 &17223517891252995
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954677298906624304}
+  m_GameObject: {fileID: 8004664006709344066}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 20
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -141,25 +145,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &3823107937658698479
+--- !u!114 &3398417122842344662
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5954677298906624304}
+  m_GameObject: {fileID: 8004664006709344066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ad89327b4efc5247b86730e4f9b3146, type: 3}
+  m_Script: {fileID: 11500000, guid: d14d1d63879bd37499473744228c4d03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 100
-  movementSpeed: 1.2
-  startingWave: 15
-  baseDamage: 25
-  experienceDrop: 100
+  startingHealth: 500
+  movementSpeed: 2
+  startingWave: 20
+  baseDamage: 30
+  experienceDrop: 250
   experiencePercent: 1
-  spawnWeight: 4
-  score: 100
-  childMob: {fileID: 6710730481885149368, guid: 0504ccdc03b21454ea243b169cb16c0b, type: 3}
-  count: 2
+  spawnWeight: 0
+  score: 1000
+  projectilePrefab: {fileID: -1723719569653500967, guid: 6880be694a4200a4889b6be79a46c3ad, type: 3}

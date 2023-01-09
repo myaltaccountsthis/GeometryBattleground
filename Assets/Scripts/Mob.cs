@@ -28,7 +28,7 @@ public class Mob : MonoBehaviour
     private float health;
     private bool dead;
     private int damageTicks;
-    private Player player;
+    protected Player player;
     private Map map;
     private SpriteRenderer spriteRenderer;
     
@@ -36,7 +36,7 @@ public class Mob : MonoBehaviour
     // private const float POWERUP_CHANCE = 1f;
     private const float POWERUP_CHANCE = .03f;
 
-    void Start()
+    public virtual void Start()
     {
         damageTicks = 0;
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
@@ -47,7 +47,7 @@ public class Mob : MonoBehaviour
     }
 
     // follow player (player has tag "Player")
-    void Update()
+    public virtual void Update()
     {
         if (GameTime.isPaused)
             return;
@@ -70,8 +70,8 @@ public class Mob : MonoBehaviour
             damage *= 2;
         health -= damage;
         if (health <= 0 && !dead) {
-            onDeath();
             dead = true;
+            onDeath();
         }
         spriteRenderer.color = DAMAGE_COLOR;
         damageTicks = DAMAGE_TICKS;
@@ -96,11 +96,11 @@ public class Mob : MonoBehaviour
 
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
-        return Mathf.Floor(startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 20 + 1));
+        return Mathf.Floor(startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 10 + 1));
     }
 
     public float GetSpeed() {
-        return movementSpeed * (1 + .02f *  player.Wave);
+        return movementSpeed * (1.5f - .5f * Mathf.Pow(1.03f, -.5f * player.Wave));
     }
 
     private float getDropChance() {

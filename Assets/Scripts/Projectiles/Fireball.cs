@@ -5,7 +5,7 @@ using UnityEngine;
 // this class must have -1 pierce for explosion to work
 public class Fireball : Projectile
 {
-    private Explosion explosion;
+    public Explosion explosion;
     private bool alreadyHit;
     private Player player;
     private const float EXPLOSION_RADIUS = 2;
@@ -21,7 +21,6 @@ public class Fireball : Projectile
         base.Start();
 
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        explosion = GameObject.FindWithTag("Player").GetComponent<Player>().explosionPrefab;
     }
 
     public override string GetUpgradeEffect(int level, ProjectileStats next) {
