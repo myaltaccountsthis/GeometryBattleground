@@ -96,7 +96,7 @@ public class Mob : MonoBehaviour
 
     // Returns the health that this mob should spawn with after some time
     public float GetHealth() {
-        return Mathf.Floor(startingHealth * (Mathf.Pow(player.Wave, 1.3f) / 10 + 1));
+        return Mathf.Floor(startingHealth * (Mathf.Pow(player.Wave, 2) / 150 + 1));
     }
 
     public float GetSpeed() {

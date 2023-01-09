@@ -32,8 +32,6 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI waveText;
     public HudUI hudUI;
 
-    [SerializeField]
-    private float health;
     private float shield;
     private float originalMovementSpeed;
     private Dictionary<string, int> activePowerups;
@@ -100,7 +98,6 @@ public class Player : MonoBehaviour
         activePowerups = new Dictionary<string, int>();
         // TESTING
         // TESTING END
-        health = totalHealth;
         iFrames = 0;
         updates = 0;
         waveText.text = "";
@@ -109,7 +106,7 @@ public class Player : MonoBehaviour
 
         UpdateExpBar();
         UpdateScore();
-        hudUI.UpdateHealth(health, totalHealth, shield);
+        hudUI.UpdateHealth(dataManager.health, totalHealth, shield);
         
         {
             Transform upgradeUIList = upgradeUI.transform.Find("Frame");
@@ -129,7 +126,7 @@ public class Player : MonoBehaviour
             return;
         
         // check health
-        if (health <= 0) {
+        if (dataManager.health <= 0) {
             // TODO game over
             Application.Quit();
         }
@@ -138,7 +135,7 @@ public class Player : MonoBehaviour
             AdvanceWave();
         }
 
-        health = Mathf.Min(totalHealth, health + healthRegen / 60f);
+        dataManager.health = Mathf.Min(totalHealth, dataManager.health + healthRegen / 60f);
         if (iFrames > 0)
             iFrames--;
 
@@ -183,16 +180,13 @@ public class Player : MonoBehaviour
                 float t = (float) (waveTextAliveTime - 90) / 30;
                 // waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
                 waveText.fontSize = 80 - 36 * t;
-                Vector2 pos = waveText.rectTransform.anchoredPosition;
-                pos.y = -60 + 40 * t;
-                waveText.rectTransform.anchoredPosition = pos;
                 if (waveTextAliveTime > 120) {
                     waveTextActive = false;
                 }
             }
         }
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.white, .2f);
-        hudUI.UpdateHealth(health, totalHealth, shield);
+        hudUI.UpdateHealth(dataManager.health, totalHealth, shield);
         if (shield > 0) {
             // TODO shield visual
         }
@@ -237,9 +231,9 @@ public class Player : MonoBehaviour
         Drop drop = collider.GetComponent<Drop>();
         if (drop != null && drop.CanPickUp)
             drop.PickUp(this);
-        EnemyProjectile enemyProjectile = collider.GetComponent<EnemyProjectile>();
-        if (enemyProjectile != null) {
-            TakeDamage(enemyProjectile.stats.damage);
+        EnemyExplosion enemyExplosion = collider.GetComponent<EnemyExplosion>();
+        if (enemyExplosion != null) {
+            TakeDamage(enemyExplosion.stats.damage);
         }
     }
 
@@ -252,19 +246,17 @@ public class Player : MonoBehaviour
             shield -= shieldDamage;
             damage -= shieldDamage;
         }
-        health -= damage;
+        dataManager.health -= damage;
         spriteRenderer.color = Color.red;
         iFrames = 30;
     }
 
     private void AdvanceWave() {
         dataManager.wave++;
+        dataManager.SaveData();
         waveText.text = "Wave " + dataManager.wave;
         // waveText.color = Color.white;
         waveText.fontSize = 80;
-        Vector2 pos = waveText.rectTransform.anchoredPosition;
-        pos.y = -60;
-        waveText.rectTransform.anchoredPosition = pos;
         waveTextActive = true;
         waveTextStart = Updates;    
     }
@@ -278,7 +270,7 @@ public class Player : MonoBehaviour
     }
 
     public void CollectHealth(Health healthDrop) {
-        health = totalHealth;
+        dataManager.health = totalHealth;
         AddScore(Health.SCORE);
     }
 

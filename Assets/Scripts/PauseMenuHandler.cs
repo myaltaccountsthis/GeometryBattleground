@@ -40,10 +40,8 @@ public class PauseMenuHandler : MonoBehaviour
         CloseUI();
     }
 
-    public void OnReset() {
-        GameTime.isPaused = false;
-        GameObject.FindWithTag("DataManager").GetComponent<DataManager>().LoadDefaultNonPersistent();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+    public void ToMenu() {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
     }
 
     public void OnExit() {

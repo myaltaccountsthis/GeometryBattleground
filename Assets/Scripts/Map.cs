@@ -173,11 +173,18 @@ public class Map : MonoBehaviour
     public void SpawnWave(int wave) {
         mobsToSpawn = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
         currentWave = wave;
-        if (currentWave >= miniboss.startingWave && wave % 5 == 0) {
-            for (int i = 0; i < (wave - 10) / 10; i++)
-                SpawnMob(miniboss, GetMobSpawnLocation());
+        if (currentWave >= miniboss.startingWave) {
+            if (wave % 5 == 0) {
+                for (int i = 0; i < (wave - 10) / 10; i++)
+                    SpawnMob(miniboss, GetMobSpawnLocation());
+            }
+            else if (wave > 40) {
+                for (int i = 0; i < (wave - 40) / 10; i++)
+                    SpawnMob(miniboss, GetMobSpawnLocation());
+            }
         }
         // TESTING
+        // SpawnMob(miniboss, GetMobSpawnLocation());
     }
 
     // Returns a random location from the tileExtent perimeter

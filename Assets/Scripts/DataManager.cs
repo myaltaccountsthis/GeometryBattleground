@@ -11,6 +11,7 @@ public class DataManager : MonoBehaviour
     public int wave;
     public int level;
     public int experience;
+    public float health;
     public Dictionary<string, int> ownedProjectiles;
     public Dictionary<string, int> ownedPassives;
 
@@ -22,7 +23,7 @@ public class DataManager : MonoBehaviour
     }
 
     void OnDestroy() {
-        SaveData();
+        // SaveData();
     }
 
     public void LoadDefaultNonPersistent() {
@@ -30,6 +31,7 @@ public class DataManager : MonoBehaviour
         wave = 0;
         level = 1;
         experience = 0;
+        health = 100f;
         ownedProjectiles = new Dictionary<string, int>();
         ownedProjectiles["Ball"] = 1;
         ownedPassives = new Dictionary<string, int>();
@@ -53,6 +55,7 @@ public class DataManager : MonoBehaviour
                 wave = Mathf.Max(data.wave - 1, 0);
                 level = data.level;
                 experience = data.experience;
+                health = data.health;
                 if (data.ownedProjectileNames != null) {
                     for (int i = 0; i < data.ownedProjectileNames.Length; i++) {
                         ownedProjectiles[data.ownedProjectileNames[i]] = data.ownedProjectileLevels[i];
@@ -81,6 +84,7 @@ public class DataManager : MonoBehaviour
             data.wave = wave;
             data.level = level;
             data.experience = experience;
+            data.health = health;
             {
                 int size = ownedProjectiles.Count;
                 data.ownedProjectileNames = new string[size];
@@ -116,6 +120,7 @@ public class DataManager : MonoBehaviour
         Debug.Log("Resetting Data...");
         try {
             LoadDefaultNonPersistent();
+            SaveData();
         }
         catch (System.Exception e) {
             Debug.LogWarning("Failed to reset data.\n" + e.ToString());
@@ -130,6 +135,7 @@ public class Data {
     public int wave;
     public int level;
     public int experience;
+    public float health;
     public string[] ownedProjectileNames;
     public int[] ownedProjectileLevels;
     public string[] ownedPassiveNames;
