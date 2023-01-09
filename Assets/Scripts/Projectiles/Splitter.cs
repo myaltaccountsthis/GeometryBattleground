@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Splitter : Projectile
 {
-    private Spike spike;
+    public Spike spike;
     private bool alreadyHit;
     private Player player;
 
@@ -19,7 +19,6 @@ public class Splitter : Projectile
         base.Start();
 
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        spike = player.spikePrefab;
     }
 
     public override string GetUpgradeEffect(int level, ProjectileStats next) {

@@ -29,14 +29,12 @@ public class Player : MonoBehaviour
     public TextAsset infoFile;
     public GameObject upgradeUI;
     public Explosion explosionPrefab;
-    public Spike spikePrefab;
     public TextMeshProUGUI waveText;
     public HudUI hudUI;
 
     [SerializeField]
     private float health;
     private float shield;
-    private int experience;
     private float originalMovementSpeed;
     private Dictionary<string, int> activePowerups;
     private Dictionary<string, ProjectileLauncher> projectileLaunchers;
@@ -105,7 +103,6 @@ public class Player : MonoBehaviour
         health = totalHealth;
         iFrames = 0;
         updates = 0;
-        experience = 0;
         waveText.text = "";
         waveTextStart = 0;
         waveTextActive = false;
@@ -235,25 +232,29 @@ public class Player : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
         if (mob != null) {
-            if (iFrames > 0)
-                return;
-            
             TakeDamage(mob.GetDamage());
-            spriteRenderer.color = Color.red;
-            iFrames = 30;
         }
         Drop drop = collider.GetComponent<Drop>();
         if (drop != null && drop.CanPickUp)
             drop.PickUp(this);
+        EnemyProjectile enemyProjectile = collider.GetComponent<EnemyProjectile>();
+        if (enemyProjectile != null) {
+            TakeDamage(enemyProjectile.stats.damage);
+        }
     }
 
     private void TakeDamage(float damage) {
+        if (iFrames > 0)
+            return;
+        
         if (shield > 0) {
             float shieldDamage = Mathf.Min(damage, shield);
             shield -= shieldDamage;
             damage -= shieldDamage;
         }
         health -= damage;
+        spriteRenderer.color = Color.red;
+        iFrames = 30;
     }
 
     private void AdvanceWave() {
@@ -271,7 +272,7 @@ public class Player : MonoBehaviour
     // ui and projectile stats
     
     public void CollectExp(Experience exp) {
-        experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
+        dataManager.experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
         AddScore(exp.Value);
         CheckLevel();
     }
@@ -282,17 +283,17 @@ public class Player : MonoBehaviour
     }
 
     private void UpdateExpBar() {
-        hudUI.UpdateExpBar(experience, ExpToNextLevel(), dataManager.level);
+        hudUI.UpdateExpBar(dataManager.experience, ExpToNextLevel(), dataManager.level);
     }
 
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
-        if (experience >= requiredExp) {
+        if (dataManager.experience >= requiredExp) {
             // int totalLevels = 0;
             // foreach (string projectileName in dataManager.ownedProjectiles.Keys)
             //     totalLevels += dataManager.ownedProjectiles[projectileName];
             // if (totalLevels < MAX_PROJECTILE_LEVEL * projectileList.Values.Count) {
-            experience -= requiredExp;
+            dataManager.experience -= requiredExp;
             dataManager.level++;
             UpdateExpBar();
             UpdateScore();
@@ -474,7 +475,7 @@ public class Player : MonoBehaviour
         switch (powerup.type) {
             case "Nuke":
                 Explosion explosion = Instantiate<Explosion>(explosionPrefab, powerup.transform.position, Quaternion.identity, projectileFolder);
-                explosion.LoadStats(new ProjectileStats(0, 0, 0, 1000000, 0, -1, 0, 0, 0));
+                explosion.LoadStats(new ProjectileStats(0, 0, 0, 100, 0, -1, 0, 0, 0));
                 explosion.SetOriginalColor(new Color(.5f, .06f, .02f, .3f));
                 explosion.minSize = 1f;
                 explosion.maxSize = map.Bounds.size.magnitude / 2.56f;

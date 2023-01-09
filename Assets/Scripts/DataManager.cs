@@ -10,6 +10,7 @@ public class DataManager : MonoBehaviour
     public int score;
     public int wave;
     public int level;
+    public int experience;
     public Dictionary<string, int> ownedProjectiles;
     public Dictionary<string, int> ownedPassives;
 
@@ -28,6 +29,7 @@ public class DataManager : MonoBehaviour
         score = 0;
         wave = 0;
         level = 1;
+        experience = 0;
         ownedProjectiles = new Dictionary<string, int>();
         ownedProjectiles["Ball"] = 1;
         ownedPassives = new Dictionary<string, int>();
@@ -50,6 +52,7 @@ public class DataManager : MonoBehaviour
                 score = data.score;
                 wave = Mathf.Max(data.wave - 1, 0);
                 level = data.level;
+                experience = data.experience;
                 if (data.ownedProjectileNames != null) {
                     for (int i = 0; i < data.ownedProjectileNames.Length; i++) {
                         ownedProjectiles[data.ownedProjectileNames[i]] = data.ownedProjectileLevels[i];
@@ -77,6 +80,7 @@ public class DataManager : MonoBehaviour
             data.score = score;
             data.wave = wave;
             data.level = level;
+            data.experience = experience;
             {
                 int size = ownedProjectiles.Count;
                 data.ownedProjectileNames = new string[size];
@@ -125,6 +129,7 @@ public class Data {
     public int score;
     public int wave;
     public int level;
+    public int experience;
     public string[] ownedProjectileNames;
     public int[] ownedProjectileLevels;
     public string[] ownedPassiveNames;

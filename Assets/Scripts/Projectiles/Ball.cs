@@ -6,6 +6,7 @@ public class Ball : Projectile
 {
     public override void GenerateStats(Transform playerTransform, int index)
     {
-        this.angle = (playerTransform.eulerAngles.z + 90) * Mathf.Deg2Rad;
+        float eulerAngle = playerTransform.eulerAngles.z + Random.Range(-.5f, .5f) * stats.spread;
+        this.angle = (eulerAngle + 90) * Mathf.Deg2Rad;
     }
 }

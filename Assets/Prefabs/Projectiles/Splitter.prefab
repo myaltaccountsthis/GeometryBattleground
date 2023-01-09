@@ -128,6 +128,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   angle: 0
-  toShoot: 0
-  toWait: -124
   sprite: {fileID: 1277646696, guid: 9d3a10a4c85cab348a4c7c385a888c18, type: 3}
+  spike: {fileID: 5248771642335778886, guid: 98ecec71fd93a2c408173dcf3153afd9, type: 3}

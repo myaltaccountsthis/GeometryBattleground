@@ -125,7 +125,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 2
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingHealth: 12
-  movementSpeed: 2
+  movementSpeed: 2.4
   startingWave: 4
   baseDamage: 8
   experienceDrop: 30

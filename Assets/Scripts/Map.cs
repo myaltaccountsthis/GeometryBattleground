@@ -13,6 +13,7 @@ public class Map : MonoBehaviour
     public int tileExtent;
     [Tooltip ("List of all mobs to use")]
     public Mob[] mobs;
+    public Mob miniboss;
     [Tooltip("The maximum number of experience drops that can exist in the tile extent range")]
     public int maxExpDrops;
     [Tooltip("In updates")]
@@ -172,6 +173,11 @@ public class Map : MonoBehaviour
     public void SpawnWave(int wave) {
         mobsToSpawn = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
         currentWave = wave;
+        if (currentWave >= miniboss.startingWave && wave % 5 == 0) {
+            for (int i = 0; i < (wave - 10) / 10; i++)
+                SpawnMob(miniboss, GetMobSpawnLocation());
+        }
+        // TESTING
     }
 
     // Returns a random location from the tileExtent perimeter
@@ -211,8 +217,12 @@ public class Map : MonoBehaviour
     }
 
     // Instantiate a random mob in some position in the tileExtent region (outside of camera view)
-    private void SpawnMob(int wave) {
-        activeMobs.Add(Instantiate<Mob>(GetRandomMob(wave), GetMobSpawnLocation(), Quaternion.identity, mobFolder));
+    public void SpawnMob(int wave) {
+        SpawnMob(GetRandomMob(wave), GetMobSpawnLocation());
+    }
+    
+    public void SpawnMob(Mob mob, Vector3 spawnLocation) {
+        activeMobs.Add(Instantiate<Mob>(mob, spawnLocation, Quaternion.identity, mobFolder));
     }
 
     // Return a random mob with weight

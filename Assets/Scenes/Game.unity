@@ -1481,7 +1481,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 530407317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -27282,7 +27282,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1496411978}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -36779,6 +36779,7 @@ MonoBehaviour:
   - {fileID: 8306826823842799550, guid: b13f2ca291a66eb49a28ddf6d3b64116, type: 3}
   - {fileID: 6710730481885149368, guid: 0504ccdc03b21454ea243b169cb16c0b, type: 3}
   - {fileID: 3823107937658698479, guid: b98d0f3b9b4f52c4c8f979279abfd148, type: 3}
+  miniboss: {fileID: 3398417122842344662, guid: a2bebd8e276277b49a2b4ac71b492ace, type: 3}
   maxExpDrops: 12
   minExpDelay: 120
   maxExpDelay: 300
@@ -37431,7 +37432,6 @@ MonoBehaviour:
   infoFile: {fileID: 4900000, guid: 2ac49942a69dcc5438ced41545bcc3da, type: 3}
   upgradeUI: {fileID: 1885261110}
   explosionPrefab: {fileID: 4949622542091398931, guid: 0fee8638b6b7d91408dedd57f4610406, type: 3}
-  spikePrefab: {fileID: 5248771642335778886, guid: 98ecec71fd93a2c408173dcf3153afd9, type: 3}
   waveText: {fileID: 772553885}
   hudUI: {fileID: 1718587549}
   health: 0
