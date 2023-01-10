@@ -50,7 +50,10 @@ public class EnemyProjectile : Projectile
     }
 
     private void SpawnExplosion() {
-        EnemyExplosion newExplosion = Instantiate<EnemyExplosion>(explosion, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
+        GameObject projectileFolder = GameObject.FindWithTag("Projectile Folder");
+        if (projectileFolder == null)
+            return;
+        EnemyExplosion newExplosion = Instantiate<EnemyExplosion>(explosion, transform.position, Quaternion.identity, projectileFolder.transform);
         newExplosion.LoadStats(explosionStats);
         newExplosion.minSize = .2f;
         newExplosion.maxSize = EnemyExplosion.MAX_SIZE;

@@ -8,6 +8,8 @@ public class Experience : Drop
         get => experienceValue;
     }
 
+    public bool isNatural;
+
     private int experienceValue;
 
     public override void PickUp(Player player) {

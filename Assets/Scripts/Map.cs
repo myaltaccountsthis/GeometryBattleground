@@ -9,12 +9,16 @@ public class Map : MonoBehaviour
         get => bounds;
     }
 
+    public int MaximumNaturalExperience {
+        get => Mathf.Min(maxExpDrops + (currentWave % ZONE_INTERVAL) / 2, 30);
+    }
+
     [Tooltip("How many units off the camera bounds should tiles still generate")]
     public int tileExtent;
     [Tooltip ("List of all mobs to use")]
     public Mob[] mobs;
     public Mob miniboss;
-    [Tooltip("The maximum number of experience drops that can exist in the tile extent range")]
+    [Tooltip("The base maximum number of experience drops that can exist in the tile extent range")]
     public int maxExpDrops;
     [Tooltip("In updates")]
     public int minExpDelay;
@@ -28,9 +32,10 @@ public class Map : MonoBehaviour
         get => mobFolder.childCount + mobsToSpawn;
     }
 
-    [Tooltip("The tile to use for the ground")]
     [SerializeField]
-    private TileBase groundTile;
+    private TileBase[] groundTiles;
+    [SerializeField]
+    private TileBase[] voidTiles;
     [Tooltip("Minimum experience value for each new experience orb sprite")]
     [SerializeField]
     private int[] experienceOrbStages;
@@ -58,17 +63,21 @@ public class Map : MonoBehaviour
     private int nextExpSpawn;
     private int currentWave;
     private int mobsToSpawn;
-    private const int SPAWN_INTERVAL = 10;
+    private const int SPAWN_INTERVAL = 15;
+    private const int ZONE_INTERVAL = 20;
 
     void Awake() {
         Debug.Assert(minExpDelay <= maxExpDelay, "Error: Max Experience Delay cannot be less than Min Experience Delay");
+
         powerupList = new Dictionary<string, Powerup>();
         foreach (Powerup powerup in powerups) {
             powerupList[powerup.type] = powerup;
         }
+
         player = GameObject.FindWithTag("Player").GetComponent<Player>();
         activeMobs = new List<Mob>();
         tileMap = GetComponent<Tilemap>();
+
         bounds = tileMap.cellBounds;
         mobBounds = background.cellBounds;
         mobBounds.SetMinMax(new Vector3Int(mobBounds.xMin + 1, mobBounds.yMin + 1), new Vector3Int(mobBounds.xMax - 1, mobBounds.yMax - 1));
@@ -81,9 +90,6 @@ public class Map : MonoBehaviour
         nextExpSpawn = 0;
         currentWave = 0;
         mobsToSpawn = 0;
-        for (int i = 0; i < maxExpDrops / 2; i++) {
-            AttemptExpSpawn();
-        }
     }
 
     void Update()
@@ -132,7 +138,14 @@ public class Map : MonoBehaviour
         }
     }
 
-
+    private void UpdateTiles() {
+        int index = Mathf.Clamp((currentWave - 1) / 20, 0, groundTiles.Length - 1);
+        TileBase groundTile = groundTiles[index];
+        TileBase voidTile = voidTiles[index];
+        BoundsInt backgroundBounds = background.cellBounds;
+        tileMap.FloodFill(Vector3Int.zero, groundTile);
+        background.FloodFill(backgroundBounds.min, voidTile);
+    }
 
     public void CheckDropMagnet(Drop drop) {
         drop.LargeDropSize = player.IsPowerupActive("Drop Magnet");
@@ -170,9 +183,18 @@ public class Map : MonoBehaviour
         bounds = new BoundsInt(new Vector3Int((int) Camera.main.transform.position.x, (int) Camera.main.transform.position.y) - combinedExtent, 2 * combinedExtent);
     }
 
+    private int GetMobsPerWave() {
+        if (currentWave < 20)
+            return Mathf.FloorToInt(Mathf.Pow(currentWave, 1.2f) + 6);
+        if (currentWave < 40)
+            return Mathf.FloorToInt(currentWave + 22);
+        return Mathf.FloorToInt(Mathf.Pow(currentWave, .8f) + 42);
+    }
+
     public void SpawnWave(int wave) {
-        mobsToSpawn = Mathf.FloorToInt(Mathf.Pow(wave, 1.3f)) + 6;
         currentWave = wave;
+        mobsToSpawn = GetMobsPerWave();
+        UpdateTiles();
         if (currentWave >= miniboss.startingWave) {
             if (wave % 5 == 0) {
                 for (int i = 0; i < (wave - 10) / 10; i++)
@@ -182,6 +204,9 @@ public class Map : MonoBehaviour
                 for (int i = 0; i < (wave - 40) / 10; i++)
                     SpawnMob(miniboss, GetMobSpawnLocation());
             }
+        }
+        for (int i = 0; i < maxExpDrops / 2; i++) {
+            AttemptExpSpawn();
         }
         // TESTING
         // SpawnMob(miniboss, GetMobSpawnLocation());
@@ -261,8 +286,15 @@ public class Map : MonoBehaviour
         return new Vector3(Random.Range((float) experienceBounds.xMin, experienceBounds.xMax), Random.Range((float) experienceBounds.yMin, experienceBounds.yMax));
     }
 
+    private int GetRandomExperienceValue() {
+        int multiplier = Mathf.FloorToInt(Mathf.Pow(2, Mathf.Min(currentWave / ZONE_INTERVAL, 2)));
+        return randomExperienceValues[Random.Range(0, randomExperienceValues.Length)];
+    }
+
+    // generate a naturally spawning experience orb
     private void GenerateNextExpSpawn() {
-        InstantiateExperience(randomExperienceValues[Random.Range(0, randomExperienceValues.Length)], GetExperienceSpawnLocation());
+        Experience experience = InstantiateExperience(GetRandomExperienceValue(), GetExperienceSpawnLocation());
+        experience.isNatural = true;
         nextExpSpawn = Random.Range(minExpDelay, maxExpDelay);
     }
 
@@ -270,7 +302,8 @@ public class Map : MonoBehaviour
     private int CountExpDrops() {
         int num = 0;
         foreach (Transform gameObject in experienceFolder) {
-            if (gameObject.tag != "Experience Orb")
+            // filter other drops and drops from mobs
+            if (gameObject.tag != "Experience Orb" || !gameObject.GetComponent<Experience>().isNatural)
                 continue;
             Vector3 position = gameObject.transform.position;
             if (position.x > bounds.xMin && position.x < bounds.xMax && position.y > bounds.yMin && position.y < bounds.yMax) {
