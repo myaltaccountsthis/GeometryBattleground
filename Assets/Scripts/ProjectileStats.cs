@@ -66,20 +66,24 @@ public struct ProjectileStats {
         return message;
     }
 
+    // Increase projectile stats depending on passives
     public void ApplyPassives(Dictionary<string, int> passives) {
         foreach(string passiveName in passives.Keys) {
             int passiveLevel = passives[passiveName];
             switch (passiveName) {
                 case "Dexterity":
+                    // Increase damage instead if attack can't be faster
                     if (interval == 1)
                         damage *= (1 + .15f * passiveLevel);
-                    else
+                    else {
                         interval = Mathf.CeilToInt(interval / (1 + .15f * passiveLevel));
+                        timeBetweenShots = Mathf.CeilToInt(timeBetweenShots / (1 + .15f * passiveLevel));
+                    }
                     break;
                 case "Power":
                     damage *= (1 + passiveLevel * .2f);
                     if (pierce != -1)
-                        pierce += passiveLevel;
+                        pierce += (passiveLevel + 1) / 2;
                     break;
             }
         }

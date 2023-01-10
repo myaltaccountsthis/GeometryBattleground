@@ -34,15 +34,15 @@ public class Passive : MonoBehaviour, IUpgradeable
 
     public string GetUpgradeEffect(Player player)
     {
-        return GetUpgradeEffect();
+        return GetUpgradeEffect(GetLevel(player));
     }
 
-    public string GetUpgradeEffect() {
+    public string GetUpgradeEffect(int level) {
         switch (name) {
             case "Wisdom":
                 return "<color=green>+20% Experience</color>";
             case "Power":
-                return "<color=green>+10% Damage\n+1 Pierce</color>";
+                return "<color=green>+10% Damage\n" + (level % 2 == 0 ? "+1 Pierce" : "") + "</color>";
             case "Agility":
                 return "<color=green>+1 Walk Speed</color>";
             case "Dexterity":
