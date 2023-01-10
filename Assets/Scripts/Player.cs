@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
     [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
 
-    private const int MAX_PROJECTILE_LEVEL = 8;
+    public const int MAX_PROJECTILE_LEVEL = 10;
     private const int NO_SHOOT_TIME = 60;
 
     void Awake()
@@ -183,7 +183,7 @@ public class Player : MonoBehaviour
         int waveTextAliveTime = Updates - waveTextStart;
         if (waveTextActive) {
             if (waveTextAliveTime == 0)
-                map.SpawnWave(dataManager.wave);
+                map.SpawnWave(Wave);
             if (waveTextAliveTime > 90) {
                 float t = (float) (waveTextAliveTime - 90) / 30;
                 // waveText.color = Color.Lerp(Color.white, new Color(1, 1, 1, 0), (float) (waveTextAliveTime - 90) / 30);
@@ -262,7 +262,7 @@ public class Player : MonoBehaviour
     private void AdvanceWave() {
         dataManager.wave++;
         dataManager.SaveData();
-        waveText.text = "Wave " + dataManager.wave;
+        waveText.text = "Wave " + Wave;
         // waveText.color = Color.white;
         waveText.fontSize = 80;
         waveTextActive = true;
@@ -507,6 +507,6 @@ public class Player : MonoBehaviour
     }
 
     public float GetExpMultiplier() {
-        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? 10 : 1);
+        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? Mathf.Pow(Wave, 2) : 1);
     }
 }

@@ -79,6 +79,8 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         // if (nextLevel == 1) {
         //     return "";
         // }
+        if (nextLevel == Player.MAX_PROJECTILE_LEVEL)
+            return "Level MAX";
         return "Level " + nextLevel;
     }
 
