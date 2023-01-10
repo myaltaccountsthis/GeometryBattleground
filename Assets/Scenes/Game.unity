@@ -36790,7 +36790,14 @@ MonoBehaviour:
   - {fileID: 6691443378005616656, guid: e57b3dd7df258e64f855c38bde877397, type: 3}
   - {fileID: 8362523445036480281, guid: 1e1e3fb3b11e9974a9d9dde8e390a11f, type: 3}
   - {fileID: 7048858604349462264, guid: 6069c256e82e72844bbf278ffcc738ff, type: 3}
-  groundTile: {fileID: 11400000, guid: 2d1bf5593830ba04eadbcafcacd65121, type: 2}
+  groundTiles:
+  - {fileID: 11400000, guid: 2d1bf5593830ba04eadbcafcacd65121, type: 2}
+  - {fileID: 11400000, guid: fefa195d91014f44ba0351a3fb947fa1, type: 2}
+  - {fileID: 11400000, guid: ab68bcc809a0a674488ef30d5934a10c, type: 2}
+  voidTiles:
+  - {fileID: 11400000, guid: 372319b2a13af4b48a178d62b9ce539a, type: 2}
+  - {fileID: 11400000, guid: c9e2be6453bda9b4ab17596b996b7af3, type: 2}
+  - {fileID: 11400000, guid: c153507c6cb14b64bb35ec08b3027f59, type: 2}
   experienceOrbStages: 0a0000002800000064000000
   experienceOrbSprites:
   - {fileID: 754947037, guid: 0df6f0911fa6d734c8eebaa1ffb63db8, type: 3}

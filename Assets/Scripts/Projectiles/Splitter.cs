@@ -46,9 +46,12 @@ public class Splitter : Projectile
     }
 
     void SpawnSpikes() {
+        GameObject projectileFolder = GameObject.FindWithTag("Projectile Folder");
+        if (projectileFolder == null)
+            return;
         int toSpawn = GetProjectileCount();
         for (int i = 0; i < toSpawn; i++) {
-            Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
+            Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, projectileFolder.transform);
             newSpike.LoadStats(stats);
             newSpike.projectileCount = toSpawn;
             newSpike.GenerateStats(transform, i);

@@ -41,6 +41,7 @@ public class PauseMenuHandler : MonoBehaviour
     }
 
     public void ToMenu() {
+        GameTime.isPaused = false;
         UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
     }
 

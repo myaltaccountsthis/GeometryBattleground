@@ -15,10 +15,13 @@ public class SplittingMob : Mob
     {
         base.onDeath();
         
+        if (transform.parent == null)
+            return;
+            
         // Spawn children on death
         for (int i = 0; i < count; i++) {
             Vector3 offset = new Vector3(Mathf.Cos(2 * Mathf.PI / count) * OFFSET, Mathf.Sin(2 * Mathf.PI / count) * OFFSET, 0);
-            Instantiate(childMob, transform.position + offset, transform.rotation);
+            Instantiate(childMob, transform.position + offset, transform.rotation, transform.parent);
         }
     }
 }
