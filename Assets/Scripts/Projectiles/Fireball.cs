@@ -60,7 +60,10 @@ public class Fireball : Projectile
     }
 
     private void SpawnExplosion() {
-        Explosion newExplosion = Instantiate<Explosion>(explosion, transform.position, Quaternion.identity, GameObject.FindWithTag("Projectile Folder").transform);
+        GameObject projectileFolder = GameObject.FindWithTag("Projectile Folder");
+        if (projectileFolder == null)
+            return;
+        Explosion newExplosion = Instantiate<Explosion>(explosion, transform.position, Quaternion.identity, projectileFolder.transform);
         newExplosion.LoadStats(stats);
         newExplosion.minSize = .2f;
         newExplosion.maxSize = getExplosionSize();

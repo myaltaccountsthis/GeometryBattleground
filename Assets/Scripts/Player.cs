@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     private Dictionary<string, ProjectileLauncher> projectileLaunchers;
     public Dictionary<string, Passive> passiveList;
     private int iFrames;
+    private int doNotShoot;
     private SpriteRenderer spriteRenderer;
     private Dictionary<string, ProjectileStats[]> projectileInfo;
     private UpgradeOption[] upgradeUIOptions;
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
     private bool testingMode;
 
     private const int MAX_PROJECTILE_LEVEL = 8;
+    private const int NO_SHOOT_TIME = 60;
 
     void Awake()
     {
@@ -99,10 +101,12 @@ public class Player : MonoBehaviour
         // TESTING
         // TESTING END
         iFrames = 0;
+        doNotShoot = NO_SHOOT_TIME;
         updates = 0;
         waveText.text = "";
         waveTextStart = 0;
         waveTextActive = false;
+        movementSpeed = GetMovementSpeed();
 
         UpdateExpBar();
         UpdateScore();
@@ -138,6 +142,8 @@ public class Player : MonoBehaviour
         dataManager.health = Mathf.Min(totalHealth, dataManager.health + healthRegen / 60f);
         if (iFrames > 0)
             iFrames--;
+        if (doNotShoot > 0)
+            doNotShoot--;
 
         // do position stuff
         float horizontal = Input.GetAxis("Horizontal"), vertical = Input.GetAxis("Vertical");
@@ -164,9 +170,11 @@ public class Player : MonoBehaviour
                 launcher.Shoot();
             }
             while (launcher.ShouldShoot) {
-                Projectile newProjectile = Instantiate<Projectile>(launcher.Projectile, transform.position, Quaternion.identity, projectileFolder);
-                newProjectile.LoadStats(stats);
-                newProjectile.GenerateStats(transform, stats.projectileCount - launcher.ToShoot);
+                if (doNotShoot == 0) {
+                    Projectile newProjectile = Instantiate<Projectile>(launcher.Projectile, transform.position, Quaternion.identity, projectileFolder);
+                    newProjectile.LoadStats(stats);
+                    newProjectile.GenerateStats(transform, stats.projectileCount - launcher.ToShoot);
+                }
                 launcher.ShootSub();
             }
         }
