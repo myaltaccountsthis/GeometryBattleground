@@ -131,8 +131,8 @@ public class Player : MonoBehaviour
         
         // check health
         if (dataManager.health <= 0) {
-            // TODO game over
-            Application.Quit();
+            GetComponent<GameOverMenuHandler>().OpenUI();
+            dataManager.health = 0;
         }
 
         if (map.CurrentMobCount == 0 && !waveTextActive) {
