@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
     // if waveText is big
     private bool waveTextActive;
 
-    [SerializeField, Tooltip(".5x atk int, 10x xp")]
+    [SerializeField, Tooltip(".5x atk int, 5w^2 xp")]
     private bool testingMode;
 
     public const int MAX_PROJECTILE_LEVEL = 10;
@@ -507,6 +507,6 @@ public class Player : MonoBehaviour
     }
 
     public float GetExpMultiplier() {
-        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? Mathf.Pow(Wave, 2) : 1);
+        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? 5 * Mathf.Pow(Wave, 2) : 1);
     }
 }
