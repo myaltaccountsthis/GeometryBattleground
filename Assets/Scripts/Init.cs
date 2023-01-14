@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Init : MonoBehaviour
 {
+    public TransitionManager transitionManager;
+
     private DataManager dataManager;
 
     void Awake()
@@ -20,7 +22,7 @@ public class Init : MonoBehaviour
     }
 
     public void ChangeScene() {
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        transitionManager.ChangeScene("Game");
     }
 
     public void ResetAndChangeScene() {

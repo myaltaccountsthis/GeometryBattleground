@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
     public Explosion explosionPrefab;
     public TextMeshProUGUI waveText;
     public HudUI hudUI;
+    public TransitionManager transitionManager;
 
     private float shield;
     private float originalMovementSpeed;
@@ -48,6 +49,7 @@ public class Player : MonoBehaviour
     private DataManager dataManager;
     // if waveText is big
     private bool waveTextActive;
+    private bool transitioning;
 
     [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
@@ -106,6 +108,7 @@ public class Player : MonoBehaviour
         waveText.text = "";
         waveTextStart = 0;
         waveTextActive = false;
+        transitioning = false;
         movementSpeed = GetMovementSpeed();
 
         UpdateExpBar();
@@ -135,7 +138,7 @@ public class Player : MonoBehaviour
             dataManager.health = 0;
         }
 
-        if (map.CurrentMobCount == 0 && !waveTextActive) {
+        if (map.CurrentMobCount == 0 && !waveTextActive && !transitioning) {
             AdvanceWave();
         }
 
@@ -262,11 +265,30 @@ public class Player : MonoBehaviour
     private void AdvanceWave() {
         dataManager.wave++;
         dataManager.SaveData();
+        // advance zones, play transition
+        if (dataManager.wave % 20 == 1 && dataManager.wave > 20 && dataManager.zone < dataManager.wave / 20) {
+            doNotShoot = -1;
+            transitioning = true;
+            dataManager.zone++;
+            dataManager.SaveData();
+            ReloadScene();
+            return;
+        }
         waveText.text = "Wave " + Wave;
         // waveText.color = Color.white;
         waveText.fontSize = 80;
         waveTextActive = true;
         waveTextStart = Updates;    
+    }
+
+    private void ReloadScene() {
+        StartCoroutine(DelayedReload());
+    }
+
+    private IEnumerator DelayedReload() {
+        yield return new WaitForSeconds(1);
+
+        transitionManager.ChangeScene("Game", 3f);
     }
 
     // ui and projectile stats
