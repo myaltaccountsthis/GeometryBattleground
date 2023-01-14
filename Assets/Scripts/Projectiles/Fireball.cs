@@ -64,6 +64,7 @@ public class Fireball : Projectile
         if (projectileFolder == null)
             return;
         Explosion newExplosion = Instantiate<Explosion>(explosion, transform.position, Quaternion.identity, projectileFolder.transform);
+        newExplosion.PlaySound();
         newExplosion.LoadStats(stats);
         newExplosion.minSize = .2f;
         newExplosion.maxSize = getExplosionSize();

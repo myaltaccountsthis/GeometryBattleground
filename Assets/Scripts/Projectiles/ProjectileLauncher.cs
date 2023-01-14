@@ -14,6 +14,8 @@ public class ProjectileLauncher
         get => toShoot;
     }
 
+    public bool isSub;
+
     private Projectile projectilePrefab;
     private Player player;
     private int toWait;
@@ -32,11 +34,13 @@ public class ProjectileLauncher
     }
 
     public void Shoot() {
+        isSub = false;
         toShoot = currentStats.projectileCount;
         toWait = 0;
     }
 
     public void ShootSub() {
+        isSub = true;
         toShoot--;
         toWait = currentStats.timeBetweenShots;
     }

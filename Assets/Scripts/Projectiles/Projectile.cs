@@ -1,23 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // there will be instances of each sub-class in Player's projectiles instance variable. those will Instantiate<>() new projectiles
 public abstract class Projectile : MonoBehaviour, IUpgradeable
 {
     public ProjectileStats stats;
+
+    public float startAudioAt;
     // in radians
     [HideInInspector]
     public float angle;
     public Sprite sprite;
+    
+    [HideInInspector]
+    public bool isSub;
 
     private Collider2D collision;
     protected int creationTime;
     private int pierceLeft;
     private BoundsInt bounds;
+    protected AudioSource audioSrc;
 
     public virtual void Awake() {
         collision = GetComponent<Collider2D>();
+        audioSrc = GetComponent<AudioSource>();
+        if(audioSrc != null) audioSrc.time = startAudioAt;
         Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
     }
 
@@ -105,5 +115,11 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
 
     public Sprite GetSprite() {
         return sprite;
+    }
+
+    public virtual void PlaySound()
+    {
+        if (audioSrc == null) return;
+        audioSrc.Play();
     }
 }
