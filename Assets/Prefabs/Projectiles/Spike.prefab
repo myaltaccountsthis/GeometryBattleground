@@ -127,8 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f2c0984ded49948b46787bebe20d73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startAudioAt: 0.24
   angle: 0
   sprite: {fileID: 0}
+  isSub: 0
   projectileCount: 0
 --- !u!82 &5543713126852731906
 AudioSource:

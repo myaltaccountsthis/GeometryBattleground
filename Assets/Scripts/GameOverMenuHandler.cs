@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,16 +10,19 @@ public class GameOverMenuHandler : MonoBehaviour
 {
     public GameObject gameOverMenu;
     private AudioSource backgroundMusic;
+    private AudioSource darkAura;
     
     private void Awake()
     {
         backgroundMusic = GameObject.Find("Background Music").GetComponent<AudioSource>();
+        darkAura = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
     }
     
     public void OpenUI()
     {
         if(gameOverMenu.activeInHierarchy) return;
         backgroundMusic.Pause();
+        if(darkAura.isPlaying) darkAura.Pause();
         gameOverMenu.SetActive(true);
         GameTime.isPaused = true;
     }

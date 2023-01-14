@@ -1,16 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DarkAura : Projectile
 {
-    private static AudioSource _audioSrc = null;
-
-    public override void Awake()
-    {
-        _audioSrc ??= GameObject.Find("Dark Aura").GetComponent<AudioSource>();
-        base.Awake();
-    }
+    private static AudioSource _audioSrc;
 
     public override string GetUpgradeEffect(int level, ProjectileStats next) {
         string message = base.GetUpgradeEffect(level, next);
@@ -37,6 +32,7 @@ public class DarkAura : Projectile
 
     public override void PlaySound()
     {
-        if(!_audioSrc.isPlaying) _audioSrc.Play();
+        if (!_audioSrc) _audioSrc = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
+        if(!_audioSrc.isPlaying && !GameTime.isPaused) _audioSrc.Play();
     }
 }

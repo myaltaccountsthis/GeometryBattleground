@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
     private AudioSource levelUpAudio;
     private AudioSource newWaveAudio;
     private AudioSource xpOrbPickupAudio;
+    private AudioSource darkAuraAudio;
     
     [SerializeField, Tooltip(".5x atk int, 10x xp")]
     private bool testingMode;
@@ -79,6 +80,7 @@ public class Player : MonoBehaviour
         levelUpAudio = GameObject.Find("Level Up").GetComponent<AudioSource>();
         newWaveAudio = GameObject.Find("New Wave").GetComponent<AudioSource>();
         xpOrbPickupAudio = GameObject.Find("XP Orb Pickup").GetComponent<AudioSource>();
+        darkAuraAudio = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
         
         dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
         projectileLaunchers = new Dictionary<string, ProjectileLauncher>();
@@ -382,7 +384,8 @@ public class Player : MonoBehaviour
             return;
 
         GameTime.isPaused = true;
-
+        if(darkAuraAudio.isPlaying) darkAuraAudio.Pause();
+        
         // generate options
         List<IUpgradeable> availableUpgrades = new List<IUpgradeable>();
         foreach (ProjectileLauncher launcher in projectileLaunchers.Values) {
@@ -480,6 +483,7 @@ public class Player : MonoBehaviour
                 dataManager.ownedPassives.Add(upgradeName, 0);
             dataManager.ownedPassives[upgradeName]++;
         }
+        darkAuraAudio.UnPause();
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
         printInfo();

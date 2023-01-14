@@ -115,8 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 839776b4b37f850459e1cdca1bf245ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startAudioAt: 0.3
   angle: 0
   sprite: {fileID: 0}
+  isSub: 0
   minSize: 0
   maxSize: 0
   explosionLifeTime: 0
@@ -130,7 +132,7 @@ AudioSource:
   m_GameObject: {fileID: 2738190187933232830}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 5503490592737840360, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: 311f089a89f3f2743ba84209800e9dc4, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1

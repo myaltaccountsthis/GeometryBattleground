@@ -9,7 +9,7 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
 {
     public ProjectileStats stats;
 
-    public ulong audioDelay;
+    public float startAudioAt;
     // in radians
     [HideInInspector]
     public float angle;
@@ -27,6 +27,7 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     public virtual void Awake() {
         collision = GetComponent<Collider2D>();
         audioSrc = GetComponent<AudioSource>();
+        if(audioSrc != null) audioSrc.time = startAudioAt;
         Debug.Assert(collision.isTrigger, "Error: this projectile's Collider2D property isTrigger is false");
     }
 
@@ -119,6 +120,6 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
     public virtual void PlaySound()
     {
         if (audioSrc == null) return;
-        audioSrc.Play(audioDelay);
+        audioSrc.Play();
     }
 }

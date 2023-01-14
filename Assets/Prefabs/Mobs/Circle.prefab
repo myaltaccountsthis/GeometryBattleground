@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bf2e07fdb842f84891650d09c59956c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startAudioAt: 0
   startingHealth: 5
   movementSpeed: 3
   startingWave: 0
@@ -145,7 +146,6 @@ MonoBehaviour:
   experiencePercent: 0.5
   spawnWeight: 100
   score: 10
-  audioDelay: 0
 --- !u!82 &276576122689843027
 AudioSource:
   m_ObjectHideFlags: 0
@@ -158,7 +158,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: d778a8e74e39d5645861cf79dfb13ccd, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0

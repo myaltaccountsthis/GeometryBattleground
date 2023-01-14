@@ -8,6 +8,9 @@ public class Mob : MonoBehaviour
     public static Color DAMAGE_COLOR {
         get => Color.gray;
     }
+
+    public float startAudioAt;
+    
     [Tooltip("Starting health of the mob, in health points")]
     public float startingHealth;
     [Tooltip("Movement speed of the mob, in units per second")]
@@ -25,8 +28,6 @@ public class Mob : MonoBehaviour
     [Tooltip("How many points this mob awards you when defeated")]
     public int score;
 
-    public ulong audioDelay;
-    
     private float health;
     private bool dead;
     private int damageTicks;
@@ -48,6 +49,7 @@ public class Mob : MonoBehaviour
         dead = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSrc = GetComponent<AudioSource>();
+        if (audioSrc != null) audioSrc.time = startAudioAt;
     }
 
     // follow player (player has tag "Player")
@@ -130,6 +132,6 @@ public class Mob : MonoBehaviour
     public virtual void PlaySound()
     {
         if (audioSrc == null || dead) return;
-        audioSrc.Play(audioDelay);
+        audioSrc.Play();
     }
 }
