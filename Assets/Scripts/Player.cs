@@ -50,8 +50,17 @@ public class Player : MonoBehaviour
     // if waveText is big
     private bool waveTextActive;
     private bool transitioning;
+    
+    // audio sources
+    private AudioSource playerDamageAudio;
+    private AudioSource gameOverAudio;
+    private AudioSource heartPickupAudio;
+    private AudioSource levelUpAudio;
+    private AudioSource newWaveAudio;
+    private AudioSource xpOrbPickupAudio;
+    private AudioSource darkAuraAudio;
 
-    [SerializeField, Tooltip(".5x atk int, 10x xp")]
+    [SerializeField, Tooltip(".5x atk int, 5w^2 xp")]
     private bool testingMode;
 
     public const int MAX_PROJECTILE_LEVEL = 10;
@@ -65,6 +74,16 @@ public class Player : MonoBehaviour
         map = GameObject.FindWithTag("Map").GetComponent<Map>();
         playerCollider = GetComponent<CircleCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        // audio source initializing
+        playerDamageAudio = GetComponent<AudioSource>();
+        gameOverAudio = GameObject.Find("Game Over").GetComponent<AudioSource>();
+        heartPickupAudio = GameObject.Find("Heart Pickup").GetComponent<AudioSource>();
+        levelUpAudio = GameObject.Find("Level Up").GetComponent<AudioSource>();
+        newWaveAudio = GameObject.Find("New Wave").GetComponent<AudioSource>();
+        xpOrbPickupAudio = GameObject.Find("XP Orb Pickup").GetComponent<AudioSource>();
+        darkAuraAudio = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
+        
         dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
         projectileLaunchers = new Dictionary<string, ProjectileLauncher>();
         foreach (Projectile projectile in projectiles) {
@@ -134,6 +153,7 @@ public class Player : MonoBehaviour
         
         // check health
         if (dataManager.health <= 0) {
+            gameOverAudio.Play();
             GetComponent<GameOverMenuHandler>().OpenUI();
             dataManager.health = 0;
         }
@@ -175,6 +195,8 @@ public class Player : MonoBehaviour
             while (launcher.ShouldShoot) {
                 if (doNotShoot == 0) {
                     Projectile newProjectile = Instantiate<Projectile>(launcher.Projectile, transform.position, Quaternion.identity, projectileFolder);
+                    newProjectile.isSub = launcher.isSub;
+                    newProjectile.PlaySound();
                     newProjectile.LoadStats(stats);
                     newProjectile.GenerateStats(transform, stats.projectileCount - launcher.ToShoot);
                 }
@@ -252,6 +274,8 @@ public class Player : MonoBehaviour
         if (iFrames > 0)
             return;
         
+        playerDamageAudio.Play();
+        
         if (shield > 0) {
             float shieldDamage = Mathf.Min(damage, shield);
             shield -= shieldDamage;
@@ -263,6 +287,7 @@ public class Player : MonoBehaviour
     }
 
     private void AdvanceWave() {
+        if(dataManager.wave > 0) newWaveAudio.Play();
         dataManager.wave++;
         dataManager.SaveData();
         // advance zones, play transition
@@ -293,13 +318,17 @@ public class Player : MonoBehaviour
 
     // ui and projectile stats
     
-    public void CollectExp(Experience exp) {
+    public void CollectExp(Experience exp)
+    {
+        xpOrbPickupAudio.Play();
         dataManager.experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
         AddScore(exp.Value);
         CheckLevel();
     }
 
-    public void CollectHealth(Health healthDrop) {
+    public void CollectHealth(Health healthDrop)
+    {
+        heartPickupAudio.Play();
         dataManager.health = totalHealth;
         AddScore(Health.SCORE);
     }
@@ -311,6 +340,8 @@ public class Player : MonoBehaviour
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
         if (dataManager.experience >= requiredExp) {
+            levelUpAudio.Play();
+            
             // int totalLevels = 0;
             // foreach (string projectileName in dataManager.ownedProjectiles.Keys)
             //     totalLevels += dataManager.ownedProjectiles[projectileName];
@@ -375,7 +406,8 @@ public class Player : MonoBehaviour
             return;
 
         GameTime.isPaused = true;
-
+        if(darkAuraAudio.isPlaying) darkAuraAudio.Pause();
+        
         // generate options
         List<IUpgradeable> availableUpgrades = new List<IUpgradeable>();
         foreach (ProjectileLauncher launcher in projectileLaunchers.Values) {
@@ -473,6 +505,7 @@ public class Player : MonoBehaviour
                 dataManager.ownedPassives.Add(upgradeName, 0);
             dataManager.ownedPassives[upgradeName]++;
         }
+        darkAuraAudio.UnPause();
         upgradeUI.SetActive(false);
         GameTime.isPaused = false;
         printInfo();
@@ -529,6 +562,6 @@ public class Player : MonoBehaviour
     }
 
     public float GetExpMultiplier() {
-        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? Mathf.Pow(Wave, 2) : 1);
+        return (1 + .2f * dataManager.ownedPassives.GetValueOrDefault("Wisdom", 0)) * (testingMode ? 5 * Mathf.Pow(Wave, 2) : 1);
     }
 }

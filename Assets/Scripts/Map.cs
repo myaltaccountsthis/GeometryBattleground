@@ -288,7 +288,7 @@ public class Map : MonoBehaviour
 
     private int GetRandomExperienceValue() {
         int multiplier = Mathf.FloorToInt(Mathf.Pow(2, Mathf.Min(currentWave / ZONE_INTERVAL, 2)));
-        return randomExperienceValues[Random.Range(0, randomExperienceValues.Length)];
+        return randomExperienceValues[Random.Range(0, randomExperienceValues.Length)] * multiplier;
     }
 
     // generate a naturally spawning experience orb

@@ -10,4 +10,9 @@ public class Barrage : Projectile
         this.angle = (eulerAngle + 90) * Mathf.Deg2Rad;
         transform.eulerAngles = new Vector3(0, 0, eulerAngle);
     }
+
+    public override void PlaySound()
+    {
+        if(!isSub) base.PlaySound();
+    }
 }

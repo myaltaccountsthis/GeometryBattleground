@@ -11,7 +11,15 @@ public class PauseMenuHandler : MonoBehaviour
     public TransitionManager transitionManager;
 
     private bool prevPressed;
-    
+    private AudioSource backgroundMusic;
+    private AudioSource darkAura;
+
+    private void Awake()
+    {
+        backgroundMusic = GameObject.Find("Background Music").GetComponent<AudioSource>();
+        darkAura = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
+    }
+
     void Update() {
         bool pressed = Input.GetAxis("Cancel") > 0;
         if (pressed && !prevPressed) {
@@ -20,7 +28,10 @@ public class PauseMenuHandler : MonoBehaviour
         prevPressed = pressed;
     }
 
-    private void CloseUI() {
+    private void CloseUI()
+    {
+        backgroundMusic.UnPause();
+        darkAura.UnPause();
         pauseMenu.SetActive(false);
         GameTime.isPaused = false;
     }
@@ -32,6 +43,8 @@ public class PauseMenuHandler : MonoBehaviour
         // if any other thing that pauses the game isnt active
         else if (!GameTime.isPaused) {
             // open ui
+            backgroundMusic.Pause();
+            if(darkAura.isPlaying) darkAura.Pause();
             pauseMenu.SetActive(true);
             GameTime.isPaused = true;
         }
@@ -42,6 +55,7 @@ public class PauseMenuHandler : MonoBehaviour
     }
 
     public void ToMenu() {
+        darkAura.Stop();
         transitionManager.ChangeScene("Home");
     }
 

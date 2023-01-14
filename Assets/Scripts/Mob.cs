@@ -8,6 +8,9 @@ public class Mob : MonoBehaviour
     public static Color DAMAGE_COLOR {
         get => Color.gray;
     }
+
+    public float startAudioAt;
+    
     [Tooltip("Starting health of the mob, in health points")]
     public float startingHealth;
     [Tooltip("Movement speed of the mob, in units per second")]
@@ -31,6 +34,7 @@ public class Mob : MonoBehaviour
     protected Player player;
     private Map map;
     private SpriteRenderer spriteRenderer;
+    protected AudioSource audioSrc;
     
     private const float HEALTH_CHANCE = .04f;
     // private const float POWERUP_CHANCE = 1f;
@@ -44,12 +48,14 @@ public class Mob : MonoBehaviour
         health = GetHealth();
         dead = false;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSrc = GetComponent<AudioSource>();
+        if (audioSrc != null) audioSrc.time = startAudioAt;
     }
 
     // follow player (player has tag "Player")
     public virtual void Update()
     {
-        if (GameTime.isPaused)
+        if (GameTime.isPaused || dead)
             return;
 
         if (damageTicks > 0) {
@@ -65,6 +71,7 @@ public class Mob : MonoBehaviour
 
     // Makes this mob take damage
     public void TakeDamage(Projectile projectile) {
+        PlaySound();
         float damage = projectile.stats.damage;
         if (player.IsPowerupActive("Double Damage"))
             damage *= 2;
@@ -86,6 +93,13 @@ public class Mob : MonoBehaviour
             map.InstantiateHealth(transform.position);
         else if (Random.value < experiencePercent)
             map.InstantiateExperience(experienceDrop, transform.position);
+        GetComponent<Renderer>().enabled = false;
+        StartCoroutine(destroy());
+    }
+
+    IEnumerator destroy()
+    {
+        yield return new WaitUntil(() => !audioSrc.isPlaying);
         Destroy(gameObject);
     }
 
@@ -113,5 +127,11 @@ public class Mob : MonoBehaviour
 
     private float getPowerupChance(float chance) {
         return POWERUP_CHANCE * getDropChance();
+    }
+    
+    public virtual void PlaySound()
+    {
+        if (audioSrc == null || dead) return;
+        audioSrc.Play();
     }
 }
