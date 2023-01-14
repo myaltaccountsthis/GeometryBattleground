@@ -28,6 +28,10 @@ public class Mob : MonoBehaviour
     [Tooltip("How many points this mob awards you when defeated")]
     public int score;
 
+    public bool IsDead {
+        get => dead;
+    }
+
     private float health;
     private bool dead;
     private int damageTicks;
@@ -93,7 +97,7 @@ public class Mob : MonoBehaviour
             map.InstantiateHealth(transform.position);
         else if (Random.value < experiencePercent)
             map.InstantiateExperience(experienceDrop, transform.position);
-        GetComponent<Renderer>().enabled = false;
+        spriteRenderer.enabled = false;
         StartCoroutine(destroy());
     }
 

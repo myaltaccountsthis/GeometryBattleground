@@ -39,7 +39,7 @@ public class Splitter : Projectile
 
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
-        if (mob != null && !alreadyHit) {
+        if (mob != null && !mob.IsDead && !alreadyHit) {
             alreadyHit = true;
             Destroy(gameObject);
         }
