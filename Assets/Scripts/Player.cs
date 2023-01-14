@@ -266,7 +266,6 @@ public class Player : MonoBehaviour
         }
         Drop drop = collider.GetComponent<Drop>();
         if (drop != null && drop.CanPickUp) {
-            xpOrbPickupAudio.Play();
             drop.PickUp(this);
         }
         EnemyExplosion enemyExplosion = collider.GetComponent<EnemyExplosion>();
@@ -325,6 +324,7 @@ public class Player : MonoBehaviour
     
     public void CollectExp(Experience exp)
     {
+        xpOrbPickupAudio.Play();
         dataManager.experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
         AddScore(exp.Value);
         CheckLevel();
@@ -529,6 +529,7 @@ public class Player : MonoBehaviour
     // powerups
 
     public void CollectPowerup(Powerup powerup) {
+        heartPickupAudio.Play();
         activePowerups[powerup.type] = powerup.duration;
         AddScore(Powerup.SCORE);
         switch (powerup.type) {
