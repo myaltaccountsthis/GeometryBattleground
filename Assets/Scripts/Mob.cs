@@ -98,6 +98,7 @@ public class Mob : MonoBehaviour
         else if (Random.value < experiencePercent)
             map.InstantiateExperience(experienceDrop, transform.position);
         spriteRenderer.enabled = false;
+        GetComponent<Rigidbody2D>().simulated = false;
         StartCoroutine(destroy());
     }
 

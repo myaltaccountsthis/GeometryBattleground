@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bf2e07fdb842f84891650d09c59956c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startAudioAt: 0
   startingHealth: 30
   movementSpeed: 1.5
   startingWave: 10
@@ -160,7 +161,6 @@ MonoBehaviour:
   experiencePercent: 0.5
   spawnWeight: 10
   score: 50
-  audioDelay: 0
 --- !u!82 &7048261972331621830
 AudioSource:
   m_ObjectHideFlags: 0
