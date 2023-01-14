@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class PauseMenuHandler : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public TransitionManager transitionManager;
 
     private bool prevPressed;
     private AudioSource backgroundMusic;
@@ -55,8 +56,7 @@ public class PauseMenuHandler : MonoBehaviour
 
     public void ToMenu() {
         darkAura.Stop();
-        GameTime.isPaused = false;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+        transitionManager.ChangeScene("Home");
     }
 
     public void OnExit() {

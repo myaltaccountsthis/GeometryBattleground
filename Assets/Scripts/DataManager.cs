@@ -9,6 +9,7 @@ public class DataManager : MonoBehaviour
     public int highScore;
     public int score;
     public int wave;
+    public int zone;
     public int level;
     public int experience;
     public float health;
@@ -29,6 +30,7 @@ public class DataManager : MonoBehaviour
     public void LoadDefaultNonPersistent() {
         score = 0;
         wave = 0;
+        zone = 0;
         level = 1;
         experience = 0;
         health = 100f;
@@ -53,6 +55,7 @@ public class DataManager : MonoBehaviour
                 highScore = data.highScore;
                 score = data.score;
                 wave = Mathf.Max(data.wave - 1, 0);
+                zone = data.zone;
                 level = data.level;
                 experience = data.experience;
                 health = data.health;
@@ -82,6 +85,7 @@ public class DataManager : MonoBehaviour
             data.highScore = highScore;
             data.score = score;
             data.wave = wave;
+            data.zone = zone;
             data.level = level;
             data.experience = experience;
             data.health = health;
@@ -133,6 +137,7 @@ public class Data {
     public int highScore;
     public int score;
     public int wave;
+    public int zone;
     public int level;
     public int experience;
     public float health;
