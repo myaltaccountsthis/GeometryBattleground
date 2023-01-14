@@ -261,7 +261,7 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
-        if (mob != null) {
+        if (mob != null && !mob.IsDead) {
             TakeDamage(mob.GetDamage());
         }
         Drop drop = collider.GetComponent<Drop>();

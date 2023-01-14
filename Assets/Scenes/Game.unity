@@ -706,7 +706,7 @@ AudioSource:
   m_GameObject: {fileID: 131080177}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 4135360134730184474, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: e60868e92e67cb44494c24c276f28b71, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -28631,7 +28631,7 @@ AudioSource:
   m_GameObject: {fileID: 1396244973}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2126897896711427709, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: 5afc24209d3b7e143aab0bd728ddce1b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -28759,7 +28759,7 @@ AudioSource:
   m_GameObject: {fileID: 1419980319}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1597280470818705668, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: aeeae4213fce7414c9231fd8ba582c01, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -39082,7 +39082,7 @@ Transform:
   - {fileID: 1826331590}
   - {fileID: 1419980320}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1693394576
 GameObject:
@@ -39969,7 +39969,7 @@ AudioSource:
   m_GameObject: {fileID: 1826331589}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2442514809283665957, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: 030799ab153fe68419ec2df441d6ce9e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -40681,7 +40681,7 @@ AudioSource:
   m_GameObject: {fileID: 1903381041}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 599365045779747107, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
   m_audioClip: {fileID: 8300000, guid: 360e3a5e9ae08194b8c4d41f69a72a20, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1

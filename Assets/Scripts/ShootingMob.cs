@@ -37,7 +37,7 @@ public class ShootingMob : Mob
     public override void Update() {
         base.Update();
 
-        if (GameTime.isPaused)
+        if (GameTime.isPaused || IsDead)
             return;
 
         float distance = (player.transform.position - transform.position).magnitude;

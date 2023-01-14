@@ -63,7 +63,7 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
 
     void OnTriggerEnter2D(Collider2D collider) {
         Mob mob = collider.GetComponent<Mob>();
-        if (mob != null) {
+        if (mob != null && !mob.IsDead) {
             if (pierceLeft == 0)
                 return;
             pierceLeft--;
