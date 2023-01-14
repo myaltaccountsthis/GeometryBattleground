@@ -52,6 +52,7 @@ public class Splitter : Projectile
         int toSpawn = GetProjectileCount();
         for (int i = 0; i < toSpawn; i++) {
             Spike newSpike = Instantiate<Spike>(spike, transform.position, Quaternion.identity, projectileFolder.transform);
+            if(i == 0) newSpike.PlaySound();
             newSpike.LoadStats(stats);
             newSpike.projectileCount = toSpawn;
             newSpike.GenerateStats(transform, i);

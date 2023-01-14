@@ -8,10 +8,17 @@ using UnityEngine.UI;
 public class GameOverMenuHandler : MonoBehaviour
 {
     public GameObject gameOverMenu;
+    private AudioSource backgroundMusic;
+    
+    private void Awake()
+    {
+        backgroundMusic = GameObject.Find("Background Music").GetComponent<AudioSource>();
+    }
     
     public void OpenUI()
     {
         if(gameOverMenu.activeInHierarchy) return;
+        backgroundMusic.Pause();
         gameOverMenu.SetActive(true);
         GameTime.isPaused = true;
     }

@@ -54,6 +54,7 @@ public class EnemyProjectile : Projectile
         if (projectileFolder == null)
             return;
         EnemyExplosion newExplosion = Instantiate<EnemyExplosion>(explosion, transform.position, Quaternion.identity, projectileFolder.transform);
+        newExplosion.PlaySound();
         newExplosion.LoadStats(explosionStats);
         newExplosion.minSize = .2f;
         newExplosion.maxSize = EnemyExplosion.MAX_SIZE;
