@@ -47,7 +47,7 @@ public abstract class Drop : MonoBehaviour
     {
         Destroy(gameObject, LIFETIME);
     }
-
+    // Called by the player to perform action when picked up
     public virtual void PickUp(Player player) {
         toFollow = player.transform;
         followOrigin = transform.position;

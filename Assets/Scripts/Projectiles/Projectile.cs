@@ -50,11 +50,12 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         transform.position += new Vector3(Mathf.Cos(angle) * currentSpeed, Mathf.Sin(angle) * currentSpeed, 0);
     }
 
-    // Get stats using projectilestats, should be used and overriden by children
+    // Get the change in stats between levels, should be used and overriden by children
     public virtual string GetUpgradeEffect(int level, ProjectileStats next) {
         string message = stats.GetBaseUpgradeEffect(next);
         return message;
     }
+    // Get the original change in stats between levels
     public virtual string GetBaseStats(ProjectileStats next) {
         string message = next.GetBaseStats();
         return message;
@@ -79,12 +80,12 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         this.stats = stats;
         this.pierceLeft = stats.pierce;
     }
-
+    // Get the numerical level of the projectile
     public int GetLevel(Player player)
     {
-        return player.GetProjectileLevel(name);
+        return player.GetProjectileLevel(GetName());
     }
-
+    // Get the level or MAX to display
     public string GetLevelText(int nextLevel) {
         // if (nextLevel == 1) {
         //     return "";
@@ -93,12 +94,12 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
             return "Level MAX";
         return "Level " + nextLevel;
     }
-
+    // Get the name of the projectile
     public string GetName()
     {
         return name;
     }
-
+    // Get the change in stats between levels using the player
     public string GetUpgradeEffect(Player player)
     {
         int currentLevel = player.GetProjectileLevel(name);
@@ -112,11 +113,11 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         LoadStats(player.GetProjectileStats(name, currentLevel));
         return GetUpgradeEffect(currentLevel, player.GetProjectileStats(name, currentLevel + 1));
     }
-
+    // Get the projectile's sprite for upgrade image
     public Sprite GetSprite() {
         return sprite;
     }
-
+    // Play the sound effect when shot
     public virtual void PlaySound()
     {
         if (audioSrc == null) return;

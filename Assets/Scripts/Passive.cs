@@ -17,26 +17,26 @@ public class Passive : MonoBehaviour, IUpgradeable
     {
         
     }
-
+    // Get the numerical level of the passive
     public int GetLevel(Player player)
     {
         return player.GetPassiveLevel(name);
     }
-    
+    // Get the level to display
     public string GetLevelText(int nextLevel) {
         return "Level " + nextLevel;
     }
-
+    // Get the name of the passive
     public string GetName()
     {
         return name;
     }
-
+    // Get the change in stats between levels using the player
     public string GetUpgradeEffect(Player player)
     {
         return GetUpgradeEffect(GetLevel(player));
     }
-
+    // Get the change in stats between levels
     public string GetUpgradeEffect(int level) {
         switch (name) {
             case "Wisdom":
@@ -50,7 +50,7 @@ public class Passive : MonoBehaviour, IUpgradeable
         }
         return "";
     }
-
+    // Get the passive's sprite for upgrade image
     public Sprite GetSprite() {
         return GetComponent<Image>().sprite;
     }

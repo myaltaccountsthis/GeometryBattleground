@@ -83,7 +83,7 @@ public class Mob : MonoBehaviour
         spriteRenderer.color = DAMAGE_COLOR;
         damageTicks = DAMAGE_TICKS;
     }
-
+    // Increase score and drop something on death
     public virtual void onDeath() {
         player.AddScore(score);
         float chance = experiencePercent * experienceDrop / 10;

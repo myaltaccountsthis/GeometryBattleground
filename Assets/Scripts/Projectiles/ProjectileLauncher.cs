@@ -32,13 +32,13 @@ public class ProjectileLauncher
         toWait--;
         currentStats = stats;
     }
-
+    // Shoot a projectile
     public void Shoot() {
         isSub = false;
         toShoot = currentStats.projectileCount;
         toWait = 0;
     }
-
+    // If projectile has multiple projectiles, shoot one of them
     public void ShootSub() {
         isSub = true;
         toShoot--;

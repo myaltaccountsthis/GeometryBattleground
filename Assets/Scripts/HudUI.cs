@@ -37,7 +37,7 @@ public class HudUI : MonoBehaviour
     public void UpdateScore(int score) {
         scoreText.text = score + "";
     }
-
+    // Update the powerup UI to keep up the duration
     public void UpdatePowerups(Dictionary<string, int> activePowerups) {
         // remove inactive powerups
         List<string> activePowerupNames = new List<string>(activePowerupUI.Keys);

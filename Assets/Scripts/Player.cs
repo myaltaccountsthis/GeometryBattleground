@@ -74,6 +74,7 @@ public class Player : MonoBehaviour
         map = GameObject.FindWithTag("Map").GetComponent<Map>();
         playerCollider = GetComponent<CircleCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
         
         // audio source initializing
         playerDamageAudio = GetComponent<AudioSource>();
@@ -84,7 +85,7 @@ public class Player : MonoBehaviour
         xpOrbPickupAudio = GameObject.Find("XP Orb Pickup").GetComponent<AudioSource>();
         darkAuraAudio = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
         
-        dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
+        // Initialize all upgrades
         projectileLaunchers = new Dictionary<string, ProjectileLauncher>();
         foreach (Projectile projectile in projectiles) {
             Debug.Assert(projectile != null, "Error: Projectile List contains null values");
@@ -96,6 +97,8 @@ public class Player : MonoBehaviour
             passiveList.Add(passive.name, passive);
         }
         originalMovementSpeed = movementSpeed;
+
+        // Read file and store projectile stats
         try {
             projectileInfo = new Dictionary<string, ProjectileStats[]>();
             string[] lines = infoFile.text.Split('\n');
@@ -262,14 +265,16 @@ public class Player : MonoBehaviour
             TakeDamage(mob.GetDamage());
         }
         Drop drop = collider.GetComponent<Drop>();
-        if (drop != null && drop.CanPickUp)
+        if (drop != null && drop.CanPickUp) {
+            xpOrbPickupAudio.Play();
             drop.PickUp(this);
+        }
         EnemyExplosion enemyExplosion = collider.GetComponent<EnemyExplosion>();
         if (enemyExplosion != null) {
             TakeDamage(enemyExplosion.stats.damage);
         }
     }
-
+    // Take damage when mob collides with player
     private void TakeDamage(float damage) {
         if (iFrames > 0)
             return;
@@ -285,7 +290,7 @@ public class Player : MonoBehaviour
         spriteRenderer.color = Color.red;
         iFrames = 30;
     }
-
+    // Change and update wave text, change zone if needed
     private void AdvanceWave() {
         if(dataManager.wave > 0) newWaveAudio.Play();
         dataManager.wave++;
@@ -320,7 +325,6 @@ public class Player : MonoBehaviour
     
     public void CollectExp(Experience exp)
     {
-        xpOrbPickupAudio.Play();
         dataManager.experience += Mathf.FloorToInt(exp.Value * GetExpMultiplier());
         AddScore(exp.Value);
         CheckLevel();
@@ -336,7 +340,7 @@ public class Player : MonoBehaviour
     private void UpdateExpBar() {
         hudUI.UpdateExpBar(dataManager.experience, ExpToNextLevel(), dataManager.level);
     }
-
+    // Check level to see if player leveled up, update UI
     public void CheckLevel() {
         int requiredExp = ExpToNextLevel();
         if (dataManager.experience >= requiredExp) {
@@ -357,7 +361,7 @@ public class Player : MonoBehaviour
         UpdateScore();
         movementSpeed = GetMovementSpeed();
     }
-
+    // Update score and high score if needed
     private void UpdateScore() {
         if (dataManager.score > dataManager.highScore)
             dataManager.highScore = dataManager.score;
@@ -373,13 +377,13 @@ public class Player : MonoBehaviour
         // TODO also make leveling up more powerful (maybe ramp mobs more), TODO mobs
         return Mathf.FloorToInt((Mathf.FloorToInt(Mathf.Pow(dataManager.level - 1, 1.5f)) + 1 * dataManager.level + 4) * 10);
     }
-
+    // Get projectile stats from level
     public ProjectileStats GetProjectileStats(string projectileName, int projLevel = -1) {
         if (projLevel == -1)
             projLevel = dataManager.ownedProjectiles[projectileName];
         return projectileInfo[projectileName][projLevel];
     }
-
+    // Get projectile stats after passives are applied
     public ProjectileStats GetProjectileAppliedStats(string projectileName) {
         ProjectileStats stats = GetProjectileStats(projectileName);
         stats.ApplyPassives(dataManager.ownedPassives);
@@ -437,7 +441,7 @@ public class Player : MonoBehaviour
         }
         upgradeUI.SetActive(true);
     }
-
+    // Set the level, effect, image, and name of an upgrade to the UI
     private void SetUpgradeUI(int index, IUpgradeable upgrade) {
         UpgradeOption option = upgradeUIOptions[index];
         if (upgrade == null) {
@@ -480,7 +484,7 @@ public class Player : MonoBehaviour
             */
         }
     }
-
+    // Increment level for the player's selected upgrade
     public void OnUIOptionClick(UpgradeOption option) {
         if (!upgradeUI.activeInHierarchy)
             return;
@@ -511,7 +515,7 @@ public class Player : MonoBehaviour
         printInfo();
         CheckLevel();
     }
-
+    // print all levels for debugging
     private void printInfo() {
         string message = "L: " + dataManager.level + ", ";
         foreach (string name in dataManager.ownedProjectiles.Keys)
