@@ -55,7 +55,7 @@ public abstract class Projectile : MonoBehaviour, IUpgradeable
         string message = stats.GetBaseUpgradeEffect(next);
         return message;
     }
-    // Get the original change in stats between levels
+    // Get the original stats of the projectile
     public virtual string GetBaseStats(ProjectileStats next) {
         string message = next.GetBaseStats();
         return message;
