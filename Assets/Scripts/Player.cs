@@ -31,7 +31,6 @@ public class Player : MonoBehaviour
     public Explosion explosionPrefab;
     public TextMeshProUGUI waveText;
     public HudUI hudUI;
-    public TransitionManager transitionManager;
 
     private float shield;
     private float originalMovementSpeed;
@@ -47,6 +46,7 @@ public class Player : MonoBehaviour
     private Map map;
     private CircleCollider2D playerCollider;
     private DataManager dataManager;
+    private TransitionManager transitionManager;
     // if waveText is big
     private bool waveTextActive;
     private bool transitioning;
@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
         playerCollider = GetComponent<CircleCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
+        transitionManager = GameObject.FindWithTag("TransitionManager").GetComponent<TransitionManager>();
         
         // audio source initializing
         playerDamageAudio = GetComponent<AudioSource>();
@@ -238,7 +239,7 @@ public class Player : MonoBehaviour
                 switch (powerupName) {
                     case "Drop Magnet":
                         foreach (Transform transform in map.experienceFolder) {
-                            transform.GetComponent<Drop>().LargeDropSize = true;
+                            transform.GetComponent<Drop>().LargeDropSize = false;
                         }
                         break;
                     case "Speed":
