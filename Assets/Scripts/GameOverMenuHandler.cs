@@ -9,18 +9,24 @@ using UnityEngine.UI;
 public class GameOverMenuHandler : MonoBehaviour
 {
     public GameObject gameOverMenu;
+
     private AudioSource backgroundMusic;
     private AudioSource darkAura;
+    private DataManager dataManager;
+    private TransitionManager transitionManager;
     
     private void Awake()
     {
         backgroundMusic = GameObject.Find("Background Music").GetComponent<AudioSource>();
         darkAura = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
+        dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
+        transitionManager = GameObject.FindWithTag("TransitionManager").GetComponent<TransitionManager>();
     }
     
     public void OpenUI()
     {
         if(gameOverMenu.activeInHierarchy) return;
+        dataManager.ResetData();
         backgroundMusic.Pause();
         if(darkAura.isPlaying) darkAura.Pause();
         gameOverMenu.SetActive(true);
@@ -28,25 +34,15 @@ public class GameOverMenuHandler : MonoBehaviour
     }
 
     public void OnTryAgain() {
-        CloseUI();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
+        transitionManager.ChangeScene("Game");
     }
 
     public void ToMenu() {
-        CloseUI();
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Home");
+        transitionManager.ChangeScene("Home");
     }
 
     public void OnExit()
     {
-        CloseUI();
         Application.Quit();
-    }
-
-    private void CloseUI()
-    {
-        GameObject.FindWithTag("DataManager").GetComponent<DataManager>().ResetData();
-        gameOverMenu.SetActive(false);
-        GameTime.isPaused = false;
     }
 }

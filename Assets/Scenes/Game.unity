@@ -28548,17 +28548,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6cc787176455601409a1ab3480056855, type: 3}
---- !u!114 &1305815049 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1876260828753359854, guid: 6cc787176455601409a1ab3480056855, type: 3}
-  m_PrefabInstance: {fileID: 1305815048}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0aa1d66c66b33b64ea859999b50544b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1346883017
 GameObject:
   m_ObjectHideFlags: 0
@@ -39207,7 +39196,6 @@ MonoBehaviour:
   explosionPrefab: {fileID: 4949622542091398931, guid: 0fee8638b6b7d91408dedd57f4610406, type: 3}
   waveText: {fileID: 772553885}
   hudUI: {fileID: 1718587549}
-  transitionManager: {fileID: 1305815049}
   testingMode: 0
 --- !u!58 &1693394580
 CircleCollider2D:
@@ -39238,7 +39226,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseMenu: {fileID: 596085773}
-  transitionManager: {fileID: 1305815049}
 --- !u!114 &1693394582
 MonoBehaviour:
   m_ObjectHideFlags: 0

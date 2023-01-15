@@ -10,6 +10,7 @@ TagManager:
   - Experience Folder
   - Experience Orb
   - DataManager
+  - TransitionManager
   layers:
   - Default
   - TransparentFX

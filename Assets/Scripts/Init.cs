@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Init : MonoBehaviour
 {
-    public TransitionManager transitionManager;
-
+    private TransitionManager transitionManager;
     private DataManager dataManager;
 
     void Awake()
@@ -13,6 +12,7 @@ public class Init : MonoBehaviour
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 0;
         dataManager = GameObject.FindWithTag("DataManager").GetComponent<DataManager>();
+        transitionManager = GameObject.FindWithTag("TransitionManager").GetComponent<TransitionManager>();
     }
 
     void Update() {

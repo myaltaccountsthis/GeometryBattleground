@@ -8,14 +8,15 @@ using UnityEngine.UI;
 public class PauseMenuHandler : MonoBehaviour
 {
     public GameObject pauseMenu;
-    public TransitionManager transitionManager;
 
+    private TransitionManager transitionManager;
     private bool prevPressed;
     private AudioSource backgroundMusic;
     private AudioSource darkAura;
 
     private void Awake()
     {
+        transitionManager = GameObject.FindWithTag("TransitionManager").GetComponent<TransitionManager>();
         backgroundMusic = GameObject.Find("Background Music").GetComponent<AudioSource>();
         darkAura = GameObject.Find("Dark Aura").GetComponent<AudioSource>();
     }
