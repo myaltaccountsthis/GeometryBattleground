@@ -74,7 +74,7 @@ public class Fireball : Projectile
 
     private float getExplosionSize(int level = -1) {
         if (level == -1)
-            level = GetLevel(player);
+            level = player.GetProjectileLevel("Fireball");
         if (level >= 8)
             return 1.8f;
         if (level >= 5)

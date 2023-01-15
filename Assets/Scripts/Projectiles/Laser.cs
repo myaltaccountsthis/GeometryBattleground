@@ -16,4 +16,9 @@ public class Laser : Projectile
             transform.position += direction * offset * (-.5f + (float)index / Mathf.Max(stats.projectileCount - 1, 1));
         }
     }
+
+    public override void PlaySound()
+    {
+        if(!isSub) base.PlaySound();
+    }
 }

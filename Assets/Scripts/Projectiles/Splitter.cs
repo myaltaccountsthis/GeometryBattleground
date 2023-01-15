@@ -66,7 +66,7 @@ public class Splitter : Projectile
 
     public int GetProjectileCount(int level = -1) {
         if (level == -1)
-            level = GetLevel(player);
+            level = player.GetProjectileLevel("Splitter");
         if (level >= 6)
             return 16;
         if (level >= 3)

@@ -200,8 +200,8 @@ public class Map : MonoBehaviour
                 for (int i = 0; i < (wave - 10) / 10; i++)
                     SpawnMob(miniboss, GetMobSpawnLocation());
             }
-            else if (wave > 40) {
-                for (int i = 0; i < (wave - 40) / 10; i++)
+            if (wave > 40) {
+                for (int i = 0; i < (wave - 30) / 10; i++)
                     SpawnMob(miniboss, GetMobSpawnLocation());
             }
         }
