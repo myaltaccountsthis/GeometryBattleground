@@ -28601,7 +28601,7 @@ GameObject:
   - component: {fileID: 1396244974}
   - component: {fileID: 1396244975}
   m_Layer: 0
-  m_Name: Heart Pickup
+  m_Name: Item Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28632,7 +28632,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -2126897896711427709, guid: edeaaa5d8a68b7e4e89b4694b79fcd6a, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 5afc24209d3b7e143aab0bd728ddce1b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 7b090ccd4ccac144aa73596f08924941, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

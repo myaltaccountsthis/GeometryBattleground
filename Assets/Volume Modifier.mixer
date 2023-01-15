@@ -86,7 +86,7 @@ AudioMixerGroupController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Heart Pickup
+  m_Name: Item Pickup
   m_AudioMixer: {fileID: 24100000}
   m_GroupID: db24ca67cfd04d3409a771a9eae1cee4
   m_Children: []

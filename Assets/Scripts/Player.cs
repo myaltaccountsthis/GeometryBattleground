@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
     // audio sources
     private AudioSource playerDamageAudio;
     private AudioSource gameOverAudio;
-    private AudioSource heartPickupAudio;
+    private AudioSource itemPickupAudio;
     private AudioSource levelUpAudio;
     private AudioSource newWaveAudio;
     private AudioSource xpOrbPickupAudio;
@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
         // audio source initializing
         playerDamageAudio = GetComponent<AudioSource>();
         gameOverAudio = GameObject.Find("Game Over").GetComponent<AudioSource>();
-        heartPickupAudio = GameObject.Find("Heart Pickup").GetComponent<AudioSource>();
+        itemPickupAudio = GameObject.Find("Item Pickup").GetComponent<AudioSource>();
         levelUpAudio = GameObject.Find("Level Up").GetComponent<AudioSource>();
         newWaveAudio = GameObject.Find("New Wave").GetComponent<AudioSource>();
         xpOrbPickupAudio = GameObject.Find("XP Orb Pickup").GetComponent<AudioSource>();
@@ -332,7 +332,7 @@ public class Player : MonoBehaviour
 
     public void CollectHealth(Health healthDrop)
     {
-        heartPickupAudio.Play();
+        itemPickupAudio.Play();
         dataManager.health = totalHealth;
         AddScore(Health.SCORE);
     }
@@ -529,7 +529,7 @@ public class Player : MonoBehaviour
     // powerups
 
     public void CollectPowerup(Powerup powerup) {
-        heartPickupAudio.Play();
+        itemPickupAudio.Play();
         activePowerups[powerup.type] = powerup.duration;
         AddScore(Powerup.SCORE);
         switch (powerup.type) {
